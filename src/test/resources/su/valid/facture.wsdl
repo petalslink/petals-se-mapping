@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2016 Linagora
+ 
+ This program/library is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 2.1 of the License, or (at your
+ option) any later version.
+ 
+ This program/library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program/library; If not, see http://www.gnu.org/licenses/
+ for the GNU Lesser General Public License version 2.1.
+-->
+<wsdl:definitions name="FactureService" targetNamespace="http://petals.ow2.org/se/mapping/unit-test/facture"
+   xmlns:tns="http://petals.ow2.org/se/mapping/unit-test/facture" xmlns:mapping="http://petals.ow2.org/se/mapping/annotations/1.0"
+   xmlns:ged="http://petals.ow2.org/se/mapping/unit-test/ged" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
+
+   <wsdl:types>
+      <xsd:schema targetNamespace="http://petals.ow2.org/se/mapping/unit-test/facture" elementFormDefault="qualified">
+
+         <xsd:element name="archiver">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="identifiant" minOccurs="1" maxOccurs="1" type="xsd:string" />
+                  <xsd:element name="document" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+
+         <xsd:element name="consulter">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="identifiant" minOccurs="1" maxOccurs="1" type="xsd:string" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+
+         <xsd:element name="consulterResponse">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="document" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+
+         <xsd:element name="supprimer">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="identifiant" minOccurs="1" maxOccurs="1" type="xsd:string" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+
+         <xsd:element name="supprimerResponse">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="document" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+
+         <xsd:element name="factureInconnue">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="identifiant" minOccurs="1" maxOccurs="1" type="xsd:string" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+
+      </xsd:schema>
+   </wsdl:types>
+
+   <wsdl:message name="archiver">
+      <wsdl:part name="parameters" element="tns:archiver" />
+   </wsdl:message>
+   <wsdl:message name="consulter">
+      <wsdl:part name="parameters" element="tns:consulter" />
+   </wsdl:message>
+   <wsdl:message name="consulterResponse">
+      <wsdl:part name="parameters" element="tns:consulterResponse" />
+   </wsdl:message>
+   <wsdl:message name="supprimer">
+      <wsdl:part name="parameters" element="tns:supprimer" />
+   </wsdl:message>
+   <wsdl:message name="supprimerResponse">
+      <wsdl:part name="parameters" element="tns:supprimerResponse" />
+   </wsdl:message>
+   <wsdl:message name="factureInconnue">
+      <wsdl:part name="parameters" element="tns:factureInconnue" />
+   </wsdl:message>
+
+   <wsdl:portType name="facture">
+      <wsdl:operation name="archiver">
+         <wsdl:input message="tns:archiver" />
+      </wsdl:operation>
+      <wsdl:operation name="consulter">
+         <wsdl:input message="tns:consulter" />
+         <wsdl:output message="tns:consulterResponse" />
+         <wsdl:fault message="tns:factureInconnue" name="factureInconnue" />
+      </wsdl:operation>
+      <wsdl:operation name="supprimer">
+         <wsdl:input message="tns:supprimer" />
+         <wsdl:output message="tns:supprimerResponse" />
+         <wsdl:fault message="tns:factureInconnue" name="factureInconnue" />
+      </wsdl:operation>
+      <wsdl:operation name="fault2out">
+         <wsdl:input message="tns:supprimer" />
+         <wsdl:output message="tns:supprimer" />
+         <wsdl:fault message="tns:factureInconnue" name="factureInconnue" />
+      </wsdl:operation>
+      <wsdl:operation name="out2fault">
+         <wsdl:input message="tns:supprimer" />
+         <wsdl:output message="tns:supprimerResponse" />
+         <wsdl:fault message="tns:factureInconnue" name="factureInconnue" />
+      </wsdl:operation>
+   </wsdl:portType>
+
+   <wsdl:binding name="factureBinding" type="tns:facture">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+      <wsdl:operation name="archiver">
+         <soap:operation soapAction="http://petals.ow2.org/se/mapping/unit-test/parser/facture/archiver" />
+         <mapping:service-provider-operation>ged:archiver</mapping:service-provider-operation>
+         <mapping:input-transformation xsl="input-archiver.xsl" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+      </wsdl:operation>
+      <wsdl:operation name="consulter">
+         <soap:operation soapAction="http://petals.ow2.org/se/mapping/unit-test/parser/facture/consulter" />
+         <mapping:service-provider-operation>ged:consulter</mapping:service-provider-operation>
+         <mapping:input-transformation xsl="input-consulter.xsl" />
+         <mapping:output-transformation xsl="output-consulter.xsl">
+            <mapping:should-return-fault as-xpath-expr="true">
+               not(boolean(/*[local-name()='consulterResponse']))
+            </mapping:should-return-fault>
+         </mapping:output-transformation>
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+         <wsdl:fault name="factureInconnue">
+            <soap:fault name="factureInconnue" use="literal" />
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="supprimer">
+         <soap:operation soapAction="http://petals.ow2.org/se/mapping/unit-test/parser/facture/supprimer" />
+         <mapping:service-provider-operation>ged:supprimer</mapping:service-provider-operation>
+         <mapping:input-transformation xsl="input-supprimer.xsl" />
+         <mapping:output-transformation xsl="output-supprimer.xsl">
+            <mapping:should-return-fault as-xpath-expr="true">
+               not(boolean(/*[local-name()='supprimerResponse']))
+            </mapping:should-return-fault>
+         </mapping:output-transformation>
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+         <wsdl:fault name="factureInconnue">
+            <soap:fault name="factureInconnue" use="literal" />
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="fault2out">
+         <soap:operation soapAction="http://petals.ow2.org/se/mapping/unit-test/parser/facture/fault2out" />
+         <mapping:service-provider-operation>ged:supprimer</mapping:service-provider-operation>
+         <mapping:input-transformation xsl="input-supprimer.xsl" />
+         <mapping:output-transformation xsl="output-fault2out.xsl">
+            <mapping:should-return-fault as-xpath-expr="true">
+               not(boolean(/*[local-name()='documentInconnu']))
+            </mapping:should-return-fault>
+         </mapping:output-transformation>
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+         <wsdl:fault name="factureInconnue">
+            <soap:fault name="factureInconnue" use="literal" />
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="out2fault">
+         <soap:operation soapAction="http://petals.ow2.org/se/mapping/unit-test/parser/facture/out2fault" />
+         <mapping:service-provider-operation>ged:supprimer</mapping:service-provider-operation>
+         <mapping:input-transformation xsl="input-supprimer.xsl" />
+         <mapping:output-transformation xsl="output-out2fault.xsl">
+            <mapping:should-return-fault as-xpath-expr="true">
+               boolean(/*[local-name()='supprimerResponse'])
+            </mapping:should-return-fault>
+         </mapping:output-transformation>
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+         <wsdl:fault name="factureInconnue">
+            <soap:fault name="factureInconnue" use="literal" />
+         </wsdl:fault>
+      </wsdl:operation>
+   </wsdl:binding>
+
+   <wsdl:service name="factureService">
+      <wsdl:port name="testEndpointName" binding="tns:factureBinding">
+         <soap:address location="http://localhost:9003/facture" />
+      </wsdl:port>
+   </wsdl:service>
+
+</wsdl:definitions>

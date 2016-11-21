@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2016 Linagora
+ 
+ This program/library is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 2.1 of the License, or (at your
+ option) any later version.
+ 
+ This program/library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program/library; If not, see http://www.gnu.org/licenses/
+ for the GNU Lesser General Public License version 2.1.
+-->
+<wsdl:definitions name="FactureService" targetNamespace="http://petals.ow2.org/se/mapping/unit-test/ged"
+   xmlns:tns="http://petals.ow2.org/se/mapping/unit-test/ged" xmlns:mapping="http://petals.ow2.org/se/mapping/annotations/1.0"
+   xmlns:tech="http://petals.ow2.org/bc/ged" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
+
+   <wsdl:types>
+      <xsd:schema targetNamespace="http://petals.ow2.org/se/mapping/unit-test/ged"
+         elementFormDefault="qualified">
+
+         <xsd:element name="archiver">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="reference" minOccurs="1" maxOccurs="1" type="xsd:string" />
+                  <xsd:element name="document" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+
+         <xsd:element name="consulter">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="reference" minOccurs="1" maxOccurs="1" type="xsd:string" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+
+         <xsd:element name="consulterResponse">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="document" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+
+         <xsd:element name="supprimer">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="reference" minOccurs="1" maxOccurs="1" type="xsd:string" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+
+         <xsd:element name="supprimerResponse">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="document" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+
+         <xsd:element name="documentInconnu">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="reference" minOccurs="1" maxOccurs="1" type="xsd:string" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+
+      </xsd:schema>
+   </wsdl:types>
+
+   <wsdl:message name="archiver">
+      <wsdl:part name="parameters" element="tns:archiver" />
+   </wsdl:message>
+   <wsdl:message name="consulter">
+      <wsdl:part name="parameters" element="tns:consulter" />
+   </wsdl:message>
+   <wsdl:message name="consulterResponse">
+      <wsdl:part name="parameters" element="tns:consulterResponse" />
+   </wsdl:message>
+   <wsdl:message name="supprimer">
+      <wsdl:part name="parameters" element="tns:supprimer" />
+   </wsdl:message>
+   <wsdl:message name="supprimerResponse">
+      <wsdl:part name="parameters" element="tns:supprimerResponse" />
+   </wsdl:message>
+   <wsdl:message name="documentInconnu">
+      <wsdl:part name="parameters" element="tns:documentInconnu" />
+   </wsdl:message>
+
+   <wsdl:portType name="document">
+      <wsdl:operation name="archiver">
+         <wsdl:input message="tns:archiver" />
+      </wsdl:operation>
+      <wsdl:operation name="consulter">
+         <wsdl:input message="tns:consulter" />
+         <wsdl:output message="tns:consulterResponse" />
+         <wsdl:fault message="tns:documentInconnu" name="documentInconnu" />
+      </wsdl:operation>
+      <wsdl:operation name="supprimer">
+         <wsdl:input message="tns:supprimer" />
+         <wsdl:output message="tns:supprimerResponse" />
+         <wsdl:fault message="tns:documentInconnu" name="documentInconnu" />
+      </wsdl:operation>
+   </wsdl:portType>
+
+   <wsdl:binding name="documentBinding" type="tns:document">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+      <wsdl:operation name="archiver">
+         <soap:operation soapAction="http://petals.ow2.org/se/mapping/unit-test/ged/document/archiver" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+      </wsdl:operation>
+      <wsdl:operation name="consulter">
+         <soap:operation soapAction="http://petals.ow2.org/se/mapping/unit-test/ged/document/consulter" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+         <wsdl:fault name="documentInconnu">
+            <soap:fault name="documentInconnu" use="literal" />
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="supprimer">
+         <soap:operation soapAction="http://petals.ow2.org/se/mapping/unit-test/ged/document/supprimer" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+         <wsdl:fault name="documentInconnu">
+            <soap:fault name="documentInconnu" use="literal" />
+         </wsdl:fault>
+      </wsdl:operation>
+   </wsdl:binding>
+
+   <wsdl:service name="documentService">
+      <wsdl:port name="testEndpointName" binding="tns:documentBinding">
+         <soap:address location="http://localhost:9003/document" />
+      </wsdl:port>
+   </wsdl:service>
+
+</wsdl:definitions>
