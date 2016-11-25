@@ -83,6 +83,7 @@
          <groupId>net.sf.saxon</groupId>
          <artifactId>Saxon-HE</artifactId>
          <version>9.7.0-11</version>
+         <scope>runtime</scope>
       </dependency>
 
       <dependency>
@@ -92,6 +93,11 @@
       <dependency>
          <groupId>org.ow2.petals</groupId>
          <artifactId>petals-junit-external-resources</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>com.sun.mail</groupId>
+         <artifactId>javax.mail</artifactId>
          <scope>test</scope>
       </dependency>
    </dependencies>
@@ -117,6 +123,21 @@
                         <include>valid/ged.wsdl</include>
                      </schemaIncludes>
                      <generateDirectory>${project.build.directory}/generated-test-sources/xjc</generateDirectory>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>analyze</id>
+                  <configuration>
+                     <usedDependencies>
+                        <!-- These dependencies are needed for runtime -->
+                        <usedDependency>net.sf.saxon:Saxon-HE</usedDependency>
+                     </usedDependencies>
                   </configuration>
                </execution>
             </executions>
