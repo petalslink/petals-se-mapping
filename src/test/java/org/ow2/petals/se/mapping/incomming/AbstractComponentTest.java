@@ -37,6 +37,7 @@ import org.ow2.petals.component.framework.junit.impl.ConsumesServiceConfiguratio
 import org.ow2.petals.component.framework.junit.impl.ProvidesServiceConfiguration;
 import org.ow2.petals.component.framework.junit.impl.ServiceConfiguration;
 import org.ow2.petals.component.framework.junit.rule.ComponentUnderTest;
+import org.ow2.petals.component.framework.junit.rule.ParameterGenerator;
 import org.ow2.petals.component.framework.junit.rule.ServiceConfigurationFactory;
 import org.ow2.petals.junit.rules.log.handler.InMemoryLogHandler;
 import org.ow2.petals.se.mapping.AbstractTest;
@@ -85,12 +86,29 @@ public abstract class AbstractComponentTest extends AbstractTest {
 
     protected static final String VALID_SU = "valid-su";
 
+    protected static final String COMP_PROPERTY_VALUE_1 = "value-1";
+
+    protected static final String COMP_PROPERTY_VALUE_2 = "value-2";
+
     protected static final InMemoryLogHandler IN_MEMORY_LOG_HANDLER = new InMemoryLogHandler();
 
     private static final TemporaryFolder TEMP_FOLDER = new TemporaryFolder();
 
     protected static final ComponentUnderTest COMPONENT_UNDER_TEST = new ComponentUnderTest()
             .addLogHandler(IN_MEMORY_LOG_HANDLER.getHandler())
+            .setParameter(
+                    new QName("http://petals.ow2.org/components/extensions/version-5", "properties-file"),
+                    new ParameterGenerator() {
+
+                        @Override
+                        public String generate() throws Exception {
+                            final URL componentPropertiesFile = Thread.currentThread().getContextClassLoader()
+                                    .getResource("su/valid/componentProperties.properties");
+                            assertNotNull("Component properties file is missing !", componentPropertiesFile);
+                            return componentPropertiesFile.toString();
+                        }
+
+                    })
             .registerServiceToDeploy(VALID_SU, new ServiceConfigurationFactory() {
                 @Override
                 public ServiceConfiguration create() {

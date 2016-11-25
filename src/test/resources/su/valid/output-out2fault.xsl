@@ -16,7 +16,7 @@
  along with this program/library; If not, see http://www.gnu.org/licenses/
  for the GNU Lesser General Public License version 2.1.
 -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:mapping-xsl="http://petals.ow2.org/se/mapping/xsl/1.0"
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:mapping-xsl="http://petals.ow2.org/se/mapping/xsl/param/output/1.0"
    xmlns:facture="http://petals.ow2.org/se/mapping/unit-test/facture" xmlns:ged="http://petals.ow2.org/se/mapping/unit-test/ged">
 
    <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="no" />

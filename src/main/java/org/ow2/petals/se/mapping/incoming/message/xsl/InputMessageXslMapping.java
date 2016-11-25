@@ -17,6 +17,7 @@
  */
 package org.ow2.petals.se.mapping.incoming.message.xsl;
 
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
@@ -53,14 +54,15 @@ public class InputMessageXslMapping extends AbstractMessageXslMapping implements
      * @param logger
      */
     public InputMessageXslMapping(final QName wsdlOperationName, final String wsdlMessageName, final String xslFileName,
-            final String suRootPath,
-            final SuConfigurationParameters extensions, final LogErrorListener logErrorListener, final Logger logger) {
+            final String suRootPath, final SuConfigurationParameters extensions,
+            final LogErrorListener logErrorListener, final Logger logger) {
         super(wsdlOperationName, wsdlMessageName, xslFileName, suRootPath, extensions, logErrorListener, logger);
     }
 
     @Override
-    public void transform(final Source technicalResponse, final Result businessResponse) throws TransformException {
-        this.doTransform(technicalResponse, businessResponse, null);
+    public void transform(final Source technicalResponse, final Result businessResponse,
+            final Properties componentProperties) throws TransformException {
+        this.doTransform(technicalResponse, businessResponse, null, componentProperties);
     }
 
 }

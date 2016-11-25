@@ -18,6 +18,8 @@
 package org.ow2.petals.se.mapping.incoming.message.xsl;
 
 import java.io.File;
+import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
@@ -48,6 +50,8 @@ import org.w3c.dom.Document;
  * 
  */
 public abstract class AbstractMessageXslMapping extends AbstractMappingMessage implements AbsMappingMessage {
+
+    private static final String XSL_PARAM_PROPERTIES_NAMESPACE = "http://petals.ow2.org/se/mapping/xsl/param/1.0";
 
     /**
      * The SU root path
@@ -135,13 +139,6 @@ public abstract class AbstractMessageXslMapping extends AbstractMappingMessage i
 
     }
 
-    /**
-     * @return The XSL style-sheet compiled.
-     */
-    public Templates getXsl() {
-        return this.xsl;
-    }
-
     @Override
     public void log() {
         this.logger.config("    - xsl file = " + new File(this.suRootPath, this.xslFileName).getAbsolutePath());
@@ -154,9 +151,18 @@ public abstract class AbstractMessageXslMapping extends AbstractMappingMessage i
      *            The {@link Transformer} for which parameters must be set. Not {@code null}
      * @param incomingSource
      *            The initial incoming request
+     * @param componentProperties
+     *            Properties defined in the property file configured at component level
      */
-    protected void setXslParameters(final Transformer transformer, final Document incomingSource) {
-        // No parameter set by default
+    protected void setXslParameters(final Transformer transformer, final Document incomingSource, final Properties componentProperties) {
+        
+        if (componentProperties != null) {
+            for (final Entry<Object, Object> property : componentProperties.entrySet()) {
+                transformer.setParameter(
+                        new QName(XSL_PARAM_PROPERTIES_NAMESPACE, property.getKey().toString()).toString(),
+                        property.getValue().toString());
+            }
+        }
     }
 
     /**
@@ -168,15 +174,18 @@ public abstract class AbstractMessageXslMapping extends AbstractMappingMessage i
      *            The {@code Result} transformed.
      * @param businessRequest
      *            The XML {@code Document} associated to the incoming request
+     * @param componentProperties
+     *            Properties defined in the property file configured at component level
      * @throws TransformException
      *             An error occurs during transformation
      */
-    protected void doTransform(final Source source, final Result target, final Document businessRequest)
+    protected void doTransform(final Source source, final Result target, final Document businessRequest,
+            final Properties componentProperties)
             throws TransformException {
         try {
             final Transformer transformer = this.xsl.newTransformer();
 
-            this.setXslParameters(transformer, businessRequest);
+            this.setXslParameters(transformer, businessRequest, componentProperties);
 
             transformer.transform(source, target);
         } catch (final TransformerException e) {

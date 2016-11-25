@@ -78,14 +78,15 @@ public class JBIListener extends AbstractJBIListener {
 
                     try {
                         // Get the mapping operation to execute from the registered operation
-                        final MappingOperation mappingOperation = ((MappingSE) getComponent())
+                        final MappingOperation mappingOperation = ((MappingSE) this.getComponent())
                                 .getMappingOperation(eptAndOperation);
                         if (mappingOperation == null) {
                             // TODO: Create a unit test
                             throw new MessagingException("No mapping operation found matching the exchange");
                         }
 
-                        isExchangeClosedByCDK = mappingOperation.sendRequest(exchange, this);
+                        isExchangeClosedByCDK = mappingOperation.sendRequest(exchange, this,
+                                this.getComponent().getPlaceHolders());
 
                     } catch (final MessagingException e) {
                         logger.log(Level.SEVERE, "Exchange " + exchange.getExchangeId() + " encountered a problem.", e);
@@ -113,7 +114,7 @@ public class JBIListener extends AbstractJBIListener {
             final MappingOperationAsyncContext mappingOperationAsyncContext = (MappingOperationAsyncContext) asyncContext;
             final Exchange initialExchange = mappingOperationAsyncContext.getInitialExchange();
             mappingOperationAsyncContext.getMappingOperation().processResponse(asyncExchange,
-                    mappingOperationAsyncContext);
+                    mappingOperationAsyncContext, this.getComponent().getPlaceHolders());
 
             try {
                 this.send(initialExchange);

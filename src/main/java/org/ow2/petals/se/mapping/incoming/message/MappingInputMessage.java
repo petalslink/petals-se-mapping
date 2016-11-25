@@ -17,6 +17,8 @@
  */
 package org.ow2.petals.se.mapping.incoming.message;
 
+import java.util.Properties;
+
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
@@ -38,8 +40,11 @@ public interface MappingInputMessage extends AbsMappingMessage {
      *            The XML {@code Source} associated to the incoming request to transform
      * @param technicalRequest
      *            The {@code Result} associated to the incoming request transformed.
+     * @param componentProperties
+     *            Properties defined in the property file configured at component level
      * @throws TransformException
      *             An error occurs during transformation
      */
-    public void transform(final Source businessRequest, final Result technicalRequest) throws TransformException;
+    public void transform(final Source businessRequest, final Result technicalRequest,
+            final Properties componentProperties) throws TransformException;
 }

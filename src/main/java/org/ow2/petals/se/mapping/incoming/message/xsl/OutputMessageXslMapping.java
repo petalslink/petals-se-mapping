@@ -17,6 +17,7 @@
  */
 package org.ow2.petals.se.mapping.incoming.message.xsl;
 
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
@@ -40,11 +41,12 @@ import org.w3c.dom.Document;
  */
 public class OutputMessageXslMapping extends AbstractMessageXslMapping implements MappingOutputMessage {
 
-    private static final String XSL_PARAM_NAMESPACE = "http://petals.ow2.org/se/mapping/xsl/1.0";
+    private static final String XSL_PARAM_OUTPUT_NAMESPACE = "http://petals.ow2.org/se/mapping/xsl/param/output/1.0";
 
-    private static final QName XSL_PARAM_INCOMING_REQUEST = new QName(XSL_PARAM_NAMESPACE, "incoming-request");
+    private static final QName XSL_PARAM_OUTPUT_INCOMING_REQUEST = new QName(XSL_PARAM_OUTPUT_NAMESPACE,
+            "incoming-request");
 
-    private static final String XSL_PARAM_INCOMING_REQUEST_STR = XSL_PARAM_INCOMING_REQUEST.toString();
+    private static final String XSL_PARAM_OUTPUT_INCOMING_REQUEST_STR = XSL_PARAM_OUTPUT_INCOMING_REQUEST.toString();
 
     private final MappingOutputCondition outputCondition;
 
@@ -69,8 +71,7 @@ public class OutputMessageXslMapping extends AbstractMessageXslMapping implement
     public OutputMessageXslMapping(final QName wsdlOperationName, final String wsdlMessageName,
             final String xslFileName, final MappingOutputCondition outputCondition, final String suRootPath,
             final SuConfigurationParameters extensions, final LogErrorListener logErrorListener, final Logger logger) {
-        super(wsdlOperationName, wsdlMessageName, xslFileName, suRootPath, extensions,
-                logErrorListener, logger);
+        super(wsdlOperationName, wsdlMessageName, xslFileName, suRootPath, extensions, logErrorListener, logger);
         this.outputCondition = outputCondition;
     }
 
@@ -85,13 +86,15 @@ public class OutputMessageXslMapping extends AbstractMessageXslMapping implement
     }
 
     @Override
-    protected void setXslParameters(final Transformer transformer, final Document incomingSource) {
-        transformer.setParameter(XSL_PARAM_INCOMING_REQUEST_STR, incomingSource);
+    protected void setXslParameters(final Transformer transformer, final Document incomingSource,
+            final Properties componentProperties) {
+        super.setXslParameters(transformer, incomingSource, componentProperties);
+        transformer.setParameter(XSL_PARAM_OUTPUT_INCOMING_REQUEST_STR, incomingSource);
     }
 
     @Override
-    public void transform(final Source technicalResponse, final Result businessResponse, final Document businessRequest)
-            throws TransformException {
-        this.doTransform(technicalResponse, businessResponse, businessRequest);
+    public void transform(final Source technicalResponse, final Result businessResponse, final Document businessRequest,
+            final Properties componentProperties) throws TransformException {
+        this.doTransform(technicalResponse, businessResponse, businessRequest, componentProperties);
     }
 }

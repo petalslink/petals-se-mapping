@@ -106,7 +106,7 @@ public class MappingServiceTest extends AbstractComponentTest {
                 final Object technicalRequestObj = UNMARSHALLER.unmarshal(technicalRequest.getPayload());
                 assertTrue(technicalRequestObj instanceof org.ow2.petals.se.mapping.unit_test.ged.Consulter);
                 final org.ow2.petals.se.mapping.unit_test.ged.Consulter technicalRequestBean = (org.ow2.petals.se.mapping.unit_test.ged.Consulter) technicalRequestObj;
-                assertEquals(factureId, technicalRequestBean.getReference());
+                assertEquals(factureId + COMP_PROPERTY_VALUE_1, technicalRequestBean.getReference());
 
                 final List<Attachment> attachments = new ArrayList<>();
                 final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
@@ -210,7 +210,7 @@ public class MappingServiceTest extends AbstractComponentTest {
                 final Object technicalRequestObj = UNMARSHALLER.unmarshal(technicalRequest.getPayload());
                 assertTrue(technicalRequestObj instanceof org.ow2.petals.se.mapping.unit_test.ged.Consulter);
                 final org.ow2.petals.se.mapping.unit_test.ged.Consulter technicalRequestBean = (org.ow2.petals.se.mapping.unit_test.ged.Consulter) technicalRequestObj;
-                assertEquals(factureId, technicalRequestBean.getReference());
+                assertEquals(factureId + COMP_PROPERTY_VALUE_1, technicalRequestBean.getReference());
 
                 final List<Attachment> attachments = new ArrayList<>();
                 final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
@@ -249,7 +249,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         final Object businessResponseBeanObj = UNMARSHALLER.unmarshal(businessResponse.getPayload());
         assertTrue(businessResponseBeanObj instanceof FactureInconnue);
         final FactureInconnue businessResponseBean = (FactureInconnue) businessResponseBeanObj;
-        assertEquals(factureId, businessResponseBean.getIdentifiant());
+        assertEquals(factureId + COMP_PROPERTY_VALUE_1 + COMP_PROPERTY_VALUE_2, businessResponseBean.getIdentifiant());
 
         // We check that the technical service has received the right status DONE
         COMPONENT.receiveStatusAsExternalProvider(technicalServiceMock);
@@ -513,7 +513,7 @@ public class MappingServiceTest extends AbstractComponentTest {
                 final Object technicalRequestObj = UNMARSHALLER.unmarshal(technicalRequest.getPayload());
                 assertTrue(technicalRequestObj instanceof org.ow2.petals.se.mapping.unit_test.ged.Consulter);
                 final org.ow2.petals.se.mapping.unit_test.ged.Consulter technicalRequestBean = (org.ow2.petals.se.mapping.unit_test.ged.Consulter) technicalRequestObj;
-                assertEquals(factureId, technicalRequestBean.getReference());
+                assertEquals(factureId + COMP_PROPERTY_VALUE_1, technicalRequestBean.getReference());
 
                 // We return an error
                 return new StatusToConsumerMessage(technicalRequest, new Exception("My technical error"));
@@ -593,7 +593,7 @@ public class MappingServiceTest extends AbstractComponentTest {
                 final Object technicalRequestObj = UNMARSHALLER.unmarshal(technicalRequest.getPayload());
                 assertTrue(technicalRequestObj instanceof org.ow2.petals.se.mapping.unit_test.ged.Consulter);
                 final org.ow2.petals.se.mapping.unit_test.ged.Consulter technicalRequestBean = (org.ow2.petals.se.mapping.unit_test.ged.Consulter) technicalRequestObj;
-                assertEquals(factureId, technicalRequestBean.getReference());
+                assertEquals(factureId + COMP_PROPERTY_VALUE_1, technicalRequestBean.getReference());
 
                 Thread.sleep(FACTURE_TIMEOUT + 2000);
 

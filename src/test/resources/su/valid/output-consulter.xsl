@@ -16,14 +16,17 @@
  along with this program/library; If not, see http://www.gnu.org/licenses/
  for the GNU Lesser General Public License version 2.1.
 -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ged="http://petals.ow2.org/se/mapping/unit-test/ged">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+   xmlns:mapping-xsl-properties="http://petals.ow2.org/se/mapping/xsl/param/1.0" xmlns:ged="http://petals.ow2.org/se/mapping/unit-test/ged">
 
-   <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="no"/>
+   <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="no" />
+   
+   <xsl:param name="mapping-xsl-properties:my-property-2" />
 
    <xsl:template match="/">
       <xsl:apply-templates />
    </xsl:template>
-   
+
    <xsl:template match="ged:consulterResponse">
       <xsl:element name="consulterResponse" namespace="http://petals.ow2.org/se/mapping/unit-test/facture">
          <xsl:element name="document" namespace="http://petals.ow2.org/se/mapping/unit-test/facture">
@@ -31,11 +34,11 @@
          </xsl:element>
       </xsl:element>
    </xsl:template>
-   
+
    <xsl:template match="ged:documentInconnu">
       <xsl:element name="factureInconnue" namespace="http://petals.ow2.org/se/mapping/unit-test/facture">
          <xsl:element name="identifiant" namespace="http://petals.ow2.org/se/mapping/unit-test/facture">
-            <xsl:value-of select="ged:reference" />
+            <xsl:value-of select="concat(ged:reference, $mapping-xsl-properties:my-property-2)" />
          </xsl:element>
       </xsl:element>
    </xsl:template>

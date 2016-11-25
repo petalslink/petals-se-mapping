@@ -20,6 +20,7 @@ package org.ow2.petals.se.mapping.incoming.operation;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -142,10 +143,13 @@ public class MappingOperation {
      *            The exchange that contains the incoming request, and where the response will be put.
      * @param jbiMessageSender
      *            A JBI message sender
+     * @param componentProperties
+     *            Properties defined in the property file configured at component level
      * @return {@code true} if the given {@code exchange} must be terminated and sent back automatically by the CDK.
      *         {@code false} if the given {@code exchange} will be terminated manually
      */
-    public boolean sendRequest(final Exchange exchange, final AbstractListener jbiMessageSender) {
+    public boolean sendRequest(final Exchange exchange, final AbstractListener jbiMessageSender,
+            final Properties componentProperties) {
 
         try {
             // Get the input message content
@@ -156,7 +160,7 @@ public class MappingOperation {
             final Result transformedInputResult = new StreamResult(baos);
 
             // TODO: Must be optimlized to avoid conversion Source <-> Document
-            this.inputMessageMapping.transform(new DOMSource(inputSource), transformedInputResult);
+            this.inputMessageMapping.transform(new DOMSource(inputSource), transformedInputResult, componentProperties);
 
             // Invoke the service - Create a new exchange
             final Exchange subExchange = jbiMessageSender.createConsumeExchange(this.serviceProvider,
@@ -212,8 +216,11 @@ public class MappingOperation {
      *            The exchange used to invoke the service provider
      * @param context
      *            Asynchronous context of the technical service invocation
+     * @param componentProperties
+     *            Properties defined in the property file configured at component level
      */
-    public void processResponse(final Exchange technicalExchange, final MappingOperationAsyncContext context) {
+    public void processResponse(final Exchange technicalExchange, final MappingOperationAsyncContext context,
+            final Properties componentProperties) {
 
         final Exchange businessExchange = context.getInitialExchange();
 
@@ -247,7 +254,7 @@ public class MappingOperation {
                 final Result transformedOutputResult = new StreamResult(baos);
 
                 this.outputMessageMapping.transform(new DOMSource(technicalOutputDocument), transformedOutputResult,
-                        context.getInputRequest());
+                        context.getInputRequest(), componentProperties);
 
                 final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
                 try {
