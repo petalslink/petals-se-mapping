@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	JBI descriptor for the Petals' "petals-se-pojo" component (POJO).
+	Originally created for the version 2.2 of the component.
+ -->
+<jbi:jbi version="1.0" xmlns:facture="http://facture.mapping.samples.petals.ow2.org/" xmlns:jbi="http://java.sun.com/xml/ns/jbi"
+   xmlns:petalsCDK="http://petals.ow2.org/components/extensions/version-5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:ged="http://service.server.ged.mapping.samples.petals.ow2.org/">
+	
+   <!-- Import a Service into Petals or Expose a Petals Service => use a BC. -->
+   <jbi:services binding-component="false">
+	
+	  <!-- Import a Service into Petals => provides a Service. -->
+      <jbi:provides interface-name="facture:FactureService" service-name="facture:FactureService"
+         endpoint-name="autogenerate">
+	
+		 <!-- CDK specific elements -->
+         <petalsCDK:wsdl>factureService.wsdl</petalsCDK:wsdl>
+
+      </jbi:provides>
+      
+      <!-- The service invoked -->
+      <jbi:consumes interface-name="ged:GedService" service-name="ged:GedService">
+         <petalsCDK:timeout>15000</petalsCDK:timeout>
+         <petalsCDK:mep>InOut</petalsCDK:mep>
+      </jbi:consumes>
+   </jbi:services>
+</jbi:jbi>

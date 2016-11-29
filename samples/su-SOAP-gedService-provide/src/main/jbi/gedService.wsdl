@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2016 Linagora
+ 
+ This program/library is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 2.1 of the License, or (at your
+ option) any later version.
+ 
+ This program/library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program/library; If not, see http://www.gnu.org/licenses/
+ for the GNU Lesser General Public License version 2.1.
+-->
+<definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+   xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://service.server.ged.mapping.samples.petals.ow2.org/"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://service.server.ged.mapping.samples.petals.ow2.org/"
+   name="GedService">
+   <wsp:Policy wsu:Id="GedServicePortBinding_MTOM_Policy">
+      <ns1:OptimizedMimeSerialization xmlns:ns1="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization"
+         wsp:Optional="true"></ns1:OptimizedMimeSerialization>
+   </wsp:Policy>
+   <types>
+      <xsd:schema>
+         <xsd:import namespace="http://service.server.ged.mapping.samples.petals.ow2.org/" schemaLocation="http://localhost:9000/gedService?xsd=1"></xsd:import>
+      </xsd:schema>
+   </types>
+   <message name="stocker">
+      <part name="parameters" element="tns:stocker"></part>
+   </message>
+   <message name="stockerResponse">
+      <part name="parameters" element="tns:stockerResponse"></part>
+   </message>
+   <message name="consulter">
+      <part name="parameters" element="tns:consulter"></part>
+   </message>
+   <message name="consulterResponse">
+      <part name="parameters" element="tns:consulterResponse"></part>
+   </message>
+   <portType name="GedService">
+      <operation name="stocker">
+         <input wsam:Action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/stockerRequest"
+            message="tns:stocker"></input>
+         <output wsam:Action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/stockerResponse"
+            message="tns:stockerResponse"></output>
+      </operation>
+      <operation name="consulter">
+         <input wsam:Action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/consulterRequest"
+            message="tns:consulter"></input>
+         <output wsam:Action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/consulterResponse"
+            message="tns:consulterResponse"></output>
+      </operation>
+   </portType>
+   <binding name="GedServicePortBinding" type="tns:GedService">
+      <wsp:PolicyReference URI="#GedServicePortBinding_MTOM_Policy"></wsp:PolicyReference>
+      <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"></soap:binding>
+      <operation name="stocker">
+         <soap:operation soapAction=""></soap:operation>
+         <input>
+            <soap:body use="literal"></soap:body>
+         </input>
+         <output>
+            <soap:body use="literal"></soap:body>
+         </output>
+      </operation>
+      <operation name="consulter">
+         <soap:operation soapAction=""></soap:operation>
+         <input>
+            <soap:body use="literal"></soap:body>
+         </input>
+         <output>
+            <soap:body use="literal"></soap:body>
+         </output>
+      </operation>
+   </binding>
+   <service name="GedService">
+      <port name="autogenerate" binding="tns:GedServicePortBinding">
+         <soap:address location="http://localhost:9000/gedService"></soap:address>
+      </port>
+   </service>
+</definitions>

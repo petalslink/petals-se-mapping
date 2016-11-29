@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2016 Linagora
+ 
+ This program/library is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 2.1 of the License, or (at your
+ option) any later version.
+ 
+ This program/library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program/library; If not, see http://www.gnu.org/licenses/
+ for the GNU Lesser General Public License version 2.1.
+-->
+<xs:schema xmlns:tns="http://service.server.ged.mapping.samples.petals.ow2.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   version="1.0" targetNamespace="http://service.server.ged.mapping.samples.petals.ow2.org/">
+
+   <xs:element name="consulter" type="tns:consulter"></xs:element>
+
+   <xs:element name="consulterResponse" type="tns:consulterResponse"></xs:element>
+
+   <xs:element name="stocker" type="tns:stocker"></xs:element>
+
+   <xs:element name="stockerResponse" type="tns:stockerResponse"></xs:element>
+
+   <xs:complexType name="stocker">
+      <xs:sequence>
+         <xs:element name="reference" type="xs:string" minOccurs="0"></xs:element>
+         <xs:element name="type" type="xs:string" minOccurs="0"></xs:element>
+         <xs:element name="file" type="xs:base64Binary" minOccurs="0"></xs:element>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="stockerResponse">
+      <xs:sequence></xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="consulter">
+      <xs:sequence>
+         <xs:element name="reference" type="xs:string" minOccurs="0"></xs:element>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="consulterResponse">
+      <xs:sequence>
+         <xs:element name="file" type="xs:base64Binary" minOccurs="0"></xs:element>
+      </xs:sequence>
+   </xs:complexType>
+</xs:schema>

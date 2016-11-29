@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2016 Linagora
+
+ This program/library is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 2.1 of the License, or (at your
+ option) any later version.
+
+ This program/library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ for more details.
+
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program/library; If not, see http://www.gnu.org/licenses/
+ for the GNU Lesser General Public License version 2.1.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <parent>
+      <artifactId>petals-mapping-parent</artifactId>
+      <groupId>org.ow2.petals.samples.mapping</groupId>
+      <version>1.0.0-1.0.0-SNAPSHOT</version>
+      <relativePath>../pom.xml</relativePath>
+   </parent>
+
+   <name>Petals ESB - Components - SE Mapping - Samples - Sample web-services</name>
+   <artifactId>ged-server</artifactId>
+   <groupId>org.ow2.petals.samples.mapping</groupId>
+   <!-- No version set -->
+   <packaging>jar</packaging>
+   <description>ged-server</description>
+
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>analyze</id>
+                  <configuration>
+                     <usedDependencies>
+                        <!-- We don't provide unit test in this project -->
+                        <usedDependency>junit:junit</usedDependency>
+                     </usedDependencies>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <!-- To launch the JAX-WS server: "mvn clean verify exec:java" -->
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <configuration>
+               <mainClass>org.ow2.petals.samples.mapping.ged.server.Server</mainClass>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+
+   <!-- TODO: Following SCM information are unneeded, they should be inherited from parent -->
+   <scm>
+      <connection>scm:git:https://github.com/petalslink/petals-se-mapping.git</connection>
+      <developerConnection>scm:git:https://github.com/petalslink/petals-se-mapping.git</developerConnection>
+   </scm>
+</project>
