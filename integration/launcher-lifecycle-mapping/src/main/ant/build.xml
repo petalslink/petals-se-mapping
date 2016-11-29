@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2016 Linagora
+ 
+ This program/library is free software: you can redistribute it and/or modify
+ it under the terms of the New BSD License (3-clause license).
+
+ This program/library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the New BSD License (3-clause license)
+ for more details.
+
+ You should have received a copy of the New BSD License (3-clause license)
+ along with this program/library; If not, see http://directory.fsf.org/wiki/License:BSD_3Clause/
+ for the New BSD License (3-clause license).
+-->
+<project name="PEtALS integration - Integration tests about lifecycle of the Petals SE Mapping"
+         default="all"
+         basedir=".">
+
+   <import>
+      <javaresource name="org/ow2/petals/integration/ant/petals-esb.xml" classpath="${maven.plugin.classpath}" />
+   </import>
+   <import>
+      <javaresource name="org/ow2/petals/integration/ant/petals-registry.xml" classpath="${maven.plugin.classpath}" />
+   </import>
+   <import>
+      <javaresource name="org/ow2/petals/integration/ant/petals-esb-component.xml" classpath="${maven.plugin.classpath}" />
+   </import>
+
+   <basename property="petalsCliDirName" file="${org.ow2.petals:petals-cli-distrib-zip:zip}" suffix=".zip" />
+
+   <property name="petals.cli.home"
+             value="${project.build.directory}/${project.artifactId}/petals-cli/${petalsCliDirName}" />
+
+   <property name="topology.container.name" value="sample-0" />
+   <property name="topology.container.home" value="${project.build.directory}/${project.artifactId}/container/" />
+   <property name="topology.container.jmx.port" value="7700" />
+
+   <property name="the-component.id" value="petals-se-mapping" />
+   <property name="the-component.url" value="${org.ow2.petals:petals-se-mapping:jbi-component}" />
+
+   <property name="the-sa.id" value="sa-mapping-it" />
+   <property name="the-sa.url"
+             value="${org.ow2.petals.integration.tests.se.mapping:sa-mapping-it:jbi-service-assembly}" />
+   <property name="the-su.id" value="su-Mapping-factureService-provide" />
+
+   <target name="clean" depends="killAllRegistryMembers, killAllContainers" />
+
+   <target name="prepare" />
+
+   <target name="launchContainer">
+      <!-- No configuration required, we use the default configuration -->
+
+      <startContainer name="${topology.container.name}"
+                      home="${topology.container.home}"
+                      jmx.port="${topology.container.jmx.port}" />
+   </target>
+
+   <target name="start-infra" depends="prepare, launchContainer">
+      <echo message="0) The Petals ESB environment:" />
+      <echo message="   - A default container with its own registry embedded," />
+      <echo message="   - A standalone topology" />
+      <echo message="   - A database" />
+   </target>
+
+   <target name="all2">
+      <antcall target="clean" />
+
+      <trycatch>
+         <try>
+            <parallel failonany="yes">
+               <sequential>
+                  <antcall target="run" />
+               </sequential>
+            </parallel>
+         </try>
+         <finally>
+            <!-- We stop all to avoid stack trace logged by SE Activiti when tests fail. The async job
+                 executor of SE Activiti try run SQL query on a database that is not running -->
+            <antcall target="clean" />
+         </finally>
+      </trycatch>
+
+      <echo message="All task finished!" />
+   </target>
+
+   <target name="all">
+      <trycatch>
+         <try>
+            <antcall target="all2" />
+         </try>
+         <finally>
+            <antcall target="killAllContainers" />
+            <antcall target="killAllRegistryMembers" />
+         </finally>
+      </trycatch>
+   </target>
+
+   <target name="run">
+      <echo message="Launching integration tests about life cycle of Petals SE Mapping" />
+
+      <antcall target="run-tests" />
+
+      <echo message="Integration test completed" />
+   </target>
+
+   <!-- 
+     See details on 'component-lifecycle-vs-sa-lifecycle' to get more information on the test suite
+    -->
+   <target name="run-tests" depends="start-infra">
+
+      <component-lifecycle-vs-sa-lifecycle component.name="Petals SE Mapping"
+                                           component.url="${the-component.url}"
+                                           component.id="${the-component.id}"
+                                           is-service-engine="true"
+                                           sa.url="${the-sa.url}"
+                                           sa.id="${the-sa.id}"
+                                           su.id="${the-su.id}"
+                                           su.services="{http://facture.mapping.samples.petals.ow2.org/}FactureService"
+                                           container.jmx.port="${topology.container.jmx.port}"
+                                           container.name="${topology.container.name}"
+                                           container.home="${topology.container.home}" />
+   </target>
+
+</project>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2016 Linagora
+
+ This program/library is free software: you can redistribute it and/or modify
+ it under the terms of the New BSD License (3-clause license).
+
+ This program/library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the New BSD License (3-clause license)
+ for more details.
+
+ You should have received a copy of the New BSD License (3-clause license)
+ along with this program/library; If not, see http://directory.fsf.org/wiki/License:BSD_3Clause/
+ for the New BSD License (3-clause license).
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <parent>
+      <artifactId>parent</artifactId>
+      <groupId>org.ow2.petals.integration.tests.se.mapping</groupId>
+      <version>5.0.1-SNAPSHOT</version>
+      <relativePath>../parent/pom.xml</relativePath>
+   </parent>
+
+   <groupId>org.ow2.petals.integration.tests.se.mapping</groupId>
+   <artifactId>sa-mapping-it</artifactId>
+   <name>Petals Integration Tests - Tests - Components - Petals SE Mapping - SA</name>
+   <packaging>jbi-service-assembly</packaging>
+   <!-- No version set -->
+
+   <properties>
+      <!-- Skip dependency check for service assembly because it has Java no source code. -->
+      <maven-dependency-plugin.failOnWarning>false</maven-dependency-plugin.failOnWarning>
+   </properties>
+
+   <dependencies>
+      <dependency>
+         <groupId>org.ow2.petals.samples.mapping</groupId>
+         <artifactId>su-Mapping-factureService-provide</artifactId>
+         <version>1.0.0-1.0.0-SNAPSHOT</version>
+         <type>jbi-service-unit</type>
+      </dependency>
+   </dependencies>
+
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.ow2.petals</groupId>
+            <artifactId>petals-maven-plugin</artifactId>
+            <configuration>
+               <serviceAssemblyNameMapping>${project.artifactId}</serviceAssemblyNameMapping>
+            <!-- TODO: Use a better expression for 'serviceUnitNameMappingInSA' when MNG-3558 will be fixed -->
+            <serviceUnitNameMappingInSA>su-Mapping-factureService-provide</serviceUnitNameMappingInSA>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+
+   <!-- TODO: Following SCM information are unneeded, they should be inherited from parent -->
+   <scm>
+      <connection>scm:git:https://github.com/petalslink/petals-se-mapping.git</connection>
+      <developerConnection>scm:git:https://github.com/petalslink/petals-se-mapping.git</developerConnection>
+   </scm>
+</project>

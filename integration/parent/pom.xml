@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2016 Linagora
+
+ This program/library is free software: you can redistribute it and/or modify
+ it under the terms of the New BSD License (3-clause license).
+
+ This program/library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the New BSD License (3-clause license)
+ for more details.
+
+ You should have received a copy of the New BSD License (3-clause license)
+ along with this program/library; If not, see http://directory.fsf.org/wiki/License:BSD_3Clause/
+ for the New BSD License (3-clause license).
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <parent>
+      <artifactId>parent</artifactId>
+      <groupId>org.ow2.petals.integration.tests</groupId>
+      <version>5.0.1-SNAPSHOT</version>
+      <relativePath />
+   </parent>
+
+   <name>Petals Integration Tests - Tests - Components - Petals SE Mapping - Parent</name>
+   <artifactId>parent</artifactId>
+   <groupId>org.ow2.petals.integration.tests.se.mapping</groupId>
+   <packaging>pom</packaging>
+
+   <properties>
+      <petals-se-mapping.version>1.0.0-SNAPSHOT</petals-se-mapping.version>
+   </properties>
+
+   <dependencyManagement>
+      <dependencies>
+         <dependency>
+            <!-- We override here the component version defined in the integration test parent POM
+                 file to defined the version of the component to test. -->
+            <artifactId>petals-se-mapping</artifactId>
+            <groupId>org.ow2.petals</groupId>
+            <version>${petals-se-mapping.version}</version>
+            <type>jbi-component</type>
+         </dependency>
+      </dependencies>
+   </dependencyManagement>
+
+   <scm>
+      <connection>scm:git:https://github.com/petalslink/petals-se-mapping.git</connection>
+      <developerConnection>${project.scm.connection}</developerConnection>
+   </scm>
+</project>
