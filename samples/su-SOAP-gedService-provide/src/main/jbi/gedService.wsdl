@@ -26,8 +26,47 @@
          wsp:Optional="true"></ns1:OptimizedMimeSerialization>
    </wsp:Policy>
    <types>
-      <xsd:schema>
-         <xsd:import namespace="http://service.server.ged.mapping.samples.petals.ow2.org/" schemaLocation="http://localhost:9000/gedService?xsd=1"></xsd:import>
+      <xsd:schema targetNamespace="http://service.server.ged.mapping.samples.petals.ow2.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+         <xs:element name="consulter" type="tns:consulter"></xs:element>
+
+         <xs:element name="consulterResponse" type="tns:consulterResponse"></xs:element>
+
+         <xs:element name="documentInconnu" type="tns:DocumentInconnuException"></xs:element>
+
+         <xs:element name="stocker" type="tns:stocker"></xs:element>
+
+         <xs:element name="stockerResponse" type="tns:stockerResponse"></xs:element>
+
+         <xs:complexType name="stocker">
+            <xs:sequence>
+               <xs:element name="reference" type="xs:string" minOccurs="0"></xs:element>
+               <xs:element name="type" type="xs:string" minOccurs="0"></xs:element>
+               <xs:element name="file" type="xs:base64Binary" minOccurs="0"></xs:element>
+            </xs:sequence>
+         </xs:complexType>
+
+         <xs:complexType name="stockerResponse">
+            <xs:sequence></xs:sequence>
+         </xs:complexType>
+
+         <xs:complexType name="consulter">
+            <xs:sequence>
+               <xs:element name="reference" type="xs:string" minOccurs="0"></xs:element>
+            </xs:sequence>
+         </xs:complexType>
+
+         <xs:complexType name="consulterResponse">
+            <xs:sequence>
+               <xs:element name="file" type="xs:base64Binary" minOccurs="0"></xs:element>
+            </xs:sequence>
+         </xs:complexType>
+
+         <xs:complexType name="DocumentInconnuException">
+            <xs:sequence>
+               <xs:element name="message" type="xs:string" minOccurs="0"></xs:element>
+               <xs:element name="reference" type="xs:string" minOccurs="1"></xs:element>
+            </xs:sequence>
+         </xs:complexType>
       </xsd:schema>
    </types>
    <message name="stocker">
@@ -42,6 +81,9 @@
    <message name="consulterResponse">
       <part name="parameters" element="tns:consulterResponse"></part>
    </message>
+   <message name="DocumentInconnuException">
+      <part name="fault" element="tns:documentInconnu"></part>
+   </message>
    <portType name="GedService">
       <operation name="stocker">
          <input wsam:Action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/stockerRequest"
@@ -54,6 +96,8 @@
             message="tns:consulter"></input>
          <output wsam:Action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/consulterResponse"
             message="tns:consulterResponse"></output>
+         <fault message="tns:DocumentInconnuException" name="DocumentInconnuException"
+            wsam:Action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/consulter/Fault/DocumentInconnuException"></fault>
       </operation>
    </portType>
    <binding name="GedServicePortBinding" type="tns:GedService">
@@ -76,6 +120,9 @@
          <output>
             <soap:body use="literal"></soap:body>
          </output>
+         <fault name="DocumentInconnuException">
+            <soap:fault name="DocumentInconnuException" use="literal"></soap:fault>
+         </fault>
       </operation>
    </binding>
    <service name="GedService">

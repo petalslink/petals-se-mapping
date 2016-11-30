@@ -17,22 +17,18 @@
  for the GNU Lesser General Public License version 2.1.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-   xmlns:mapping-xsl-properties="http://petals.ow2.org/se/mapping/xsl/param/1.0" xmlns:facture="http://petals.ow2.org/se/mapping/unit-test/facture">
+   xmlns:mapping-xsl-properties="http://petals.ow2.org/se/mapping/xsl/param/1.0" xmlns:facture="http://facture.mapping.samples.petals.ow2.org/">
 
-   <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="no" />
+   <xsl:output method="xml" encoding="UTF-8" indent="yes" omit-xml-declaration="no" />
 
    <xsl:template match="/">
       <xsl:apply-templates />
    </xsl:template>
 
-   <xsl:template match="facture:stocker">
-      <xsl:element name="stocker" namespace="http://service.server.ged.mapping.samples.petals.ow2.org/">
+   <xsl:template match="facture:consulter">
+      <xsl:element name="consulter" namespace="http://service.server.ged.mapping.samples.petals.ow2.org/">
          <xsl:element name="reference" namespace="http://service.server.ged.mapping.samples.petals.ow2.org/">
-            <xsl:value-of select="facture:identifiant" />
-         </xsl:element>
-         <xsl:element name="type" namespace="http://service.server.ged.mapping.samples.petals.ow2.org/">FACTURE</xsl:element>
-         <xsl:element name="file" namespace="http://service.server.ged.mapping.samples.petals.ow2.org/">
-            <xsl:value-of select="facture:file" />
+            <xsl:value-of select="identifiant" />
          </xsl:element>
       </xsl:element>
    </xsl:template>

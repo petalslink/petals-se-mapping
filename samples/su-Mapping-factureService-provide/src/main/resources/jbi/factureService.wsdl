@@ -43,7 +43,6 @@
          <xs:complexType name="stocker">
             <xs:sequence>
                <xs:element name="identifiant" type="xs:string" minOccurs="1" maxOccurs="1" />
-               <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1" />
                <xs:element name="file" type="xs:base64Binary" minOccurs="1" maxOccurs="1" />
             </xs:sequence>
          </xs:complexType>
@@ -52,6 +51,14 @@
          <xs:complexType name="stockerResponse">
             <xs:sequence></xs:sequence>
          </xs:complexType>
+
+         <xsd:element name="factureInconnue">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="identifiant" minOccurs="1" maxOccurs="1" type="xsd:string" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
 
       </xsd:schema>
    </types>
@@ -67,6 +74,9 @@
    <message name="consulterResponse">
       <part name="parameters" element="tns:consulterResponse" />
    </message>
+   <message name="factureInconnue">
+      <part name="parameters" element="tns:factureInconnue" />
+   </message>
    <portType name="FactureService">
       <operation name="stocker">
          <input message="tns:stocker" />
@@ -75,6 +85,7 @@
       <operation name="consulter">
          <input message="tns:consulter" />
          <output message="tns:consulterResponse" />
+         <fault name="factureInconnue" message="tns:factureInconnue" />
       </operation>
    </portType>
    <binding name="FactureServicePortBinding" type="tns:FactureService">
@@ -84,7 +95,7 @@
          <mapping:service-provider-operation>ged:stocker</mapping:service-provider-operation>
          <mapping:input-transformation xsl="input-stocker.xsl" />
          <mapping:output-transformation xsl="output-stocker.xsl">
-            <mapping:should-return-fault as-xpath-expr="true">'false'</mapping:should-return-fault>
+            <mapping:should-return-fault as-xpath-expr="true">false()</mapping:should-return-fault>
          </mapping:output-transformation>
          <input>
             <soap:body use="literal" />
@@ -97,7 +108,9 @@
          <mapping:service-provider-operation>ged:consulter</mapping:service-provider-operation>
          <mapping:input-transformation xsl="input-consulter.xsl" />
          <mapping:output-transformation xsl="output-consulter.xsl">
-            <mapping:should-return-fault as-xpath-expr="true">'false'</mapping:should-return-fault>
+            <mapping:should-return-fault as-xpath-expr="true">
+               not(boolean(/*[local-name()='consulterResponse']))
+            </mapping:should-return-fault>
          </mapping:output-transformation>
          <soap:operation soapAction="" />
          <input>
@@ -106,6 +119,9 @@
          <output>
             <soap:body use="literal" />
          </output>
+         <fault name="factureInconnue">
+            <soap:fault name="factureInconnue" use="literal" />
+         </fault>
       </operation>
    </binding>
    <service name="FactureService">

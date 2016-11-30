@@ -43,6 +43,13 @@
          <artifactId>petals-se-mapping</artifactId>
          <type>jbi-component</type>
       </dependency>
+
+      <dependency>
+         <groupId>org.ow2.petals</groupId>
+         <artifactId>petals-se-mapping-junit</artifactId>
+         <version>1.0.0-SNAPSHOT</version>
+         <scope>test</scope>
+      </dependency>
    </dependencies>
 
    <build>
@@ -50,6 +57,37 @@
          <plugin>
             <groupId>org.ow2.petals</groupId>
             <artifactId>petals-maven-plugin</artifactId>
+            <configuration>
+               <jbiDirectory>src/main/resources/jbi</jbiDirectory>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.basepom.maven</groupId>
+            <artifactId>duplicate-finder-maven-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>enforce-no-duplicate-classes</id>
+                  <configuration>
+                     <exceptions>
+                        <exception>
+                           <conflictingDependencies>
+                              <dependency>
+                                 <groupId>org.ow2.petals</groupId>
+                                 <artifactId>petals-se-mapping</artifactId>
+                                 <type>jar</type>
+                                 <scope>test</scope>
+                              </dependency>
+                           </conflictingDependencies>
+                           <!-- Current project is the actual project being checked, not this parent pom -->
+                           <currentProject>true</currentProject>
+                           <resources>
+                              <resource>jbi/jbi.xml</resource>
+                           </resources>
+                        </exception>
+                     </exceptions>
+                  </configuration>
+               </execution>
+            </executions>
          </plugin>
       </plugins>
    </build>

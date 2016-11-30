@@ -26,6 +26,8 @@ import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 import javax.jws.soap.SOAPBinding.Use;
 
+import org.ow2.petals.samples.mapping.ged.server.service.data.DocumentInconnuException;
+
 @WebService
 @SOAPBinding(style = Style.DOCUMENT, use = Use.LITERAL)
 public interface GedService {
@@ -36,6 +38,6 @@ public interface GedService {
 
     @WebMethod
     @WebResult(name = "file")
-    public DataHandler consulter(@WebParam(name = "reference") final String reference);
+    public DataHandler consulter(@WebParam(name = "reference") final String reference) throws DocumentInconnuException;
 
 }

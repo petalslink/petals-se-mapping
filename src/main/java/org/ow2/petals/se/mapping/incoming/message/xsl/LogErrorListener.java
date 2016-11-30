@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2012 EBM WebSourcing, 2012-2016 Linagora
+ * Copyright (c) 2016 Linagora
  * 
  * This program/library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,7 +27,7 @@ import javax.xml.transform.TransformerException;
 /**
  * An error listener used to resolve line numbers and log details about errors.
  * 
- * @author Vincent Zurczak - EBM WebSourcing
+ * @author Christophe DENEUX - Linagora
  */
 public class LogErrorListener implements ErrorListener {
 

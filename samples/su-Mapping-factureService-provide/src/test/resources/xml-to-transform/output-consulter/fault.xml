@@ -16,17 +16,6 @@
  along with this program/library; If not, see http://www.gnu.org/licenses/
  for the GNU Lesser General Public License version 2.1.
 -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-   xmlns:mapping-xsl-properties="http://petals.ow2.org/se/mapping/xsl/param/1.0" xmlns:ged="http://service.server.ged.mapping.samples.petals.ow2.org/">
-
-   <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="no" />
-
-   <xsl:template match="/">
-      <xsl:apply-templates />
-   </xsl:template>
-
-   <xsl:template match="ged:stockerResponse">
-      <xsl:element name="stockerResponse" namespace="http://facture.mapping.samples.petals.ow2.org/" />
-   </xsl:template>
-
-</xsl:stylesheet>
+<ged:documentInconnu xmlns:ged="http://service.server.ged.mapping.samples.petals.ow2.org/">
+   <reference>AZE123</reference>
+</ged:documentInconnu>

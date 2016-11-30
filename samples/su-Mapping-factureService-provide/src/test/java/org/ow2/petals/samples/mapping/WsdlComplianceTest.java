@@ -15,41 +15,28 @@
  * along with this program/library; If not, see http://www.gnu.org/licenses/
  * for the GNU Lesser General Public License version 2.1.
  */
-package org.ow2.petals.samples.mapping.ged.server.service.data;
+package org.ow2.petals.samples.mapping;
 
-import java.util.List;
+import static org.ow2.petals.se.mapping.junit.Assert.assertWsdlCompliance;
 
-import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
 
-public class Document {
+import org.junit.Test;
 
-    private DataHandler file;
+/**
+ * Unit test of the compliance of the service WSDL
+ * 
+ * @author Christophe DENEUX - Linagora
+ *
+ */
+public class WsdlComplianceTest {
 
-    private List<String> properties;
+    private static final String TARGET_NAMESPACE = "http://facture.mapping.samples.petals.ow2.org/";
 
-    public Document() {
-        this.file = null;
-        this.properties = null;
+    @Test
+    public void validate() throws Exception {
+        assertWsdlCompliance(
+                new QName[] { new QName(TARGET_NAMESPACE, "stocker"), new QName(TARGET_NAMESPACE, "consulter") });
     }
 
-    public Document(final DataHandler file, final List<String> properties) {
-        this.file = file;
-        this.properties = properties;
-    }
-
-    public DataHandler getFile() {
-        return this.file;
-    }
-
-    public void setFile(final DataHandler file) {
-        this.file = file;
-    }
-
-    public List<String> getProperties() {
-        return this.properties;
-    }
-
-    public void setPrice(final List<String> properties) {
-        this.properties = properties;
-    }
 }

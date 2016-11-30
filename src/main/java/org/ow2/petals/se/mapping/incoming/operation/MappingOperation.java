@@ -242,9 +242,11 @@ public class MappingOperation {
                 final NormalizedMessage technicalOutput;
                 final Document technicalOutputDocument;
                 if (technicalExchange.getFault() != null) {
+                    this.logger.fine("Output extracted from fault");
                     technicalOutput = technicalExchange.getFault();
                     technicalOutputDocument = SourceHelper.toDocument(technicalOutput.getContent());
                 } else {
+                    this.logger.fine("Output extracted from OUT message");
                     technicalOutput = technicalExchange.getOutMessage();
                     technicalOutputDocument = technicalExchange.getOutMessageContentAsDocument(false);
                 }
@@ -261,10 +263,12 @@ public class MappingOperation {
                     // Set as XML payload of the normal OUT message or fault
                     // TODO: Must be optimized to avoid copy of byte array
                     if (this.outputMessageMapping.shouldReturnFault(technicalOutputDocument)) {
+                        this.logger.fine("Output returned as fault");
                         final Fault businessFault = businessExchange.createFault();
                         businessFault.setContent(new StreamSource(bais));
                         businessExchange.setFault(businessFault);
                     } else {
+                        this.logger.fine("Output returned as OUT message");
                         businessExchange.setOutMessageContent(new StreamSource(bais));
                         // Copy attachments
                         NormalizedMessageUtil.copyAttachments(technicalOutput, businessExchange.getOutMessage());

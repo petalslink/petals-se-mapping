@@ -21,6 +21,8 @@ import javax.activation.DataHandler;
 import javax.jws.WebService;
 import javax.xml.ws.soap.MTOM;
 
+import org.ow2.petals.samples.mapping.ged.server.service.data.DocumentInconnuException;
+
 @MTOM(enabled = true, threshold = 2048)
 @WebService(endpointInterface = "org.ow2.petals.samples.mapping.ged.server.service.GedService", serviceName = "GedService", portName = "GedServicePort")
 public class GedServiceImpl implements GedService {
@@ -32,8 +34,13 @@ public class GedServiceImpl implements GedService {
     }
 
     @Override
-    public DataHandler consulter(final String reference) {
-        System.out.println(String.format("Getting document '%s'", reference));
-        return null;
+    public DataHandler consulter(final String reference) throws DocumentInconnuException {
+        if ("INCONNU".equals(reference)) {
+            System.out.println(String.format("Unknown document '%s'", reference));
+            throw new DocumentInconnuException(reference);
+        } else {
+            System.out.println(String.format("Getting document '%s'", reference));
+            return null;
+        }
     }
 }
