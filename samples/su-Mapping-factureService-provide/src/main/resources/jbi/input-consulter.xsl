@@ -27,7 +27,7 @@
 
    <xsl:template match="facture:consulter">
       <xsl:element name="consulter" namespace="http://service.server.ged.mapping.samples.petals.ow2.org/">
-         <xsl:element name="reference" namespace="http://service.server.ged.mapping.samples.petals.ow2.org/">
+         <xsl:element name="reference" namespace="">
             <xsl:value-of select="identifiant" />
          </xsl:element>
       </xsl:element>

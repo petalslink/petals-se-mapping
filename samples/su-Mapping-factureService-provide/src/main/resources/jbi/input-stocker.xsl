@@ -28,16 +28,16 @@
 
    <xsl:template match="facture:stocker">
       <xsl:element name="stocker" namespace="http://service.server.ged.mapping.samples.petals.ow2.org/">
-         <xsl:element name="reference" namespace="http://service.server.ged.mapping.samples.petals.ow2.org/">
+         <xsl:element name="reference" namespace="">
             <xsl:value-of select="identifiant" />
          </xsl:element>
-         <xsl:element name="type" namespace="http://service.server.ged.mapping.samples.petals.ow2.org/">FACTURE</xsl:element>
+         <xsl:element name="type" namespace="">FACTURE</xsl:element>
          <xsl:apply-templates select="file" />
       </xsl:element>
    </xsl:template>
 
    <xsl:template match="file">
-      <xsl:element name="file" namespace="http://service.server.ged.mapping.samples.petals.ow2.org/">
+      <xsl:element name="file" namespace="">
          <xsl:apply-templates select="xop:Include" />
       </xsl:element>
    </xsl:template>

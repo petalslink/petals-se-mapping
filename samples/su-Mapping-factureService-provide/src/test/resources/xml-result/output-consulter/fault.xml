@@ -17,5 +17,5 @@
  for the GNU Lesser General Public License version 2.1.
 -->
 <factureInconnue xmlns="http://facture.mapping.samples.petals.ow2.org/">
-   <identifiant>AZE123</identifiant>
+   <identifiant xmlns="">AZE123</identifiant>
 </factureInconnue>

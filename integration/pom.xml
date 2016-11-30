@@ -28,6 +28,7 @@
     <module>parent</module>
     <module>launcher-lifecycle-mapping</module>
     <module>sa-mapping-it</module>
+    <module>launcher-standalone-mapping</module>
   </modules>
 
   <scm>

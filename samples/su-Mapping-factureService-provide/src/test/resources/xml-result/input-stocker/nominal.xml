@@ -17,9 +17,9 @@
  for the GNU Lesser General Public License version 2.1.
 -->
 <stocker xmlns="http://service.server.ged.mapping.samples.petals.ow2.org/">
-   <reference>AZE123</reference>
-   <type>FACTURE</type>
-   <file>
+   <reference xmlns="">AZE123</reference>
+   <type xmlns="">FACTURE</type>
+   <file xmlns="">
       <Include href="cid:1058824007020" xmlns="http://www.w3.org/2004/08/xop/include" />
    </file>
 </stocker>

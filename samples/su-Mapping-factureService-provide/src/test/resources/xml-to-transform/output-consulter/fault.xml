@@ -16,6 +16,13 @@
  along with this program/library; If not, see http://www.gnu.org/licenses/
  for the GNU Lesser General Public License version 2.1.
 -->
-<ged:documentInconnu xmlns:ged="http://service.server.ged.mapping.samples.petals.ow2.org/">
-   <reference>AZE123</reference>
-</ged:documentInconnu>
+<soapenv:Fault xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ged="http://service.server.ged.mapping.samples.petals.ow2.org/">
+   <faultcode>server</faultcode>
+   <faultstring>Document inconnu</faultstring>
+   <faultactor>GED</faultactor>
+   <detail>
+      <ged:documentInconnu>
+         <reference>AZE123</reference>
+      </ged:documentInconnu>
+   </detail>
+</soapenv:Fault>

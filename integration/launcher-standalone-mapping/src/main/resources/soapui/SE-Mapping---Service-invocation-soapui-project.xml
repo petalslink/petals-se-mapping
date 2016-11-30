@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2016 Linagora
+ 
+ This program/library is free software: you can redistribute it and/or modify
+ it under the terms of the New BSD License (3-clause license).
+
+ This program/library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the New BSD License (3-clause license)
+ for more details.
+
+ You should have received a copy of the New BSD License (3-clause license)
+ along with this program/library; If not, see http://directory.fsf.org/wiki/License:BSD_3Clause/
+ for the New BSD License (3-clause license).
+-->
+<con:soapui-project id="24b57cf6-2fba-4f6a-9df4-8c14f33b95ff" activeEnvironment="Default" name="Petals Trunk - IT - SE Mapping - Service invocation" resourceRoot="" soapui-version="5.2.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="b8d24e52-eba3-4ccb-91dd-4caa0823203f" wsaVersion="NONE" name="GedServicePortBinding" type="wsdl" bindingName="{http://service.server.ged.mapping.samples.petals.ow2.org/}GedServicePortBinding" soapVersion="1_1" anonymous="optional" definition="file:/home/cdeneux/workspace/petals-trunk/components-sls/components/petals-se-mapping/samples/su-SOAP-gedService-provide/src/main/jbi/gedService.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/home/cdeneux/workspace/petals-trunk/components-sls/components/petals-se-mapping/samples/su-SOAP-gedService-provide/src/main/jbi/gedService.wsdl"><con:part><con:url>file:/home/cdeneux/workspace/petals-trunk/components-sls/components/petals-se-mapping/samples/su-SOAP-gedService-provide/src/main/jbi/gedService.wsdl</con:url><con:content><![CDATA[<!--Copyright (c) 2016 Linagora
+ 
+ This program/library is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 2.1 of the License, or (at your
+ option) any later version.
+ 
+ This program/library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program/library; If not, see http://www.gnu.org/licenses/
+ for the GNU Lesser General Public License version 2.1.-->
+<definitions targetNamespace="http://service.server.ged.mapping.samples.petals.ow2.org/" name="GedService" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://service.server.ged.mapping.samples.petals.ow2.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="GedServicePortBinding_MTOM_Policy">
+    <ns1:OptimizedMimeSerialization wsp:Optional="true" xmlns:ns1="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization"/>
+  </wsp:Policy>
+  <types>
+    <xsd:schema targetNamespace="http://service.server.ged.mapping.samples.petals.ow2.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="consulter" type="tns:consulter"/>
+      <xs:element name="consulterResponse" type="tns:consulterResponse"/>
+      <xs:element name="documentInconnu" type="tns:DocumentInconnuException"/>
+      <xs:element name="stocker" type="tns:stocker"/>
+      <xs:element name="stockerResponse" type="tns:stockerResponse"/>
+      <xs:complexType name="stocker">
+        <xs:sequence>
+          <xs:element name="reference" type="xs:string" minOccurs="0"/>
+          <xs:element name="type" type="xs:string" minOccurs="0"/>
+          <xs:element name="file" type="xs:base64Binary" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="stockerResponse">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="consulter">
+        <xs:sequence>
+          <xs:element name="reference" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="consulterResponse">
+        <xs:sequence>
+          <xs:element name="file" type="xs:base64Binary" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DocumentInconnuException">
+        <xs:sequence>
+          <xs:element name="message" type="xs:string" minOccurs="0"/>
+          <xs:element name="reference" type="xs:string" minOccurs="1"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xsd:schema>
+  </types>
+  <message name="stocker">
+    <part name="parameters" element="tns:stocker"/>
+  </message>
+  <message name="stockerResponse">
+    <part name="parameters" element="tns:stockerResponse"/>
+  </message>
+  <message name="consulter">
+    <part name="parameters" element="tns:consulter"/>
+  </message>
+  <message name="consulterResponse">
+    <part name="parameters" element="tns:consulterResponse"/>
+  </message>
+  <message name="DocumentInconnuException">
+    <part name="fault" element="tns:documentInconnu"/>
+  </message>
+  <portType name="GedService">
+    <operation name="stocker">
+      <input wsam:Action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/stockerRequest" message="tns:stocker"/>
+      <output wsam:Action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/stockerResponse" message="tns:stockerResponse"/>
+    </operation>
+    <operation name="consulter">
+      <input wsam:Action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/consulterRequest" message="tns:consulter"/>
+      <output wsam:Action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/consulterResponse" message="tns:consulterResponse"/>
+      <fault message="tns:DocumentInconnuException" name="DocumentInconnuException" wsam:Action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/consulter/Fault/DocumentInconnuException"/>
+    </operation>
+  </portType>
+  <binding name="GedServicePortBinding" type="tns:GedService">
+    <wsp:PolicyReference URI="#GedServicePortBinding_MTOM_Policy"/>
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <operation name="stocker">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="consulter">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="DocumentInconnuException">
+        <soap:fault name="DocumentInconnuException" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  <service name="GedService">
+    <port name="autogenerate" binding="tns:GedServicePortBinding">
+      <soap:address location="http://localhost:9000/gedService"/>
+    </port>
+  </service>
+</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://cdeneux-laptop:9000/gedService</con:endpoint><con:endpoint>http://localhost:9000/gedService</con:endpoint></con:endpoints><con:operation id="e49bd3a8-d9f2-42f7-8d6b-a1bfd5672348" isOneWay="false" action="" name="consulter" bindingOperationName="consulter" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/></con:operation><con:operation id="7801411e-6383-42a8-a749-475298da194e" isOneWay="false" action="" name="stocker" bindingOperationName="stocker" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" id="43da6872-6889-4e9c-8d8e-1d2cb488e3d2" wsaVersion="NONE" name="FactureServicePortBinding" type="wsdl" bindingName="{http://facture.mapping.samples.petals.ow2.org/}FactureServicePortBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8084/petals/services/factureService?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8084/petals/services/factureService?wsdl"><con:part><con:url>http://localhost:8084/petals/services/factureService?wsdl</con:url><con:content><![CDATA[<w:definitions name="FactureService" targetNamespace="http://facture.mapping.samples.petals.ow2.org/" xmlns:w="http://schemas.xmlsoap.org/wsdl/" xmlns:ged="http://service.server.ged.mapping.samples.petals.ow2.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mapping="http://petals.ow2.org/se/mapping/annotations/1.0" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ns10="ns10" xmlns:ns11="ged" xmlns:ns12="ns26" xmlns:ns13="ged" xmlns:ns14="xml" xmlns:ns15="tns" xmlns:ns17="xs" xmlns:ns17_="http" xmlns:ns18="ns32" xmlns:ns20="ns24" xmlns:ns22="ns34" xmlns:ns22_="ns20" xmlns:ns24="ns12" xmlns:ns24_="ns14" xmlns:ns25="ns15" xmlns:ns26="mime" xmlns:ns26_="ns38" xmlns:ns27="ns17" xmlns:ns28="soap" xmlns:ns29="wsu" xmlns:ns30="ns27" xmlns:ns31="ns18" xmlns:ns32="ns8" xmlns:ns32_="ns25" xmlns:ns33="soap12" xmlns:ns34="ns11" xmlns:ns34_="ns22" xmlns:ns36="ns29" xmlns:ns37="ns18" xmlns:ns38="ns17_" xmlns:ns39="ns33" xmlns:ns41="w" xmlns:ns42="ns22_" xmlns:ns44="ns36" xmlns:ns45="ns39" xmlns:ns46="ns28" xmlns:ns47="ns24_" xmlns:ns48="ns26_" xmlns:ns49="ns30" xmlns:ns8="mapping" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://facture.mapping.samples.petals.ow2.org/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <w:types>
+    <xs:schema targetNamespace="http://facture.mapping.samples.petals.ow2.org/" version="1.0">
+      <xs:element name="consulter" type="tns:consulter"/>
+      <xs:complexType name="consulter">
+        <xs:sequence>
+          <xs:element maxOccurs="1" minOccurs="1" name="identifiant" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="consulterResponse" type="tns:consulterResponse"/>
+      <xs:complexType name="consulterResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="1" minOccurs="1" name="file" type="xs:base64Binary"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="stocker" type="tns:stocker"/>
+      <xs:complexType name="stocker">
+        <xs:sequence>
+          <xs:element maxOccurs="1" minOccurs="1" name="identifiant" type="xs:string"/>
+          <xs:element maxOccurs="1" minOccurs="1" name="file" type="xs:base64Binary"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="stockerResponse" type="tns:stockerResponse"/>
+      <xs:complexType name="stockerResponse">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:element name="factureInconnue">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="identifiant" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </w:types>
+  <w:message name="stocker">
+    <w:part element="tns:stocker" name="parameters"/>
+  </w:message>
+  <w:message name="stockerResponse">
+    <w:part element="tns:stockerResponse" name="parameters"/>
+  </w:message>
+  <w:message name="consulter">
+    <w:part element="tns:consulter" name="parameters"/>
+  </w:message>
+  <w:message name="consulterResponse">
+    <w:part element="tns:consulterResponse" name="parameters"/>
+  </w:message>
+  <w:message name="factureInconnue">
+    <w:part element="tns:factureInconnue" name="parameters"/>
+  </w:message>
+  <w:portType name="FactureService">
+    <w:operation name="stocker">
+      <w:input message="tns:stocker"/>
+      <w:output message="tns:stockerResponse"/>
+    </w:operation>
+    <w:operation name="consulter">
+      <w:input message="tns:consulter"/>
+      <w:output message="tns:consulterResponse"/>
+      <w:fault message="tns:factureInconnue" name="factureInconnue"/>
+    </w:operation>
+  </w:portType>
+  <w:binding name="FactureServicePortBinding" type="tns:FactureService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <w:operation name="stocker">
+      <soap:operation soapAction=""/>
+      <mapping:service-provider-operation xmlns:ns10="ged" xmlns:ns11="soap12" xmlns:ns12="wsu" xmlns:ns18="soap" xmlns:ns20="wsu" xmlns:ns22="ns14" xmlns:ns24_="ns27" xmlns:ns26_="ns25" xmlns:ns29="ns18" xmlns:ns30="ns29" xmlns:ns36="w" xmlns:ns39="ns28" xmlns="http://schemas.xmlsoap.org/wsdl/">ged:stocker</mapping:service-provider-operation>
+      <mapping:input-transformation xsl="input-stocker.xsl" xmlns:ns10="ged" xmlns:ns11="soap12" xmlns:ns12="wsu" xmlns:ns18="soap" xmlns:ns20="wsu" xmlns:ns22="ns14" xmlns:ns24_="ns27" xmlns:ns26_="ns25" xmlns:ns29="ns18" xmlns:ns30="ns29" xmlns:ns36="w" xmlns:ns39="ns28" xmlns="http://schemas.xmlsoap.org/wsdl/"/>
+      <mapping:output-transformation xsl="output-stocker.xsl" xmlns:ns10="ged" xmlns:ns11="soap12" xmlns:ns12="wsu" xmlns:ns18="soap" xmlns:ns20="wsu" xmlns:ns22="ns14" xmlns:ns24_="ns27" xmlns:ns26_="ns25" xmlns:ns29="ns18" xmlns:ns30="ns29" xmlns:ns36="w" xmlns:ns39="ns28" xmlns="http://schemas.xmlsoap.org/wsdl/">
+        <mapping:should-return-fault as-xpath-expr="true">false()</mapping:should-return-fault>
+      </mapping:output-transformation>
+      <w:input>
+        <soap:body use="literal"/>
+      </w:input>
+      <w:output>
+        <soap:body use="literal"/>
+      </w:output>
+    </w:operation>
+    <w:operation name="consulter">
+      <mapping:service-provider-operation xmlns:ns10="ged" xmlns:ns11="soap12" xmlns:ns12="wsu" xmlns:ns18="soap" xmlns:ns20="wsu" xmlns:ns22="ns14" xmlns:ns24_="ns27" xmlns:ns26_="ns25" xmlns:ns29="ns18" xmlns:ns30="ns29" xmlns:ns36="w" xmlns:ns39="ns28" xmlns="http://schemas.xmlsoap.org/wsdl/">ged:consulter</mapping:service-provider-operation>
+      <mapping:input-transformation xsl="input-consulter.xsl" xmlns:ns10="ged" xmlns:ns11="soap12" xmlns:ns12="wsu" xmlns:ns18="soap" xmlns:ns20="wsu" xmlns:ns22="ns14" xmlns:ns24_="ns27" xmlns:ns26_="ns25" xmlns:ns29="ns18" xmlns:ns30="ns29" xmlns:ns36="w" xmlns:ns39="ns28" xmlns="http://schemas.xmlsoap.org/wsdl/"/>
+      <mapping:output-transformation xsl="output-consulter.xsl" xmlns:ns10="ged" xmlns:ns11="soap12" xmlns:ns12="wsu" xmlns:ns18="soap" xmlns:ns20="wsu" xmlns:ns22="ns14" xmlns:ns24_="ns27" xmlns:ns26_="ns25" xmlns:ns29="ns18" xmlns:ns30="ns29" xmlns:ns36="w" xmlns:ns39="ns28" xmlns="http://schemas.xmlsoap.org/wsdl/">
+        <mapping:should-return-fault as-xpath-expr="true">not(boolean(/*[local-name()='consulterResponse']))</mapping:should-return-fault>
+      </mapping:output-transformation>
+      <soap:operation soapAction=""/>
+      <w:input>
+        <soap:body use="literal"/>
+      </w:input>
+      <w:output>
+        <soap:body use="literal"/>
+      </w:output>
+      <w:fault name="factureInconnue">
+        <soap:fault name="factureInconnue" use="literal"/>
+      </w:fault>
+    </w:operation>
+  </w:binding>
+  <w:service name="FactureService">
+    <w:port binding="tns:FactureServicePortBinding" name="edpt-feaffb70-b70e-11e6-b671-024219fc5093">
+      <soap:address location="http://localhost:8084/petals/services/factureService"/>
+    </w:port>
+  </w:service>
+</w:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://cdeneux-laptop:8088/mockFactureServicePortBinding</con:endpoint><con:endpoint>http://localhost:8084/petals/services/factureService</con:endpoint></con:endpoints><con:operation id="e35f22e2-5d6f-417b-bf75-236704353566" isOneWay="false" action="" name="consulter" bindingOperationName="consulter" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/></con:operation><con:operation id="77c92700-49e0-4efe-ad12-ff053e44ab3e" isOneWay="false" action="" name="stocker" bindingOperationName="stocker" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/></con:operation></con:interface><con:testSuite id="8beaa669-3065-4d2f-87ee-8b6fdfbfda4a" name="TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="cdc4c564-b7f7-42f6-ba5a-e5f39b112f4a" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Standard TestCase" searchProperties="true"><con:settings/><con:testStep type="request" name="Consulter document inexistant" id="5a7b101e-abb7-41ae-a6de-a827a82d7795"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>FactureServicePortBinding</con:interface><con:operation>consulter</con:operation><con:request name="Consulter document inexistant" id="b08ff0ca-a480-4f36-bf82-86d2d86dda1b"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8084/petals/services/factureService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:fac="http://facture.mapping.samples.petals.ow2.org/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <fac:consulter>
+         <identifiant>INCONNU</identifiant>
+      </fac:consulter>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="b75c19c1-29bf-4783-b859-acceca43f04f"/><con:assertion type="Not SOAP Fault Assertion" id="262c8762-eea0-487d-ac24-acf70deb0fd5" name="SOAP Fault"/><con:assertion type="Schema Compliance" id="f645b683-69d6-484f-bd94-8bd9b770e051" name="Schema Compliance"><con:configuration><definition/></con:configuration></con:assertion><con:assertion type="GroovyScriptAssertion" id="25a77273-6916-40dd-9ea5-176fa0ff7790" name="Script Assertion"><con:configuration><scriptText>// check that we received no attachment
+assert messageExchange.responseAttachments.length == 0</scriptText></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Stocker une facture" id="038ae31d-fbd8-4c56-a7a0-5feb315b1073"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>FactureServicePortBinding</con:interface><con:operation>stocker</con:operation><con:request name="Stocker une facture" id="8a7e4f47-6809-444b-8205-d7ccd175acce"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8084/petals/services/factureService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:fac="http://facture.mapping.samples.petals.ow2.org/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <fac:stocker>
+         <identifiant>AZE123</identifiant>
+         <file>cid:1443747830694</file>
+      </fac:stocker>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="bf4c7b3e-3001-49f4-9773-37843d7eacb9"/><con:assertion type="Schema Compliance" id="2cbe47da-2867-43f5-8120-93a51d0713e2"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion" id="bd673738-319e-41ca-a30d-a8791b57a077"/><con:assertion type="GroovyScriptAssertion" id="35a0b256-f2dd-49db-8026-87d2bb1146a5" name="Script Assertion"><con:configuration><scriptText>// check that we received no attachment
+assert messageExchange.responseAttachments.length == 0</scriptText></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:attachment><con:name>COPYRIGHT</con:name><con:contentType>application/octet-stream</con:contentType><con:size>754</con:size><con:contentId>COPYRIGHT</con:contentId><con:part>1443747830694</con:part><con:data>UEsDBBQACAgIAApwfkkAAAAAAAAAAAAAAAAJAAAAQ09QWVJJR0hUjZJPb6MwEMXv/hTv2EoRbHvooT2xUdIiZZMIiKocDQxgybGRbYL49h1oV11ppSpHz5/n35sZCKxtPznVdgF31T0efz08YaeMbK2TQqDolEfvbOvkJdaqdNJN4FDjiOBtE0bp6BmTHVBJA0e18sGpcggEFSBNHVuHi61VM4k5MpiaHEJHCOQuHrZZHq/7E3bkPedeyZCTGseh1KpimIqMJ0jmmCO+oxoli81t2xkj/8LA1rK6DMqaFUhx3uFKzvMbj9HD36++BFdgsDsZZnYnYPu5756JJ2gZvlujH6bwbbaGMot6Z3u21rEumx2V1igJg6dm0CtwpcB7WrwdTgWS/RnvSZYl++L8wqWhs0MAXelTSF16rViXnTlpwjTj/9lk6zeuT36nu7Q4swOBbVrsN3mO7SFDgmOSFen6tEsyHE/Z8ZBvIuREt81YoFmWxaOsKUil/Wz+zLv1zKZrdPJKvOOK1JXJJCq+nZs3KCC1Ne3ilDv+n+gL0gbGhhU8E3ch9M9xPI5j1Johsq7lukXIx5+gt93NPxcQCYgPUEsHCAaJQ5GbAQAA8gIAAFBLAQIUABQACAgIAApwfkkGiUORmwEAAPICAAAJAAAAAAAAAAAAAAAAAAAAAABDT1BZUklHSFRQSwUGAAAAAAEAAQA3AAAA0gEAAAAA</con:data><con:id>066dd579-5cf5-459e-8d2d-665e546ba7d9</con:id></con:attachment><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Consulter document existant" id="a9f72b41-5c48-4a8f-9a6f-4cce4d509b6b"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>FactureServicePortBinding</con:interface><con:operation>consulter</con:operation><con:request name="Consulter document existant" id="b08ff0ca-a480-4f36-bf82-86d2d86dda1b"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8084/petals/services/factureService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:fac="http://facture.mapping.samples.petals.ow2.org/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <fac:consulter>
+         <identifiant>AZE123</identifiant>
+      </fac:consulter>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="b75c19c1-29bf-4783-b859-acceca43f04f"/><con:assertion type="SOAP Fault Assertion" id="34db6b7f-06d7-4298-a389-b2ae97fe103d" name="Not SOAP Fault"/><con:assertion type="GroovyScriptAssertion" id="25a77273-6916-40dd-9ea5-176fa0ff7790" name="Script Assertion"><con:configuration><scriptText>// check that we received no attachment
+assert messageExchange.responseAttachments.length == 0</scriptText></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:mockService id="08fba0bf-95b7-4440-a423-595980952dd0" port="9000" path="/gedService" host="cdeneux-laptop" name="GedServicePortBinding MockService" bindToHostOnly="false" docroot="" faultMockOperation="consulter"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.mock.WsdlMockService@require-soap-action">false</con:setting></con:settings><con:properties/><con:mockOperation name="consulter" id="95fd07e8-5d51-4dc8-9dc3-903c23125e48" interface="GedServicePortBinding" operation="consulter"><con:settings/><con:defaultResponse>Document existant</con:defaultResponse><con:dispatchStyle>QUERY_MATCH</con:dispatchStyle><con:response name="Document existant" id="ee214ab4-2734-4036-9297-cda8ed86a515" httpResponseStatus="200" encoding="UTF-8"><con:settings><con:setting id="WsdlSettings@enable-mtom">true</con:setting></con:settings><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.server.ged.mapping.samples.petals.ow2.org/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ser:consulterResponse>
+         <file>cid:349501619481</file>
+      </ser:consulterResponse>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:attachment><con:name>COPYRIGHT</con:name><con:contentType>application/octet-stream</con:contentType><con:size>754</con:size><con:contentId>COPYRIGHT</con:contentId><con:part>349501619481</con:part><con:data>UEsDBBQACAgIAOt9fUkAAAAAAAAAAAAAAAAJAAAAQ09QWVJJR0hUjZJPb6MwEMXv/hTv2EoRbHvooT2xUdIiZZMIiKocDQxgybGRbYL49h1oV11ppSpHz5/n35sZCKxtPznVdgF31T0efz08YaeMbK2TQqDolEfvbOvkJdaqdNJN4FDjiOBtE0bp6BmTHVBJA0e18sGpcggEFSBNHVuHi61VM4k5MpiaHEJHCOQuHrZZHq/7E3bkPedeyZCTGseh1KpimIqMJ0jmmCO+oxoli81t2xkj/8LA1rK6DMqaFUhx3uFKzvMbj9HD36++BFdgsDsZZnYnYPu5756JJ2gZvlujH6bwbbaGMot6Z3u21rEumx2V1igJg6dm0CtwpcB7WrwdTgWS/RnvSZYl++L8wqWhs0MAXelTSF16rViXnTlpwjTj/9lk6zeuT36nu7Q4swOBbVrsN3mO7SFDgmOSFen6tEsyHE/Z8ZBvIuREt81YoFmWxaOsKUil/Wz+zLv1zKZrdPJKvOOK1JXJJCq+nZs3KCC1Ne3ilDv+n+gL0gbGhhU8E3ch9M9xPI5j1Johsq7lukXIx5+gt93NPxcQCYgPUEsHCAaJQ5GbAQAA8gIAAFBLAQIUABQACAgIAOt9fUkGiUORmwEAAPICAAAJAAAAAAAAAAAAAAAAAAAAAABDT1BZUklHSFRQSwUGAAAAAAEAAQA3AAAA0gEAAAAA</con:data><con:id>8d7f59cc-c2e3-4891-9acb-84bb40479634</con:id></con:attachment><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/consulterResponse"/></con:response><con:response name="Document inconnu" id="edce418f-5a6d-43b1-8e0b-e72f1d05ae6e" httpResponseStatus="500" encoding="UTF-8"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.server.ged.mapping.samples.petals.ow2.org/">
+  <soapenv:Body>
+    <soapenv:Fault>
+      <faultcode>server</faultcode>
+      <faultstring xml:lang="fr">Document inconnu</faultstring>
+      <!--Optional:-->
+      <faultactor>GED</faultactor>
+      <!--Optional:-->
+      <detail>
+        <ser:documentInconnu>
+          <reference>INCONNU</reference>
+        </ser:documentInconnu>
+      </detail>
+    </soapenv:Fault>
+  </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/consulterResponse"/></con:response><con:dispatchConfig xsi:type="con:MockOperationQueryMatchDispatch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:query><con:name>Document inexistant</con:name><con:query>declare namespace ged="http://service.server.ged.mapping.samples.petals.ow2.org/";
+declare namespace ns="";
+//ged:consulter/ns:reference</con:query><con:match>INCONNU</con:match><con:response>Document inconnu</con:response></con:query></con:dispatchConfig></con:mockOperation><con:mockOperation name="stocker" id="1bac8fa5-f7c7-41fa-a8c9-ef54e0c7e161" interface="GedServicePortBinding" operation="stocker"><con:settings/><con:defaultResponse>Response 1</con:defaultResponse><con:dispatchStyle>SEQUENCE</con:dispatchStyle><con:response name="Response 1" id="5fbc6fb6-8d98-4608-b98b-d2b2e31ff544" httpResponseStatus="200" encoding="UTF-8"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.server.ged.mapping.samples.petals.ow2.org/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ser:stockerResponse/>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://service.server.ged.mapping.samples.petals.ow2.org/GedService/stockerResponse"/></con:response><con:dispatchConfig/></con:mockOperation></con:mockService><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/></con:soapui-project>

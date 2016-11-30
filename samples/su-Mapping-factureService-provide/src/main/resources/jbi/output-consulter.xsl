@@ -18,12 +18,12 @@
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
    xmlns:mapping-xsl-properties="http://petals.ow2.org/se/mapping/xsl/param/1.0" xmlns:ged="http://service.server.ged.mapping.samples.petals.ow2.org/"
-   xmlns:xop="http://www.w3.org/2004/08/xop/include">
+   xmlns:xop="http://www.w3.org/2004/08/xop/include" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
 
    <xsl:output method="xml" encoding="UTF-8" indent="yes" omit-xml-declaration="no" />
 
    <xsl:template match="/">
-      <xsl:apply-templates />
+      <xsl:apply-templates select="ged:consulterResponse | soapenv:Fault"/>
    </xsl:template>
 
    <xsl:template match="ged:consulterResponse">
@@ -32,16 +32,24 @@
       </xsl:element>
    </xsl:template>
 
+   <xsl:template match="soapenv:Fault">
+      <xsl:apply-templates select="detail"/>
+   </xsl:template>
+   
+   <xsl:template match="detail">
+      <xsl:apply-templates select="ged:documentInconnu"/>
+   </xsl:template>
+   
    <xsl:template match="ged:documentInconnu">
       <xsl:element name="factureInconnue" namespace="http://facture.mapping.samples.petals.ow2.org/">
-         <xsl:element name="identifiant" namespace="http://facture.mapping.samples.petals.ow2.org/">
+         <xsl:element name="identifiant">
             <xsl:value-of select="reference" />
          </xsl:element>
       </xsl:element>
    </xsl:template>
 
    <xsl:template match="file">
-      <xsl:element name="file" namespace="http://facture.mapping.samples.petals.ow2.org/">
+      <xsl:element name="file">
          <xsl:apply-templates select="xop:Include" />
       </xsl:element>
    </xsl:template>

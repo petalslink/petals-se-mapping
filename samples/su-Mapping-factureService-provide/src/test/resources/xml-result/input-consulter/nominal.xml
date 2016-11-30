@@ -17,5 +17,5 @@
  for the GNU Lesser General Public License version 2.1.
 -->
 <consulter xmlns="http://service.server.ged.mapping.samples.petals.ow2.org/">
-   <reference>AZE123</reference>
+   <reference xmlns="">AZE123</reference>
 </consulter>

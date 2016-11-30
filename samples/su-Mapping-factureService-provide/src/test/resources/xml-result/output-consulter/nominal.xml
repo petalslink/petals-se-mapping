@@ -17,7 +17,7 @@
  for the GNU Lesser General Public License version 2.1.
 -->
 <consulterResponse xmlns="http://facture.mapping.samples.petals.ow2.org/">
-   <file>
+   <file xmlns="">
       <Include href="cid:1058824007020" xmlns="http://www.w3.org/2004/08/xop/include" />
    </file>
 </consulterResponse>

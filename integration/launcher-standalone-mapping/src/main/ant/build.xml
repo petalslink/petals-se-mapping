@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2016 Linagora
+ 
+ This program/library is free software: you can redistribute it and/or modify
+ it under the terms of the New BSD License (3-clause license).
+
+ This program/library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the New BSD License (3-clause license)
+ for more details.
+
+ You should have received a copy of the New BSD License (3-clause license)
+ along with this program/library; If not, see http://directory.fsf.org/wiki/License:BSD_3Clause/
+ for the New BSD License (3-clause license).
+-->
+<project name="PEtALS integration Mapping component tests" default="all" basedir=".">
+
+   <import>
+      <javaresource name="org/ow2/petals/integration/ant/petals-esb.xml" classpath="${maven.plugin.classpath}" />
+   </import>
+   <import>
+      <javaresource name="org/ow2/petals/integration/ant/petals-soapui.xml" classpath="${maven.plugin.classpath}" />
+   </import>
+   <import>
+      <javaresource name="org/ow2/petals/integration/ant/petals-registry.xml" classpath="${maven.plugin.classpath}" />
+   </import>
+   <import>
+      <javaresource name="org/ow2/petals/integration/ant/petals-esb-component.xml"
+                    classpath="${maven.plugin.classpath}" />
+   </import>
+   <import>
+      <javaresource name="org/ow2/petals/integration/ant/petals-esb-sa.xml" classpath="${maven.plugin.classpath}" />
+   </import>
+
+   <property name="petals.home" value="${project.build.directory}/${project.artifactId}/container" />
+   <property name="topology.container.name" value="sample-0" />
+
+   <!-- Properties -->
+   <property name="host1.port" value="7700" />
+   <property name="host1.ip" value="localhost" />
+   <property name="host1.username" value="petals" />
+   <property name="host1.password" value="petals" />
+
+   <!-- Used by soapui tasks -->
+   <property name="soapui.projectFile"
+             value="${project.build.directory}/${project.artifactId}/resources/soapui/SE-Mapping---Service-invocation-soapui-project.xml" />
+
+   <!-- Target : Prepare -->
+   <target name="prepare" />
+
+   <!-- Target : Deploy -->
+   <target name="deploy">
+      <echo message="Installing and starting components..." />
+
+      <parallel>
+         <deployComponent url="${org.ow2.petals:petals-se-mapping:jbi-component}"
+                          id="petals-se-mapping"
+                          jmx.port="${host1.port}"
+                          jmx.host="${host1.ip}"
+                          jmx.user="${host1.username}"
+                          jmx.pwd="${host1.password}" />
+         <deployComponent url="${org.ow2.petals:petals-bc-soap:jbi-component}"
+                          id="petals-bc-soap"
+                          jmx.port="${host1.port}"
+                          jmx.host="${host1.ip}"
+                          jmx.user="${host1.username}"
+                          jmx.pwd="${host1.password}">
+            <params>
+               <param name="httpHost" value="localhost" />
+            </params>
+         </deployComponent>
+      </parallel>
+
+      <echo message="Deploying and starting service assemblies..." />
+      <deploySa url="${org.ow2.petals.samples.mapping:sa-mapping-sample:jbi-service-assembly}"
+                id="sa-mapping-sample"
+                jmx.port="${host1.port}"
+                jmx.host="${host1.ip}"
+                jmx.user="${host1.username}"
+                jmx.pwd="${host1.password}" />
+   </target>
+
+
+   <!-- Target : Run -->
+   <target name="run">
+      <echo message="Launching Mapping component tests..." />
+
+      <petals-soapui-test testCase="Standard TestCase" />
+
+   </target>
+
+
+   <!-- Target : Clean all -->
+   <target name="cleanAll">
+      <echo message="Cleaning Activiti component tests..." />
+
+      <cleanContainerArtifacts jmx.host="${host1.ip}"
+                               jmx.port="${host1.port}"
+                               jmx.user="${host1.username}"
+                               jmx.pwd="${host1.password}" />
+
+   </target>
+
+   <!-- Target : Start Web services -->
+   <target name="startWebservices">
+      <startMocks />
+   </target>
+
+   <!-- Target : Wait Web services -->
+   <target name="waitWebservices">
+      <parallel failonany="yes">
+         <waitMock url="http://localhost:9000/gedService" />
+      </parallel>
+   </target>
+
+   <!-- Target : Stop Web services -->
+   <target name="stopWebservices">
+      <parallel failonany="yes">
+         <stopMock url="http://localhost:9000/gedService" />
+      </parallel>
+   </target>
+
+   <target name="launchContainer">
+      <replaceregexp file="${petals.home}/conf/loggers.properties"
+                     match="org.ow2.petals.log.handler.PetalsFileHandler.level.*"
+                     replace="org.ow2.petals.log.handler.PetalsFileHandler.level=FINEST"
+                     byline="true" />
+      <replaceregexp file="${petals.home}/conf/loggers.properties"
+                     match="Petals.Container.Components.level.*"
+                     replace="Petals.Container.Components.level=FINEST"
+                     byline="true" />
+
+      <startContainer name="${topology.container.name}" home="${petals.home}" jmx.port="${host1.port}" />
+   </target>
+
+   <!-- Target : All -->
+   <target name="all.env-not-killed-after">
+      <antcall target="killAllContainers" />
+      <antcall target="launchContainer" />
+
+      <antcall target="cleanAll" />
+
+      <trycatch>
+         <try>
+            <parallel failonany="yes">
+               <antcall target="startWebservices" />
+               <sequential>
+                  <trycatch>
+                     <try>
+                        <sequential>
+                           <antcall target="prepare" />
+                           <antcall target="deploy" />
+                           <antcall target="waitWebservices" />
+                           <antcall target="run" />
+                        </sequential>
+                     </try>
+                     <finally>
+                        <antcall target="stopWebservices" />
+                     </finally>
+                  </trycatch>
+               </sequential>
+            </parallel>
+         </try>
+         <finally>
+            <!-- We force component uninstallation to avoid stack trace logged by SE Activiti when tests fail. The async job
+                 executor of SE Activiti try run SQL query on a database that is not running -->
+            <antcall target="cleanAll" />
+         </finally>
+      </trycatch>
+      <stopContainer name="${topology.container.name}" home="${petals.home}" />
+
+   </target>
+
+   <target name="all">
+      <trycatch>
+         <try>
+            <antcall target="all.env-not-killed-after" />
+         </try>
+         <finally>
+            <antcall target="killAllContainers" />
+            <antcall target="killAllRegistryMembers" />
+         </finally>
+      </trycatch>
+   </target>
+</project>
