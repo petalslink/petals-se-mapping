@@ -152,6 +152,7 @@ public class Assert {
      * @param xslResourceName
      *            Name of the XSL resource to test, relative to the package {@code jbi}.
      */
+    // TODO: Create a global XSL transformation assertion at CDK Junit level when it depends on XMLUnit 2.x
     public static void assertXslTransformation(final String resultXmlResourceName, final String xmlResourceName,
             final String xslResourceName) throws IOException, TransformerException, SAXException {
 
@@ -168,7 +169,7 @@ public class Assert {
         // Execute the transformation
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Transform.source(Input.fromURL(xmlResourceUrl).build()).
-            withStylesheet(Input.fromURL(xslResourceUrl).build()).
+                withStylesheet(Input.fromURL(xslResourceUrl).build()).
                 build().to(new StreamResult(baos));
 
         final Diff diff = DiffBuilder.compare(Input.fromURL(resultXmlUrl))
