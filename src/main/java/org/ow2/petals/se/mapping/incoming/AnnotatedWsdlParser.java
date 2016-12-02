@@ -153,63 +153,11 @@ public class AnnotatedWsdlParser {
             final NodeList wsdlOperations = ((Element) wsdlBinding).getElementsByTagNameNS(SCHEMA_WSDL, "operation");
             for (int j = 0; j < wsdlOperations.getLength(); j++) {
                 final Node wsdlOperation = wsdlOperations.item(j);
-                final QName wsdlOperationName = new QName(targetNamespace,
-                        ((Element) wsdlOperation).getAttribute("name"));
 
                 try {
 
-                    // Get the node "mapping:service-provider-operation"
-                    final NodeList serviceProviderOperationNodes = ((Element) wsdlOperation)
-                            .getElementsByTagNameNS(SCHEMA_MAPPING_ANNOTATIONS, MAPPING_ANNOTATION_OPERATION);
-                    final QName serviceProviderOperation;
-                    if (serviceProviderOperationNodes.getLength() > 1) {
-                        throw new MultipleServiceProviderOperationDefinedException(wsdlOperationName);
-                    } else if (serviceProviderOperationNodes.getLength() == 0) {
-                        throw new NoServiceProviderOperationException(wsdlOperationName);
-                    } else {
-                        serviceProviderOperation = XMLUtil
-                                .getElementValueAsQName(serviceProviderOperationNodes.item(0));
-                        if (serviceProviderOperation == null) {
-                            throw new NoServiceProviderOperationException(wsdlOperationName);
-                        }
-                    }
-
-                    // Get the node "mapping:input-transformation"
-                    final NodeList inputTransfoNodes = ((Element) wsdlOperation)
-                            .getElementsByTagNameNS(SCHEMA_MAPPING_ANNOTATIONS, MAPPING_ANNOTATION_INPUT_TRANSFO);
-                    final MappingInputMessage inputMessageMapping;
-                    if (inputTransfoNodes.getLength() > 1) {
-                        throw new MultipleInputTransfoDefinedException(wsdlOperationName);
-                    } else if (inputTransfoNodes.getLength() == 0) {
-                        throw new NoTransformationDefinedException(wsdlOperationName, MAPPING_ANNOTATION_INPUT_TRANSFO);
-                    } else {
-                        inputMessageMapping = this.parseInputMessage(wsdlOperationName, inputTransfoNodes.item(0),
-                                extensions, suRootPath, xslLogErrorListener);
-                    }
-
-                    // Get the node "mapping:output-transformation"
-                    final NodeList outputTransfoNodes = ((Element) wsdlOperation)
-                            .getElementsByTagNameNS(SCHEMA_MAPPING_ANNOTATIONS, MAPPING_ANNOTATION_OUTPUT_TRANSFO);
-                    final MappingOutputMessage outputMessageMapping;
-                    if (outputTransfoNodes.getLength() > 1) {
-                        throw new MultipleOutputTransfoDefinedException(wsdlOperationName);
-                    } else if (outputTransfoNodes.getLength() == 0) {
-                        // If no output and no fault is defined at port-type, it's not an error
-                        // TODO: Check against the port-type instead of binding operation
-                        if ((((Element) wsdlOperation).getElementsByTagNameNS(SCHEMA_WSDL, "output").getLength()
-                                + ((Element) wsdlOperation).getElementsByTagNameNS(SCHEMA_WSDL, "fault")
-                                        .getLength()) > 0) {
-                            throw new NoOutputXslException(wsdlOperationName);
-                        } else {
-                            outputMessageMapping = null;
-                        }
-                    } else {
-                        outputMessageMapping = this.parseOutputMessage(wsdlOperationName, outputTransfoNodes.item(0),
-                                extensions, suRootPath, xslLogErrorListener);
-                    }
-
-                    mappingOperations.add(new MappingOperation(wsdlOperationName, inputMessageMapping,
-                            outputMessageMapping, serviceProvider, serviceProviderOperation, this.logger));
+                    mappingOperations.add(this.parseOPeration(wsdlOperation, targetNamespace, extensions, suRootPath,
+                            serviceProvider, xslLogErrorListener));
 
                 } catch (final InvalidAnnotationForOperationException e) {
                     this.encounteredErrors.add(e);
@@ -224,6 +172,84 @@ public class AnnotatedWsdlParser {
         }
 
         return mappingOperations;
+
+    }
+
+    /**
+     * Parse a WSDL binding annotation associated
+     * 
+     * @param wsdlOperation
+     *            The binding operation node to parse
+     * @param targetNamespace
+     *            Target namespace of the WSDL
+     * @param extensions
+     *            BC Mail extensions of the JBI descriptor of the current provider. Not {@code null}
+     * @param suRootPath
+     *            The root directory of the service unit
+     * @param serviceProvider
+     *            The service to invoke declared in the service unit
+     * @param xslLogErrorListener
+     *            The SU XSL error listener
+     * @return The mapping operation associated to the WSDL binding annotation.
+     * @throws InvalidAnnotationForMessageException
+     *             An error occurs during the parsing of the binding annotation
+     */
+    private MappingOperation parseOPeration(final Node wsdlOperation, final String targetNamespace,
+            final SuConfigurationParameters extensions, final String suRootPath, final Consumes serviceProvider,
+            final LogErrorListener xslLogErrorListener) throws InvalidAnnotationForOperationException {
+
+        final QName wsdlOperationName = new QName(targetNamespace, ((Element) wsdlOperation).getAttribute("name"));
+
+        // Get the node "mapping:service-provider-operation"
+        final NodeList serviceProviderOperationNodes = ((Element) wsdlOperation)
+                .getElementsByTagNameNS(SCHEMA_MAPPING_ANNOTATIONS, MAPPING_ANNOTATION_OPERATION);
+        final QName serviceProviderOperation;
+        if (serviceProviderOperationNodes.getLength() > 1) {
+            throw new MultipleServiceProviderOperationDefinedException(wsdlOperationName);
+        } else if (serviceProviderOperationNodes.getLength() == 0) {
+            throw new NoServiceProviderOperationException(wsdlOperationName);
+        } else {
+            serviceProviderOperation = XMLUtil.getElementValueAsQName(serviceProviderOperationNodes.item(0));
+            if (serviceProviderOperation == null) {
+                throw new NoServiceProviderOperationException(wsdlOperationName);
+            }
+        }
+
+        // Get the node "mapping:input-transformation"
+        final NodeList inputTransfoNodes = ((Element) wsdlOperation).getElementsByTagNameNS(SCHEMA_MAPPING_ANNOTATIONS,
+                MAPPING_ANNOTATION_INPUT_TRANSFO);
+        final MappingInputMessage inputMessageMapping;
+        if (inputTransfoNodes.getLength() > 1) {
+            throw new MultipleInputTransfoDefinedException(wsdlOperationName);
+        } else if (inputTransfoNodes.getLength() == 0) {
+            throw new NoTransformationDefinedException(wsdlOperationName, MAPPING_ANNOTATION_INPUT_TRANSFO);
+        } else {
+            inputMessageMapping = this.parseInputMessage(wsdlOperationName, inputTransfoNodes.item(0), extensions,
+                    suRootPath, xslLogErrorListener);
+        }
+
+        // Get the node "mapping:output-transformation"
+        final NodeList outputTransfoNodes = ((Element) wsdlOperation).getElementsByTagNameNS(SCHEMA_MAPPING_ANNOTATIONS,
+                MAPPING_ANNOTATION_OUTPUT_TRANSFO);
+        final MappingOutputMessage outputMessageMapping;
+        if (outputTransfoNodes.getLength() > 1) {
+            throw new MultipleOutputTransfoDefinedException(wsdlOperationName);
+        } else if (outputTransfoNodes.getLength() == 0) {
+            // If no output and no fault is defined at port-type, it's not an error
+            // TODO: Check against the port-type instead of binding operation
+            if ((((Element) wsdlOperation).getElementsByTagNameNS(SCHEMA_WSDL, "output").getLength()
+                    + ((Element) wsdlOperation).getElementsByTagNameNS(SCHEMA_WSDL, "fault").getLength()) > 0) {
+                throw new NoOutputXslException(wsdlOperationName);
+            } else {
+                outputMessageMapping = null;
+            }
+        } else {
+            outputMessageMapping = this.parseOutputMessage(wsdlOperationName, outputTransfoNodes.item(0), extensions,
+                    suRootPath, xslLogErrorListener);
+        }
+
+        return new MappingOperation(wsdlOperationName, inputMessageMapping, outputMessageMapping, serviceProvider,
+                serviceProviderOperation, this.logger);
 
     }
 

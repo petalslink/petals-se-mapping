@@ -31,11 +31,6 @@ public abstract class AbstractMappingCondition implements MappingOutputCondition
 
     protected final Logger logger;
 
-    @Override
-    public void log() {
-        this.logger.config("    - output condition nature = " + this.getClass().getName());
-    }
-
     /**
      * The WSDL binding operation name containing the current annotations
      */
@@ -71,5 +66,10 @@ public abstract class AbstractMappingCondition implements MappingOutputCondition
     @Override
     public String getWsdlMessageName() {
         return this.wsdlMessageName;
+    }
+
+    @Override
+    public void log() {
+        this.logger.config("    - output condition nature = " + this.getClass().getName());
     }
 }

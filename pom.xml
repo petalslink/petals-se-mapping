@@ -27,9 +27,6 @@
       <version>1.0.3-SNAPSHOT</version>
    </parent>
 
-	<!-- ============== -->
-	<!-- Identification -->
-	<!-- ============== -->
    <name>Petals ESB - Components - SE Mapping</name>
    <artifactId>petals-se-mapping</artifactId>
    <groupId>org.ow2.petals</groupId>

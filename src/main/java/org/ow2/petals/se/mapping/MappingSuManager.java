@@ -62,7 +62,7 @@ public class MappingSuManager extends ServiceEngineServiceUnitManager {
         // Check the JBI descriptor
         if (jbiDescriptor == null || jbiDescriptor.getServices() == null
                 || jbiDescriptor.getServices().getProvides() == null
-                || jbiDescriptor.getServices().getProvides().size() == 0) {
+                || jbiDescriptor.getServices().getProvides().isEmpty()) {
             // TODO: This check should be done at CDK level: all SUs deployed on a SE must have at least one section
             // 'provides' ?
             throw new PEtALSCDKException("Invalid JBI descriptor: it does not contain a 'provides' section.");
