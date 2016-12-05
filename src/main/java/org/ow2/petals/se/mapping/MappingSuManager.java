@@ -73,6 +73,10 @@ public class MappingSuManager extends ServiceEngineServiceUnitManager {
                     "Invalid JBI descriptor: one and only one 'consumes' section must be defined.");
         }
         final Consumes serviceProvider = jbiDescriptor.getServices().getConsumes().get(0);
+        if (serviceProvider.getOperation() != null) {
+            this.logger.warning(
+                    "An operation '%s' is defined into the 3PP service provider definition in the JBI descriptor. It won't be used, remove it !!");
+        }
 
         // Check that there is only one Provides section in the SU
         if (jbiDescriptor.getServices().getProvides().size() != 1) {
