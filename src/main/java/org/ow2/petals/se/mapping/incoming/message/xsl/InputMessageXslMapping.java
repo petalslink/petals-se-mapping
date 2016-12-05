@@ -24,7 +24,6 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
-import org.ow2.petals.component.framework.api.configuration.SuConfigurationParameters;
 import org.ow2.petals.se.mapping.incoming.message.MappingInputMessage;
 import org.ow2.petals.se.mapping.incoming.message.exception.TransformException;
 
@@ -45,18 +44,14 @@ public class InputMessageXslMapping extends AbstractMessageXslMapping implements
      *            The XSL style-sheet file name. Not {@code null} and not empty.
      * @param suRootPath
      *            The SU root path. Can not be {@code null}.
-     * @param extensions
-     *            SE Mapping extensions of the JBI descriptor of the current provider in which this operation takes
-     *            place. Not {@code null}.
      * @param logErrorListener
      *            The SU XSL error listener, used to resolve and log line numbers when errors are found into the XSL
      *            style-sheet.
      * @param logger
      */
     public InputMessageXslMapping(final QName wsdlOperationName, final String wsdlMessageName, final String xslFileName,
-            final String suRootPath, final SuConfigurationParameters extensions,
-            final LogErrorListener logErrorListener, final Logger logger) {
-        super(wsdlOperationName, wsdlMessageName, xslFileName, suRootPath, extensions, logErrorListener, logger);
+            final String suRootPath, final LogErrorListener logErrorListener, final Logger logger) {
+        super(wsdlOperationName, wsdlMessageName, xslFileName, suRootPath, logErrorListener, logger);
     }
 
     @Override

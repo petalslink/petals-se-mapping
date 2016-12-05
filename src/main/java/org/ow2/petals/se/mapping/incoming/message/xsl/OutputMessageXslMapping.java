@@ -25,7 +25,6 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 
-import org.ow2.petals.component.framework.api.configuration.SuConfigurationParameters;
 import org.ow2.petals.se.mapping.incoming.condition.MappingOutputCondition;
 import org.ow2.petals.se.mapping.incoming.message.MappingOutputMessage;
 import org.ow2.petals.se.mapping.incoming.message.exception.InvalidAnnotationForMessageException;
@@ -60,9 +59,6 @@ public class OutputMessageXslMapping extends AbstractMessageXslMapping implement
      *            The condition to define is a fault or a 'OUT' message must be returned
      * @param suRootPath
      *            The SU root path. Can not be {@code null}.
-     * @param extensions
-     *            SE Mapping extensions of the JBI descriptor of the current provider in which this operation takes
-     *            place. Not {@code null}.
      * @param logErrorListener
      *            The SU XSL error listener, used to resolve and log line numbers when errors are found into the XSL
      *            style-sheet.
@@ -70,8 +66,8 @@ public class OutputMessageXslMapping extends AbstractMessageXslMapping implement
      */
     public OutputMessageXslMapping(final QName wsdlOperationName, final String wsdlMessageName,
             final String xslFileName, final MappingOutputCondition outputCondition, final String suRootPath,
-            final SuConfigurationParameters extensions, final LogErrorListener logErrorListener, final Logger logger) {
-        super(wsdlOperationName, wsdlMessageName, xslFileName, suRootPath, extensions, logErrorListener, logger);
+            final LogErrorListener logErrorListener, final Logger logger) {
+        super(wsdlOperationName, wsdlMessageName, xslFileName, suRootPath, logErrorListener, logger);
         this.outputCondition = outputCondition;
     }
 

@@ -141,7 +141,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     public void parse_WsdlValid() throws SAXException, IOException {
 
         final List<MappingOperation> mappingOperations = this.parser.parse(this.readWsdlDocument("parser/valid.wsdl"),
-                null, SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER);
+                SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER);
         assertEquals(0, this.parser.getEncounteredErrors().size());
         assertEquals(3, mappingOperations.size());
         boolean op1_found = false;
@@ -196,8 +196,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     public void parse_WsdlValidWithImports() throws SAXException, IOException {
 
         final List<MappingOperation> mappingOperations = this.parser.parse(
-                this.readWsdlDocument("parser/valid-with-imports.wsdl"), null, SU_ROOT_PATH, SU_NAME,
-                SU_SERVICE_PROVIDER);
+                this.readWsdlDocument("parser/valid-with-imports.wsdl"), SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER);
         assertEquals(0, this.parser.getEncounteredErrors().size());
         assertEquals(3, mappingOperations.size());
         boolean op1_found = false;
@@ -247,8 +246,9 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     @Test
     public void parse_WsdlWithoutBinding() throws SAXException, IOException {
 
-        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/abstract-import.wsdl"), null, SU_ROOT_PATH,
-                SU_NAME, SU_SERVICE_PROVIDER).size());
+        assertEquals(0, this.parser
+                .parse(this.readWsdlDocument("parser/abstract-import.wsdl"), SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER)
+                .size());
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
         assertEquals(2, encounteredErrors.size());
         boolean noWsdlBindingExceptionCounter = false;
@@ -278,8 +278,8 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     @Test
     public void parse_WsdlWithoutMappingAnnotations() throws SAXException, IOException {
 
-        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/withoutMappingAnnotation.wsdl"), null,
-                SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
+        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/withoutMappingAnnotation.wsdl"), SU_ROOT_PATH,
+                SU_NAME, SU_SERVICE_PROVIDER).size());
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
         assertEquals(3, encounteredErrors.size());
         int multipleNoServiceProviderOperationExceptionCounter = 0;
@@ -310,7 +310,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     public void parse_WsdlWithSeveralServiceProviderOpInOneWsdlOp() throws SAXException, IOException {
 
         assertEquals(0,
-                this.parser.parse(this.readWsdlDocument("parser/several-service-provider-op-in-one-wsdl-op.wsdl"), null,
+                this.parser.parse(this.readWsdlDocument("parser/several-service-provider-op-in-one-wsdl-op.wsdl"),
                         SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
         assertEquals(2, encounteredErrors.size());
@@ -348,7 +348,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     public void parse_WsdlWithServiceProviderOpMissing() throws SAXException, IOException {
 
         assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/missing-and-empty-service-provider-op.wsdl"),
-                null, SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
+                SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
 
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
         assertEquals(4, encounteredErrors.size());
@@ -395,7 +395,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     public void parse_WsdlWithSeveralInputTransfoInOneWsdlOp() throws SAXException, IOException {
 
         assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/several-input-transfo-in-one-wsdl-op.wsdl"),
-                null, SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
+                SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
         assertEquals(2, encounteredErrors.size());
         boolean multipleInputTransformationDefinedException = false;
@@ -426,7 +426,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     public void parse_WsdlWithSeveralOutputTransfoInOneWsdlOp() throws SAXException, IOException {
 
         assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/several-output-transfo-in-one-wsdl-op.wsdl"),
-                null, SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
+                SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
         assertEquals(2, encounteredErrors.size());
         boolean multipleOutputTransformationDefinedException = false;
@@ -457,7 +457,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     public void parse_WsdlWithSeveralOutputConditionInOneWsdlOp() throws SAXException, IOException {
 
         assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/several-output-condition-in-one-wsdl-op.wsdl"),
-                null, SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
+                SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
         assertEquals(2, encounteredErrors.size());
         boolean multipleOutputConditionDefinedException = false;
@@ -493,7 +493,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     @Test
     public void parse_WsdlWithInputXslMissing() throws SAXException, IOException {
 
-        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/input-xsl-missing-and-empty.wsdl"), null,
+        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/input-xsl-missing-and-empty.wsdl"),
                 SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
 
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
@@ -552,7 +552,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     @Test
     public void parse_WsdlWithInputUnexistingXsl() throws SAXException, IOException {
 
-        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/input-xsl-not-found.wsdl"), null, SU_ROOT_PATH,
+        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/input-xsl-not-found.wsdl"), SU_ROOT_PATH,
                 SU_NAME, SU_SERVICE_PROVIDER).size());
 
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
@@ -586,8 +586,8 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     @Test
     public void parse_WsdlWithInputXslInvalid() throws SAXException, IOException {
 
-        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/input-xsl-invalid.wsdl"), null, SU_ROOT_PATH,
-                SU_NAME, SU_SERVICE_PROVIDER).size());
+        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/input-xsl-invalid.wsdl"), SU_ROOT_PATH, SU_NAME,
+                SU_SERVICE_PROVIDER).size());
 
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
         assertEquals(2, encounteredErrors.size());
@@ -620,7 +620,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     @Test
     public void parse_WsdlWithInputXslNotAFile() throws SAXException, IOException {
 
-        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/input-xsl-not-a-file.wsdl"), null, SU_ROOT_PATH,
+        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/input-xsl-not-a-file.wsdl"), SU_ROOT_PATH,
                 SU_NAME, SU_SERVICE_PROVIDER).size());
 
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
@@ -659,7 +659,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     @Test
     public void parse_WsdlWithOutputXslMissing() throws SAXException, IOException {
 
-        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/output-xsl-missing-and-empty.wsdl"), null,
+        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/output-xsl-missing-and-empty.wsdl"),
                 SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
 
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
@@ -717,7 +717,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     @Test
     public void parse_WsdlWithOutputUnexistingXsl() throws SAXException, IOException {
 
-        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/output-xsl-not-found.wsdl"), null, SU_ROOT_PATH,
+        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/output-xsl-not-found.wsdl"), SU_ROOT_PATH,
                 SU_NAME, SU_SERVICE_PROVIDER).size());
 
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
@@ -751,7 +751,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     @Test
     public void parse_WsdlWithOutputXslInvalid() throws SAXException, IOException {
 
-        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/output-xsl-invalid.wsdl"), null, SU_ROOT_PATH,
+        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/output-xsl-invalid.wsdl"), SU_ROOT_PATH,
                 SU_NAME, SU_SERVICE_PROVIDER).size());
 
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
@@ -786,8 +786,8 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     @Test
     public void parse_WsdlWithOutputXslNotAFile() throws SAXException, IOException {
 
-        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/output-xsl-not-a-file.wsdl"), null,
-                SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
+        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/output-xsl-not-a-file.wsdl"), SU_ROOT_PATH,
+                SU_NAME, SU_SERVICE_PROVIDER).size());
 
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
         assertEquals(2, encounteredErrors.size());
@@ -822,7 +822,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     @Test
     public void parse_WsdlWithXPathExprMissing() throws SAXException, IOException {
 
-        assertEquals(1, this.parser.parse(this.readWsdlDocument("parser/missing-and-empty-xpath-expression.wsdl"), null,
+        assertEquals(1, this.parser.parse(this.readWsdlDocument("parser/missing-and-empty-xpath-expression.wsdl"),
                 SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
 
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
@@ -860,8 +860,8 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     @Test
     public void parse_WsdlWithoutOutputConditionImplem() throws SAXException, IOException {
 
-        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/no-output-condition-implem.wsdl"),
-                null, SU_ROOT_PATH, SU_NAME, SU_SERVICE_PROVIDER).size());
+        assertEquals(0, this.parser.parse(this.readWsdlDocument("parser/no-output-condition-implem.wsdl"), SU_ROOT_PATH,
+                SU_NAME, SU_SERVICE_PROVIDER).size());
         final List<InvalidAnnotationException> encounteredErrors = this.parser.getEncounteredErrors();
         assertEquals(2, encounteredErrors.size());
         boolean noOutputConditionDefinedException = false;

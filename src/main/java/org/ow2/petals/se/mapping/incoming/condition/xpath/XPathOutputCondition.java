@@ -26,7 +26,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.ow2.petals.component.framework.api.configuration.SuConfigurationParameters;
 import org.ow2.petals.se.mapping.incoming.condition.AbstractMappingCondition;
 import org.ow2.petals.se.mapping.incoming.condition.MappingOutputCondition;
 import org.ow2.petals.se.mapping.incoming.condition.xpath.exception.XpathExprEvaluationUnexpectedException;
@@ -54,26 +53,17 @@ public class XPathOutputCondition extends AbstractMappingCondition implements Ma
     private final String xpathExprStr;
 
     /**
-     * SE Mapping extensions of the JBI descriptor of the current provider in which this operation takes place.
-     */
-    private final SuConfigurationParameters extensions;
-
-    /**
      * 
      * @param wsdlOperationName
      *            The WSDL operation containing the current annotations
      * @param xpathExprStr
      *            The XPath expression of the condition. Not {@code null} and not empty.
-     * @param extensions
-     *            SE Mapping extensions of the JBI descriptor of the current provider in which this operation takes
-     *            place. Not {@code null}.
      * @param logger
      */
     public XPathOutputCondition(final QName wsdlOperationName, final String wsdlMessageName, final String xpathExprStr,
-            final SuConfigurationParameters extensions, final Logger logger) {
+            final Logger logger) {
         super(wsdlOperationName, wsdlMessageName, logger);
         this.xpathExprStr = xpathExprStr;
-        this.extensions = extensions;
     }
 
     @Override

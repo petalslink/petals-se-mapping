@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
-import org.ow2.petals.component.framework.api.configuration.SuConfigurationParameters;
 import org.ow2.petals.component.framework.jbidescriptor.generated.Consumes;
 import org.ow2.petals.component.framework.util.XMLUtil;
 import org.ow2.petals.se.mapping.incoming.condition.MappingOutputCondition;
@@ -122,9 +121,6 @@ public class AnnotatedWsdlParser {
      * 
      * @param annotatedWsdl
      *            The WSDL to parse containing BC Mail annotations
-     * @param extensions
-     *            BC Mail extensions of the JBI descriptor of the current provider. Can be {@code null} if the WSDL is
-     *            correctly annotated and it is not needed to extract fields from the SU JBI descriptor.
      * @param suRootPath
      *            The root directory of the service unit
      * @param suName
@@ -133,8 +129,8 @@ public class AnnotatedWsdlParser {
      *            The service to invoke declared in the service unit
      * @return The mapping operation of the WSDL.
      */
-    public List<MappingOperation> parse(final Document annotatedWsdl, final SuConfigurationParameters extensions,
-            final String suRootPath, final String suName, final Consumes serviceProvider) {
+    public List<MappingOperation> parse(final Document annotatedWsdl, final String suRootPath, final String suName,
+            final Consumes serviceProvider) {
 
         this.encounteredErrors.clear();
 
@@ -156,7 +152,7 @@ public class AnnotatedWsdlParser {
 
                 try {
 
-                    mappingOperations.add(this.parseOPeration(wsdlOperation, targetNamespace, extensions, suRootPath,
+                    mappingOperations.add(this.parseOperation(wsdlOperation, targetNamespace, suRootPath,
                             serviceProvider, xslLogErrorListener));
 
                 } catch (final InvalidAnnotationForOperationException e) {
@@ -182,8 +178,6 @@ public class AnnotatedWsdlParser {
      *            The binding operation node to parse
      * @param targetNamespace
      *            Target namespace of the WSDL
-     * @param extensions
-     *            BC Mail extensions of the JBI descriptor of the current provider. Not {@code null}
      * @param suRootPath
      *            The root directory of the service unit
      * @param serviceProvider
@@ -194,9 +188,9 @@ public class AnnotatedWsdlParser {
      * @throws InvalidAnnotationForMessageException
      *             An error occurs during the parsing of the binding annotation
      */
-    private MappingOperation parseOPeration(final Node wsdlOperation, final String targetNamespace,
-            final SuConfigurationParameters extensions, final String suRootPath, final Consumes serviceProvider,
-            final LogErrorListener xslLogErrorListener) throws InvalidAnnotationForOperationException {
+    private MappingOperation parseOperation(final Node wsdlOperation, final String targetNamespace,
+            final String suRootPath, final Consumes serviceProvider, final LogErrorListener xslLogErrorListener)
+            throws InvalidAnnotationForOperationException {
 
         final QName wsdlOperationName = new QName(targetNamespace, ((Element) wsdlOperation).getAttribute("name"));
 
@@ -224,8 +218,8 @@ public class AnnotatedWsdlParser {
         } else if (inputTransfoNodes.getLength() == 0) {
             throw new NoTransformationDefinedException(wsdlOperationName, MAPPING_ANNOTATION_INPUT_TRANSFO);
         } else {
-            inputMessageMapping = this.parseInputMessage(wsdlOperationName, inputTransfoNodes.item(0), extensions,
-                    suRootPath, xslLogErrorListener);
+            inputMessageMapping = this.parseInputMessage(wsdlOperationName, inputTransfoNodes.item(0), suRootPath,
+                    xslLogErrorListener);
         }
 
         // Get the node "mapping:output-transformation"
@@ -244,8 +238,8 @@ public class AnnotatedWsdlParser {
                 outputMessageMapping = null;
             }
         } else {
-            outputMessageMapping = this.parseOutputMessage(wsdlOperationName, outputTransfoNodes.item(0), extensions,
-                    suRootPath, xslLogErrorListener);
+            outputMessageMapping = this.parseOutputMessage(wsdlOperationName, outputTransfoNodes.item(0), suRootPath,
+                    xslLogErrorListener);
         }
 
         return new MappingOperation(wsdlOperationName, inputMessageMapping, outputMessageMapping, serviceProvider,
@@ -260,8 +254,6 @@ public class AnnotatedWsdlParser {
      *            The binding operation name of the binding operation message to parse
      * @param wsdlMessageAnnotation
      *            The WSDL binding annotation to parse
-     * @param extensions
-     *            BC Mail extensions of the JBI descriptor of the current provider. Not {@code null}
      * @param suRootPath
      *            The root directory of the service unit
      * @param xslLogErrorListener
@@ -271,8 +263,8 @@ public class AnnotatedWsdlParser {
      *             An error occurs during the parsing of the binding annotation
      */
     private MappingInputMessage parseInputMessage(final QName wsdlOperationName, final Node wsdlMessageAnnotation,
-            final SuConfigurationParameters extensions, final String suRootPath,
-            final LogErrorListener xslLogErrorListener) throws InvalidAnnotationForMessageException {
+            final String suRootPath, final LogErrorListener xslLogErrorListener)
+            throws InvalidAnnotationForMessageException {
 
         // Get the attribute "xsl" of the transformation node
         final String xslFileStr = AnnotatedWsdlParser.retrieveXslValue(wsdlOperationName, wsdlMessageAnnotation);
@@ -280,8 +272,7 @@ public class AnnotatedWsdlParser {
         if (xslFileStr != null) {
             // Create the annotated operation from annotations read into the WSDL
             final MappingInputMessage annotatedMappingMessage = new InputMessageXslMapping(wsdlOperationName,
-                    wsdlMessageAnnotation.getLocalName(), xslFileStr, suRootPath, extensions, xslLogErrorListener,
-                    this.logger);
+                    wsdlMessageAnnotation.getLocalName(), xslFileStr, suRootPath, xslLogErrorListener, this.logger);
 
             // Check the coherence of the annotated operation (ie. coherence of annotations of the operation
             // against content of the JBI descriptor)
@@ -301,8 +292,6 @@ public class AnnotatedWsdlParser {
      *            The binding operation name of the binding operation message to parse
      * @param wsdlMessageAnnotation
      *            The WSDL binding annotation to parse
-     * @param extensions
-     *            BC Mail extensions of the JBI descriptor of the current provider. Not {@code null}
      * @param suRootPath
      *            The root directory of the service unit
      * @param xslLogErrorListener
@@ -312,8 +301,8 @@ public class AnnotatedWsdlParser {
      *             An error occurs during the parsing of the binding annotation
      */
     private MappingOutputMessage parseOutputMessage(final QName wsdlOperationName, final Node wsdlMessageAnnotation,
-            final SuConfigurationParameters extensions, final String suRootPath,
-            final LogErrorListener xslLogErrorListener) throws InvalidAnnotationForMessageException {
+            final String suRootPath, final LogErrorListener xslLogErrorListener)
+            throws InvalidAnnotationForMessageException {
 
         // Get the attribute "xsl" of the transformation node to know if an XSL transformation must be applied
         final String xslFileStr = AnnotatedWsdlParser.retrieveXslValue(wsdlOperationName, wsdlMessageAnnotation);
@@ -328,14 +317,14 @@ public class AnnotatedWsdlParser {
             outputCondition = new BooleanOutputCondition(wsdlOperationName, wsdlMessageAnnotation.getNodeName(),
                     this.logger);
         } else {
-            outputCondition = this.parseOutputCondition(wsdlOperationName, outputConditionNodes.item(0), extensions);
+            outputCondition = this.parseOutputCondition(wsdlOperationName, outputConditionNodes.item(0));
         }
 
         if (xslFileStr != null) {
             // Create the annotated operation from annotations read into the WSDL
             final MappingOutputMessage annotatedMappingMessage = new OutputMessageXslMapping(wsdlOperationName,
-                    wsdlMessageAnnotation.getLocalName(), xslFileStr, outputCondition, suRootPath, extensions,
-                    xslLogErrorListener, this.logger);
+                    wsdlMessageAnnotation.getLocalName(), xslFileStr, outputCondition, suRootPath, xslLogErrorListener,
+                    this.logger);
 
             // Check the coherence of the annotated operation (ie. coherence of annotations of the operation
             // against content of the JBI descriptor)
@@ -355,17 +344,15 @@ public class AnnotatedWsdlParser {
      *            The binding operation name of the binding operation message to parse
      * @param wsdlMessageAnnotation
      *            The WSDL binding annotation to parse
-     * @param extensions
-     *            BC Mail extensions of the JBI descriptor of the current provider. Not {@code null}
      * @return The annotated message condition associated to the WSDL binding annotation.
      * @throws InvalidAnnotationForMessageException
      *             An error occurs during the parsing of the binding annotation
      */
-    private MappingOutputCondition parseOutputCondition(final QName wsdlOperationName, final Node wsdlMessageAnnotation,
-            final SuConfigurationParameters extensions) throws InvalidAnnotationForMessageException {
+    private MappingOutputCondition parseOutputCondition(final QName wsdlOperationName, final Node wsdlMessageAnnotation)
+            throws InvalidAnnotationForMessageException {
 
         // Get the attribute "as-xpath-expr" of the condition node to know if an XPath condition must be applied
-        final Boolean xpathCond = AnnotatedWsdlParser.retrieveXpathExprFlag(wsdlOperationName, wsdlMessageAnnotation,
+        final Boolean xpathCond = AnnotatedWsdlParser.retrieveXpathExprFlag(wsdlMessageAnnotation,
                 wsdlMessageAnnotation.getLocalName());
 
         if (xpathCond != null && xpathCond.booleanValue()) {
@@ -376,7 +363,7 @@ public class AnnotatedWsdlParser {
             } else {
                 // Create the annotated output condition from annotations read into the WSDL
                 final MappingOutputCondition outputCondition = new XPathOutputCondition(wsdlOperationName,
-                        wsdlMessageAnnotation.getLocalName(), xpathExprStr, extensions, this.logger);
+                        wsdlMessageAnnotation.getLocalName(), xpathExprStr, this.logger);
 
                 // Check the coherence of the annotated operation (ie. coherence of annotations of the operation
                 // against content of the JBI descriptor)
@@ -405,7 +392,7 @@ public class AnnotatedWsdlParser {
             throws InvalidAnnotationForMessageException {
 
         // Note: if the attribute 'xsl' is defined several times, an error is generating during the XML parsing of the
-        // WSDL. SO it is not needed to manage this case here.
+        // WSDL. So it is not needed to manage this case here.
         final String xslFileStr;
         if (!((Element) wsdlMessageAnnotation).hasAttribute(MAPPING_ANNOTATION_XSL)) {
             xslFileStr = null;
@@ -424,21 +411,17 @@ public class AnnotatedWsdlParser {
     /**
      * Retrieve the XPath flag defining an output condition given as an XPath expressionL
      * 
-     * @param wsdlOperationName
-     *            The binding operation name of the binding operation message to parse
      * @param wsdlMessageConditionAnnotation
      *            The WSDL binding annotation node associated to the condition to parse
      * @return An XSL file name
      * @throws InvalidAnnotationForMessageException
      *             An error occurs during the parsing of the binding annotation
      */
-    private static final Boolean retrieveXpathExprFlag(final QName wsdlOperationName,
-            final Node wsdlMessageConditionAnnotation, final String wsdlMessageName)
-            throws InvalidAnnotationForMessageException {
+    private static final Boolean retrieveXpathExprFlag(final Node wsdlMessageConditionAnnotation,
+            final String wsdlMessageName) throws InvalidAnnotationForMessageException {
 
         // Note: if the attribute 'as-xpath-expr' is defined several times, an error is generating during the XML
-        // parsing of the
-        // WSDL. SO it is not needed to manage this case here.
+        // parsing of the WSDL. So it is not needed to manage this case here.
         final Boolean xpathExprFlag;
         if (!((Element) wsdlMessageConditionAnnotation).hasAttribute(MAPPING_ANNOTATION_EXPR_XPATH)) {
             xpathExprFlag = null;

@@ -22,7 +22,6 @@ import java.util.logging.Level;
 
 import javax.xml.namespace.QName;
 
-import org.ow2.petals.component.framework.api.configuration.SuConfigurationParameters;
 import org.ow2.petals.component.framework.api.exception.PEtALSCDKException;
 import org.ow2.petals.component.framework.jbidescriptor.generated.Consumes;
 import org.ow2.petals.component.framework.jbidescriptor.generated.Jbi;
@@ -86,16 +85,10 @@ public class MappingSuManager extends ServiceEngineServiceUnitManager {
             throw new PEtALSCDKException("Invalid JBI descriptor: the 'provides' section is invalid.");
         }
 
-        // Get the extension configuration for the mapping services to be deployed from the SU jbi.xml
-        final SuConfigurationParameters extensions = suDH.getConfigurationExtensions(provides);
-        if (extensions == null) {
-            throw new PEtALSCDKException("Invalid JBI descriptor: it does not contain any extensions.");
-        }
-
         // Create mapping operations
         final Document wsdl = suDH.getEndpointDescription(provides);
-        final List<MappingOperation> mappingOperations = this.createMappingOperations(wsdl, extensions,
-                suDH.getInstallRoot(), suDH.getName(), serviceProvider);
+        final List<MappingOperation> mappingOperations = this.createMappingOperations(wsdl, suDH.getInstallRoot(),
+                suDH.getName(), serviceProvider);
 
         // Enable mapping operations
         final String edptName = provides.getEndpointName();
@@ -137,8 +130,6 @@ public class MappingSuManager extends ServiceEngineServiceUnitManager {
      * 
      * @param wsdlDocument
      *            The WSDL to parse to create mapping operations
-     * @param extensions
-     *            BC Mail extensions of the JBI descriptor of the current provider
      * @param suRootPath
      *            The root directory of the service unit
      * @param suName
@@ -149,14 +140,13 @@ public class MappingSuManager extends ServiceEngineServiceUnitManager {
      * @throws MappingDeclarationException
      *             An error was detected about annotations
      */
-    private List<MappingOperation> createMappingOperations(final Document wsdlDocument,
-            final SuConfigurationParameters extensions, final String suRootPath, final String suName,
-            final Consumes serviceProvider) {
+    private List<MappingOperation> createMappingOperations(final Document wsdlDocument, final String suRootPath,
+            final String suName, final Consumes serviceProvider) {
 
         final AnnotatedWsdlParser annotatedWdslParser = new AnnotatedWsdlParser(this.logger);
 
-        final List<MappingOperation> mappingOperations = annotatedWdslParser.parse(wsdlDocument, extensions, suRootPath,
-                suName, serviceProvider);
+        final List<MappingOperation> mappingOperations = annotatedWdslParser.parse(wsdlDocument, suRootPath, suName,
+                serviceProvider);
 
         // Log all WSDL errors
         if (this.logger.isLoggable(Level.WARNING)) {

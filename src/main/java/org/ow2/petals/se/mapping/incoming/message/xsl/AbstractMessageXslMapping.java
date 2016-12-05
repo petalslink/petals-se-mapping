@@ -32,7 +32,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
-import org.ow2.petals.component.framework.api.configuration.SuConfigurationParameters;
 import org.ow2.petals.se.mapping.incoming.message.AbsMappingMessage;
 import org.ow2.petals.se.mapping.incoming.message.AbstractMappingMessage;
 import org.ow2.petals.se.mapping.incoming.message.exception.InvalidAnnotationForMessageException;
@@ -64,11 +63,6 @@ public abstract class AbstractMessageXslMapping extends AbstractMappingMessage i
     private String xslFileName;
 
     /**
-     * SE Mapping extensions of the JBI descriptor of the current provider in which this operation takes place.
-     */
-    private final SuConfigurationParameters extensions;
-
-    /**
      * The SU XSL error listener, used to resolve and log line numbers when errors are found into the XSL style-sheet.
      */
     private final LogErrorListener logErrorListener;
@@ -88,20 +82,16 @@ public abstract class AbstractMessageXslMapping extends AbstractMappingMessage i
      *            The XSL style-sheet file name. Not {@code null} and not empty.
      * @param suRootPath
      *            The SU root path. Can not be {@code null}.
-     * @param extensions
-     *            SE Mapping extensions of the JBI descriptor of the current provider in which this operation takes
-     *            place. Not {@code null}.
      * @param logErrorListener
      *            The SU XSL error listener, used to resolve and log line numbers when errors are found into the XSL
      *            style-sheet.
      * @param logger
      */
     public AbstractMessageXslMapping(final QName wsdlOperationName, final String wsdlMessageName,
-            final String xslFileName, final String suRootPath, final SuConfigurationParameters extensions,
-            final LogErrorListener logErrorListener, final Logger logger) {
+            final String xslFileName, final String suRootPath, final LogErrorListener logErrorListener,
+            final Logger logger) {
         super(wsdlOperationName, wsdlMessageName);
         this.xslFileName = xslFileName;
-        this.extensions = extensions;
         this.suRootPath = suRootPath;
         this.logErrorListener = logErrorListener;
         this.logger = logger;
@@ -145,7 +135,11 @@ public abstract class AbstractMessageXslMapping extends AbstractMappingMessage i
     }
 
     /**
-     * Set XSL global parameters.
+     * <p>
+     * Set XSL global parameters.</p
+     * <p>
+     * This implementation add all properties of the component property file.
+     * </p>
      * 
      * @param transformer
      *            The {@link Transformer} for which parameters must be set. Not {@code null}
@@ -154,8 +148,9 @@ public abstract class AbstractMessageXslMapping extends AbstractMappingMessage i
      * @param componentProperties
      *            Properties defined in the property file configured at component level
      */
-    protected void setXslParameters(final Transformer transformer, final Document incomingSource, final Properties componentProperties) {
-        
+    protected void setXslParameters(final Transformer transformer, final Document incomingSource,
+            final Properties componentProperties) {
+
         if (componentProperties != null) {
             for (final Entry<Object, Object> property : componentProperties.entrySet()) {
                 transformer.setParameter(
@@ -180,8 +175,7 @@ public abstract class AbstractMessageXslMapping extends AbstractMappingMessage i
      *             An error occurs during transformation
      */
     protected void doTransform(final Source source, final Result target, final Document businessRequest,
-            final Properties componentProperties)
-            throws TransformException {
+            final Properties componentProperties) throws TransformException {
         try {
             final Transformer transformer = this.xsl.newTransformer();
 

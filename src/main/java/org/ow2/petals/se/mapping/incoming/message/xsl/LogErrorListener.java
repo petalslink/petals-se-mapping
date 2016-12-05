@@ -80,8 +80,8 @@ public class LogErrorListener implements ErrorListener {
             if (locator != null)
                 line = locator.getLineNumber();
 
-            String msg = errorType + " was found: " + e.getMessage() + " (line: " + ((line == -1) ? "unresolved" : line)
-                    + ").";
+            final String msg = errorType + " was found: " + e.getMessage() + " (line: "
+                    + ((line == -1) ? "unresolved" : line) + ").";
             this.logger.log(level, this.logPrefix + msg);
         }
 

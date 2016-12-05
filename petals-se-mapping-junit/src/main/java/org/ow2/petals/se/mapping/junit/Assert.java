@@ -103,7 +103,7 @@ public class Assert {
             final Description wsdlDescription = ServiceUnitUtil.getWsdlDescription(jbiDescriptorFile.getParent(),
                     provides);
             final Document wsdlDocument = WSDLUtilImpl.convertDescriptionToDocument(wsdlDescription);
-            final List<MappingOperation> mappingOperations = annotatedWdslParser.parse(wsdlDocument, null,
+            final List<MappingOperation> mappingOperations = annotatedWdslParser.parse(wsdlDocument,
                     jbiDescriptorFile.getParent(), null, null);
             // Log all WSDL errors before to assert annotated operations
             if (LOGGER.isLoggable(Level.WARNING)) {
