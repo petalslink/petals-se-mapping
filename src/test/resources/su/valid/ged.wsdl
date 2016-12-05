@@ -34,6 +34,14 @@
             </xsd:complexType>
          </xsd:element>
 
+         <xsd:element name="documentExistant">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="reference" minOccurs="1" maxOccurs="1" type="xsd:string" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+
          <xsd:element name="consulter">
             <xsd:complexType>
                <xsd:sequence>
@@ -80,6 +88,9 @@
    <wsdl:message name="archiver">
       <wsdl:part name="parameters" element="tns:archiver" />
    </wsdl:message>
+   <wsdl:message name="documentExistant">
+      <wsdl:part name="parameters" element="tns:documentExistant" />
+   </wsdl:message>
    <wsdl:message name="consulter">
       <wsdl:part name="parameters" element="tns:consulter" />
    </wsdl:message>
@@ -99,6 +110,7 @@
    <wsdl:portType name="document">
       <wsdl:operation name="archiver">
          <wsdl:input message="tns:archiver" />
+         <wsdl:fault message="tns:documentExistant" name="documentExistant" />
       </wsdl:operation>
       <wsdl:operation name="consulter">
          <wsdl:input message="tns:consulter" />
@@ -119,6 +131,9 @@
          <wsdl:input>
             <soap:body use="literal" />
          </wsdl:input>
+         <wsdl:fault name="documentExistant">
+            <soap:fault name="documentExistant" use="literal" />
+         </wsdl:fault>
       </wsdl:operation>
       <wsdl:operation name="consulter">
          <soap:operation soapAction="http://petals.ow2.org/se/mapping/unit-test/ged/document/consulter" />

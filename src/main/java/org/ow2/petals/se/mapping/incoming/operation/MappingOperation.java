@@ -235,6 +235,10 @@ public class MappingOperation {
                         technicalExchange.getError());
                 this.logger.log(Level.SEVERE, businessError.getMessage(), technicalExchange.getError());
                 businessExchange.setError(businessError);
+            } else if (technicalExchange.isDoneStatus()) {
+                // We receive a DONE status as response. It should be an exchange with pattern InOnly, RobustInOnly or
+                // InOptionalOut. We return the same status.
+                businessExchange.setDoneStatus();
             } else {
                 // An OUT message or a fault was returned
 

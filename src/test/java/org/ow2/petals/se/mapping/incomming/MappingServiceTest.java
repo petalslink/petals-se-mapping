@@ -45,8 +45,10 @@ import org.ow2.petals.component.framework.junit.impl.message.FaultToConsumerMess
 import org.ow2.petals.component.framework.junit.impl.message.RequestToProviderMessage;
 import org.ow2.petals.component.framework.junit.impl.message.ResponseToConsumerMessage;
 import org.ow2.petals.component.framework.junit.impl.message.StatusToConsumerMessage;
+import org.ow2.petals.se.mapping.unit_test.facture.Archiver;
 import org.ow2.petals.se.mapping.unit_test.facture.Consulter;
 import org.ow2.petals.se.mapping.unit_test.facture.ConsulterResponse;
+import org.ow2.petals.se.mapping.unit_test.facture.FactureExistante;
 import org.ow2.petals.se.mapping.unit_test.facture.FactureInconnue;
 import org.ow2.petals.se.mapping.unit_test.facture.Supprimer;
 
@@ -217,12 +219,12 @@ public class MappingServiceTest extends AbstractComponentTest {
                 final DataHandler dh = new DataHandler(ds);
                 attachments.add(new Attachment(myDocumentId, dh));
 
-                final org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu technicalConsulterFault = new org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu();
-                technicalConsulterFault.setReference(technicalRequestBean.getReference());
+                final org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu technicalFault = new org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu();
+                technicalFault.setReference(technicalRequestBean.getReference());
 
                 // We return the response
                 return new FaultToConsumerMessage(technicalRequest,
-                        new String(MappingServiceTest.this.toByteArray(technicalConsulterFault)));
+                        new String(MappingServiceTest.this.toByteArray(technicalFault)));
             }
 
             @Override
@@ -318,12 +320,12 @@ public class MappingServiceTest extends AbstractComponentTest {
                 final DataHandler dh = new DataHandler(ds);
                 attachments.add(new Attachment(myDocumentId, dh));
 
-                final org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu technicalConsulterFault = new org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu();
-                technicalConsulterFault.setReference(technicalRequestBean.getReference());
+                final org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu technicalFault = new org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu();
+                technicalFault.setReference(technicalRequestBean.getReference());
 
                 // We return the response
                 return new FaultToConsumerMessage(technicalRequest,
-                        new String(MappingServiceTest.this.toByteArray(technicalConsulterFault)));
+                        new String(MappingServiceTest.this.toByteArray(technicalFault)));
             }
 
             @Override
@@ -647,5 +649,432 @@ public class MappingServiceTest extends AbstractComponentTest {
 
         // We check that the technical service has received the right status ERROR because of timeout on consumer side
         COMPONENT.receiveStatusAsExternalProvider(technicalServiceMock);
+    }
+
+    /**
+     * <p>
+     * Check the message processing where the service is invoked with a valid in-only request where the sub-service
+     * returns a status DONE.
+     * </p>
+     * <p>
+     * Expected results:
+     * <ul>
+     * <li>the request is correctly transformed,</li>
+     * <li>the sub-service is correctly called and returns a status DONE,</li>
+     * <li>a status DONE is returned,</li>
+     * </ul>
+     * </p>
+     */
+    @Test
+    public void validInOnlyRequest_WithStatusDone() throws Exception {
+
+        final String factureId = "my-facture-id";
+
+        final Archiver businessRequestBean = new Archiver();
+        businessRequestBean.setIdentifiant(factureId);
+        final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
+        final DataHandler dh = new DataHandler(ds);
+        businessRequestBean.setDocument(dh);
+
+        // Send the valid request
+        final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
+                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.IN_ONLY.value(),
+                this.toByteArray(businessRequestBean));
+
+        final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
+            private MessageExchange technicalMessageExchange;
+
+            @Override
+            public Message provides(final RequestMessage technicalRequest) throws Exception {
+
+                this.technicalMessageExchange = technicalRequest.getMessageExchange();
+                assertNotNull(this.technicalMessageExchange);
+                assertEquals(ExchangeStatus.ACTIVE, this.technicalMessageExchange.getStatus());
+                assertEquals(MEPConstants.IN_ONLY_PATTERN.value(), this.technicalMessageExchange.getPattern());
+                assertEquals(Role.PROVIDER, technicalRequest.getMessageExchange().getRole());
+                assertEquals(GED_INTERFACE, this.technicalMessageExchange.getInterfaceName());
+                assertEquals(GED_SERVICE, this.technicalMessageExchange.getService());
+                assertNotNull(this.technicalMessageExchange.getEndpoint());
+                assertEquals(GED_ENDPOINT, this.technicalMessageExchange.getEndpoint().getEndpointName());
+                assertEquals(GED_ARCHIVER_OPERATION, this.technicalMessageExchange.getOperation());
+                final Object technicalRequestObj = UNMARSHALLER.unmarshal(technicalRequest.getPayload());
+                assertTrue(technicalRequestObj instanceof org.ow2.petals.se.mapping.unit_test.ged.Archiver);
+                final org.ow2.petals.se.mapping.unit_test.ged.Archiver technicalRequestBean = (org.ow2.petals.se.mapping.unit_test.ged.Archiver) technicalRequestObj;
+                assertEquals(factureId, technicalRequestBean.getReference());
+
+                // We return the status DONE
+                return new StatusToConsumerMessage(technicalRequest, ExchangeStatus.DONE);
+            }
+
+            @Override
+            public boolean statusExpected() {
+                return false;
+            }
+
+        };
+
+        // We send the business request to the mapping service, and we check that the technical service receives the
+        // right request
+        final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
+
+        // Check the reply
+        assertNotNull(businessStatus);
+        assertEquals(businessStatus.getStatus(), ExchangeStatus.DONE);
+
+        // Check MONIT traces
+        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        assertEquals(4, monitLogs_1.size());
+        final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
+                FACTURE_ENDPOINT, OPERATION_ARCHIVER, monitLogs_1.get(0));
+        final FlowLogData technicalBeginFlowLogData = assertMonitProviderBeginLog(businessBeginFlowLogData,
+                GED_INTERFACE, GED_SERVICE, GED_ENDPOINT, GED_ARCHIVER_OPERATION, monitLogs_1.get(1));
+        assertMonitProviderEndLog(technicalBeginFlowLogData, monitLogs_1.get(2));
+        assertMonitProviderEndLog(businessBeginFlowLogData, monitLogs_1.get(3));
+    }
+
+    /**
+     * <p>
+     * Check the message processing where the service is invoked with a valid in-only request where the sub-service
+     * returns a status ERROR.
+     * </p>
+     * <p>
+     * Expected results:
+     * <ul>
+     * <li>the request is correctly transformed,</li>
+     * <li>the sub-service is correctly called and returns a status ERROR,</li>
+     * <li>a status ERROR is returned,</li>
+     * </ul>
+     * </p>
+     */
+    @Test
+    public void validInOnlyRequest_WithStatusError() throws Exception {
+
+        final String factureId = "my-facture-id";
+        final String myErrorMsg = "My error message about facture '" + factureId + "'";
+
+        final Archiver businessRequestBean = new Archiver();
+        businessRequestBean.setIdentifiant(factureId);
+        final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
+        final DataHandler dh = new DataHandler(ds);
+        businessRequestBean.setDocument(dh);
+
+        // Send the valid request
+        final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
+                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.IN_ONLY.value(),
+                this.toByteArray(businessRequestBean));
+
+        final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
+            private MessageExchange technicalMessageExchange;
+
+            @Override
+            public Message provides(final RequestMessage technicalRequest) throws Exception {
+
+                this.technicalMessageExchange = technicalRequest.getMessageExchange();
+                assertNotNull(this.technicalMessageExchange);
+                assertEquals(ExchangeStatus.ACTIVE, this.technicalMessageExchange.getStatus());
+                assertEquals(MEPConstants.IN_ONLY_PATTERN.value(), this.technicalMessageExchange.getPattern());
+                assertEquals(Role.PROVIDER, technicalRequest.getMessageExchange().getRole());
+                assertEquals(GED_INTERFACE, this.technicalMessageExchange.getInterfaceName());
+                assertEquals(GED_SERVICE, this.technicalMessageExchange.getService());
+                assertNotNull(this.technicalMessageExchange.getEndpoint());
+                assertEquals(GED_ENDPOINT, this.technicalMessageExchange.getEndpoint().getEndpointName());
+                assertEquals(GED_ARCHIVER_OPERATION, this.technicalMessageExchange.getOperation());
+                final Object technicalRequestObj = UNMARSHALLER.unmarshal(technicalRequest.getPayload());
+                assertTrue(technicalRequestObj instanceof org.ow2.petals.se.mapping.unit_test.ged.Archiver);
+                final org.ow2.petals.se.mapping.unit_test.ged.Archiver technicalRequestBean = (org.ow2.petals.se.mapping.unit_test.ged.Archiver) technicalRequestObj;
+                assertEquals(factureId, technicalRequestBean.getReference());
+
+                // We return the status DONE
+                return new StatusToConsumerMessage(technicalRequest, new Exception(myErrorMsg));
+            }
+
+            @Override
+            public boolean statusExpected() {
+                return false;
+            }
+
+        };
+
+        // We send the business request to the mapping service, and we check that the technical service receives the
+        // right request
+        final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
+
+        // Check the reply
+        assertNotNull(businessStatus);
+        assertEquals(businessStatus.getStatus(), ExchangeStatus.ERROR);
+        assertEquals(myErrorMsg, businessStatus.getError().getCause().getMessage());
+
+        // Check MONIT traces
+        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        assertEquals(4, monitLogs_1.size());
+        final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
+                FACTURE_ENDPOINT, OPERATION_ARCHIVER, monitLogs_1.get(0));
+        final FlowLogData technicalBeginFlowLogData = assertMonitProviderBeginLog(businessBeginFlowLogData,
+                GED_INTERFACE, GED_SERVICE, GED_ENDPOINT, GED_ARCHIVER_OPERATION, monitLogs_1.get(1));
+        assertMonitProviderFailureLog(technicalBeginFlowLogData, monitLogs_1.get(2));
+        assertMonitProviderFailureLog(businessBeginFlowLogData, monitLogs_1.get(3));
+    }
+
+    /**
+     * <p>
+     * Check the message processing where the service is invoked with a valid robust-in-only request where the
+     * sub-service returns a status DONE.
+     * </p>
+     * <p>
+     * Expected results:
+     * <ul>
+     * <li>the request is correctly transformed,</li>
+     * <li>the sub-service is correctly called and returns a status DONE,</li>
+     * <li>a status DONE is returned,</li>
+     * </ul>
+     * </p>
+     */
+    @Test
+    public void validRobustInOnlyRequest_WithStatusDone() throws Exception {
+
+        final String factureId = "my-facture-id";
+
+        final Archiver businessRequestBean = new Archiver();
+        businessRequestBean.setIdentifiant(factureId);
+        final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
+        final DataHandler dh = new DataHandler(ds);
+        businessRequestBean.setDocument(dh);
+
+        // Send the valid request
+        final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
+                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.ROBUST_IN_ONLY.value(),
+                this.toByteArray(businessRequestBean));
+
+        final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
+            private MessageExchange technicalMessageExchange;
+
+            @Override
+            public Message provides(final RequestMessage technicalRequest) throws Exception {
+
+                this.technicalMessageExchange = technicalRequest.getMessageExchange();
+                assertNotNull(this.technicalMessageExchange);
+                assertEquals(ExchangeStatus.ACTIVE, this.technicalMessageExchange.getStatus());
+                assertEquals(MEPConstants.ROBUST_IN_ONLY_PATTERN.value(), this.technicalMessageExchange.getPattern());
+                assertEquals(Role.PROVIDER, technicalRequest.getMessageExchange().getRole());
+                assertEquals(GED_INTERFACE, this.technicalMessageExchange.getInterfaceName());
+                assertEquals(GED_SERVICE, this.technicalMessageExchange.getService());
+                assertNotNull(this.technicalMessageExchange.getEndpoint());
+                assertEquals(GED_ENDPOINT, this.technicalMessageExchange.getEndpoint().getEndpointName());
+                assertEquals(GED_ARCHIVER_OPERATION, this.technicalMessageExchange.getOperation());
+                final Object technicalRequestObj = UNMARSHALLER.unmarshal(technicalRequest.getPayload());
+                assertTrue(technicalRequestObj instanceof org.ow2.petals.se.mapping.unit_test.ged.Archiver);
+                final org.ow2.petals.se.mapping.unit_test.ged.Archiver technicalRequestBean = (org.ow2.petals.se.mapping.unit_test.ged.Archiver) technicalRequestObj;
+                assertEquals(factureId, technicalRequestBean.getReference());
+
+                // We return the status DONE
+                return new StatusToConsumerMessage(technicalRequest, ExchangeStatus.DONE);
+            }
+
+            @Override
+            public boolean statusExpected() {
+                return false;
+            }
+
+        };
+
+        // We send the business request to the mapping service, and we check that the technical service receives the
+        // right request
+        final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
+
+        // Check the reply
+        assertNotNull(businessStatus);
+        assertEquals(businessStatus.getStatus(), ExchangeStatus.DONE);
+
+        // Check MONIT traces
+        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        assertEquals(4, monitLogs_1.size());
+        final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
+                FACTURE_ENDPOINT, OPERATION_ARCHIVER, monitLogs_1.get(0));
+        final FlowLogData technicalBeginFlowLogData = assertMonitProviderBeginLog(businessBeginFlowLogData,
+                GED_INTERFACE, GED_SERVICE, GED_ENDPOINT, GED_ARCHIVER_OPERATION, monitLogs_1.get(1));
+        assertMonitProviderEndLog(technicalBeginFlowLogData, monitLogs_1.get(2));
+        assertMonitProviderEndLog(businessBeginFlowLogData, monitLogs_1.get(3));
+    }
+
+    /**
+     * <p>
+     * Check the message processing where the service is invoked with a valid robust-in-only request where the
+     * sub-service returns a status ERROR.
+     * </p>
+     * <p>
+     * Expected results:
+     * <ul>
+     * <li>the request is correctly transformed,</li>
+     * <li>the sub-service is correctly called and returns a status ERROR,</li>
+     * <li>a status ERROR is returned,</li>
+     * </ul>
+     * </p>
+     */
+    @Test
+    public void validRobustInOnlyRequest_WithStatusError() throws Exception {
+
+        final String factureId = "my-facture-id";
+        final String myErrorMsg = "My error message about facture '" + factureId + "'";
+
+        final Archiver businessRequestBean = new Archiver();
+        businessRequestBean.setIdentifiant(factureId);
+        final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
+        final DataHandler dh = new DataHandler(ds);
+        businessRequestBean.setDocument(dh);
+
+        // Send the valid request
+        final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
+                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.ROBUST_IN_ONLY.value(),
+                this.toByteArray(businessRequestBean));
+
+        final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
+            private MessageExchange technicalMessageExchange;
+
+            @Override
+            public Message provides(final RequestMessage technicalRequest) throws Exception {
+
+                this.technicalMessageExchange = technicalRequest.getMessageExchange();
+                assertNotNull(this.technicalMessageExchange);
+                assertEquals(ExchangeStatus.ACTIVE, this.technicalMessageExchange.getStatus());
+                assertEquals(MEPConstants.ROBUST_IN_ONLY_PATTERN.value(), this.technicalMessageExchange.getPattern());
+                assertEquals(Role.PROVIDER, technicalRequest.getMessageExchange().getRole());
+                assertEquals(GED_INTERFACE, this.technicalMessageExchange.getInterfaceName());
+                assertEquals(GED_SERVICE, this.technicalMessageExchange.getService());
+                assertNotNull(this.technicalMessageExchange.getEndpoint());
+                assertEquals(GED_ENDPOINT, this.technicalMessageExchange.getEndpoint().getEndpointName());
+                assertEquals(GED_ARCHIVER_OPERATION, this.technicalMessageExchange.getOperation());
+                final Object technicalRequestObj = UNMARSHALLER.unmarshal(technicalRequest.getPayload());
+                assertTrue(technicalRequestObj instanceof org.ow2.petals.se.mapping.unit_test.ged.Archiver);
+                final org.ow2.petals.se.mapping.unit_test.ged.Archiver technicalRequestBean = (org.ow2.petals.se.mapping.unit_test.ged.Archiver) technicalRequestObj;
+                assertEquals(factureId, technicalRequestBean.getReference());
+
+                // We return the status DONE
+                return new StatusToConsumerMessage(technicalRequest, new Exception(myErrorMsg));
+            }
+
+            @Override
+            public boolean statusExpected() {
+                return false;
+            }
+
+        };
+
+        // We send the business request to the mapping service, and we check that the technical service receives the
+        // right request
+        final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
+
+        // Check the reply
+        assertNotNull(businessStatus);
+        assertEquals(businessStatus.getStatus(), ExchangeStatus.ERROR);
+        assertEquals(myErrorMsg, businessStatus.getError().getCause().getMessage());
+
+        // Check MONIT traces
+        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        assertEquals(4, monitLogs_1.size());
+        final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
+                FACTURE_ENDPOINT, OPERATION_ARCHIVER, monitLogs_1.get(0));
+        final FlowLogData technicalBeginFlowLogData = assertMonitProviderBeginLog(businessBeginFlowLogData,
+                GED_INTERFACE, GED_SERVICE, GED_ENDPOINT, GED_ARCHIVER_OPERATION, monitLogs_1.get(1));
+        assertMonitProviderFailureLog(technicalBeginFlowLogData, monitLogs_1.get(2));
+        assertMonitProviderFailureLog(businessBeginFlowLogData, monitLogs_1.get(3));
+    }
+
+    /**
+     * <p>
+     * Check the message processing where the service is invoked with a valid robust-in-only request where the
+     * sub-service returns a fault.
+     * </p>
+     * <p>
+     * Expected results:
+     * <ul>
+     * <li>the request is correctly transformed,</li>
+     * <li>the sub-service is correctly called and returns a fault,</li>
+     * <li>a fault transformed is returned,</li>
+     * </ul>
+     * </p>
+     */
+    @Test
+    public void validRobustInOnlyRequest_WithFaultTransformedInFault() throws Exception {
+
+        final String factureId = "my-facture-id";
+
+        final Archiver businessRequestBean = new Archiver();
+        businessRequestBean.setIdentifiant(factureId);
+        final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
+        final DataHandler dh = new DataHandler(ds);
+        businessRequestBean.setDocument(dh);
+
+        // Send the valid request
+        final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
+                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.ROBUST_IN_ONLY.value(),
+                this.toByteArray(businessRequestBean));
+
+        final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
+            private MessageExchange technicalMessageExchange;
+
+            @Override
+            public Message provides(final RequestMessage technicalRequest) throws Exception {
+
+                this.technicalMessageExchange = technicalRequest.getMessageExchange();
+                assertNotNull(this.technicalMessageExchange);
+                assertEquals(ExchangeStatus.ACTIVE, this.technicalMessageExchange.getStatus());
+                assertEquals(MEPConstants.ROBUST_IN_ONLY_PATTERN.value(), this.technicalMessageExchange.getPattern());
+                assertEquals(Role.PROVIDER, technicalRequest.getMessageExchange().getRole());
+                assertEquals(GED_INTERFACE, this.technicalMessageExchange.getInterfaceName());
+                assertEquals(GED_SERVICE, this.technicalMessageExchange.getService());
+                assertNotNull(this.technicalMessageExchange.getEndpoint());
+                assertEquals(GED_ENDPOINT, this.technicalMessageExchange.getEndpoint().getEndpointName());
+                assertEquals(GED_ARCHIVER_OPERATION, this.technicalMessageExchange.getOperation());
+                final Object technicalRequestObj = UNMARSHALLER.unmarshal(technicalRequest.getPayload());
+                assertTrue(technicalRequestObj instanceof org.ow2.petals.se.mapping.unit_test.ged.Archiver);
+                final org.ow2.petals.se.mapping.unit_test.ged.Archiver technicalRequestBean = (org.ow2.petals.se.mapping.unit_test.ged.Archiver) technicalRequestObj;
+                assertEquals(factureId, technicalRequestBean.getReference());
+
+                final org.ow2.petals.se.mapping.unit_test.ged.DocumentExistant technicalFault = new org.ow2.petals.se.mapping.unit_test.ged.DocumentExistant();
+                technicalFault.setReference(technicalRequestBean.getReference());
+
+                // We return the response
+                return new FaultToConsumerMessage(technicalRequest,
+                        new String(MappingServiceTest.this.toByteArray(technicalFault)));
+            }
+
+            @Override
+            public void handleStatus(final StatusMessage statusDoneMsg) throws Exception {
+                // Assert the status DONE on the message exchange
+                assertNotNull(statusDoneMsg);
+                // It's the same message exchange instance
+                assertSame(statusDoneMsg.getMessageExchange(), this.technicalMessageExchange);
+                assertEquals(statusDoneMsg.getMessageExchange().getStatus(), ExchangeStatus.DONE);
+            }
+
+        };
+
+        // We send the business request to the mapping service, and we check that the technical service receives the
+        // right request
+        final ResponseMessage businessResponse = COMPONENT.sendAndGetResponse(businessRequest, technicalServiceMock);
+
+        // Check the reply
+        assertNotNull(businessResponse);
+        assertTrue(businessResponse.isFault());
+        final Source out = businessResponse.getOut();
+        assertNull("Unexpected OUT message", (out == null ? null : SourceHelper.toString(out)));
+        assertNotNull("No XML payload in fault", businessResponse.getPayload());
+        final Object businessResponseBeanObj = UNMARSHALLER.unmarshal(businessResponse.getPayload());
+        assertTrue(businessResponseBeanObj instanceof FactureExistante);
+        final FactureExistante businessResponseBean = (FactureExistante) businessResponseBeanObj;
+        assertEquals(factureId, businessResponseBean.getIdentifiant());
+
+        // We check that the technical service has received the right status DONE
+        COMPONENT.receiveStatusAsExternalProvider(technicalServiceMock);
+
+        // Check MONIT traces
+        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        assertEquals(4, monitLogs_1.size());
+        final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
+                FACTURE_ENDPOINT, OPERATION_ARCHIVER, monitLogs_1.get(0));
+        final FlowLogData technicalBeginFlowLogData = assertMonitProviderBeginLog(businessBeginFlowLogData,
+                GED_INTERFACE, GED_SERVICE, GED_ENDPOINT, GED_ARCHIVER_OPERATION, monitLogs_1.get(1));
+        assertMonitProviderFailureLog(technicalBeginFlowLogData, monitLogs_1.get(2));
+        assertMonitProviderFailureLog(businessBeginFlowLogData, monitLogs_1.get(3));
     }
 }

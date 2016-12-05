@@ -96,8 +96,7 @@ public abstract class AbstractComponentTest extends AbstractTest {
 
     protected static final ComponentUnderTest COMPONENT_UNDER_TEST = new ComponentUnderTest()
             .addLogHandler(IN_MEMORY_LOG_HANDLER.getHandler())
-            .setParameter(
-                    new QName("http://petals.ow2.org/components/extensions/version-5", "properties-file"),
+            .setParameter(new QName("http://petals.ow2.org/components/extensions/version-5", "properties-file"),
                     new ParameterGenerator() {
 
                         @Override
@@ -123,6 +122,11 @@ public abstract class AbstractComponentTest extends AbstractTest {
                             .getResource("su/valid/input-archiver.xsl");
                     assertNotNull("XSL 'input-archiver.xsl' not found", inputArchiverXslUrl);
                     serviceConfiguration.addResource(inputArchiverXslUrl);
+
+                    final URL outputArchiverXslUrl = Thread.currentThread().getContextClassLoader()
+                            .getResource("su/valid/output-archiver.xsl");
+                    assertNotNull("XSL 'output-archiver.xsl' not found", outputArchiverXslUrl);
+                    serviceConfiguration.addResource(outputArchiverXslUrl);
 
                     final URL inputConsulterXslUrl = Thread.currentThread().getContextClassLoader()
                             .getResource("su/valid/input-consulter.xsl");
@@ -183,12 +187,14 @@ public abstract class AbstractComponentTest extends AbstractTest {
                     org.ow2.petals.se.mapping.unit_test.facture.Supprimer.class,
                     org.ow2.petals.se.mapping.unit_test.facture.SupprimerResponse.class,
                     org.ow2.petals.se.mapping.unit_test.facture.FactureInconnue.class,
+                    org.ow2.petals.se.mapping.unit_test.facture.FactureExistante.class,
                     org.ow2.petals.se.mapping.unit_test.ged.Archiver.class,
                     org.ow2.petals.se.mapping.unit_test.ged.Consulter.class,
                     org.ow2.petals.se.mapping.unit_test.ged.ConsulterResponse.class,
                     org.ow2.petals.se.mapping.unit_test.ged.Supprimer.class,
                     org.ow2.petals.se.mapping.unit_test.ged.SupprimerResponse.class,
-                    org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu.class);
+                    org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu.class,
+                    org.ow2.petals.se.mapping.unit_test.ged.DocumentExistant.class);
             UNMARSHALLER = context.createUnmarshaller();
             MARSHALLER = context.createMarshaller();
             MARSHALLER.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);

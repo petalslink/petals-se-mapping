@@ -33,6 +33,14 @@
             </xsd:complexType>
          </xsd:element>
 
+         <xsd:element name="factureExistante">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="identifiant" minOccurs="1" maxOccurs="1" type="xsd:string" />
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+
          <xsd:element name="consulter">
             <xsd:complexType>
                <xsd:sequence>
@@ -79,6 +87,9 @@
    <wsdl:message name="archiver">
       <wsdl:part name="parameters" element="tns:archiver" />
    </wsdl:message>
+   <wsdl:message name="factureExistante">
+      <wsdl:part name="parameters" element="tns:factureExistante" />
+   </wsdl:message>
    <wsdl:message name="consulter">
       <wsdl:part name="parameters" element="tns:consulter" />
    </wsdl:message>
@@ -98,6 +109,7 @@
    <wsdl:portType name="facture">
       <wsdl:operation name="archiver">
          <wsdl:input message="tns:archiver" />
+         <wsdl:fault message="tns:factureExistante" name="factureExistante" />
       </wsdl:operation>
       <wsdl:operation name="consulter">
          <wsdl:input message="tns:consulter" />
@@ -127,9 +139,15 @@
          <soap:operation soapAction="http://petals.ow2.org/se/mapping/unit-test/parser/facture/archiver" />
          <mapping:service-provider-operation>ged:archiver</mapping:service-provider-operation>
          <mapping:input-transformation xsl="input-archiver.xsl" />
+         <mapping:output-transformation xsl="output-archiver.xsl">
+            <mapping:should-return-fault as-xpath-expr="true">true()</mapping:should-return-fault>
+         </mapping:output-transformation>
          <wsdl:input>
             <soap:body use="literal" />
          </wsdl:input>
+         <wsdl:fault name="factureExistante">
+            <soap:fault name="factureExistante" use="literal" />
+         </wsdl:fault>
       </wsdl:operation>
       <wsdl:operation name="consulter">
          <soap:operation soapAction="http://petals.ow2.org/se/mapping/unit-test/parser/facture/consulter" />
