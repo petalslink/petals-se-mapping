@@ -64,7 +64,7 @@
    </build>
 
    <modules>
-      <module>samples-SOAP-services</module>
+      <module>ged-server</module>
       <module>su-SOAP-gedService-provide</module>
       <module>su-Mapping-factureService-provide</module>
       <module>su-SOAP-factureService-consume</module>
