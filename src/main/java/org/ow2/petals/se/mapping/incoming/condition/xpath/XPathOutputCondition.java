@@ -24,7 +24,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 import org.ow2.petals.se.mapping.incoming.condition.AbstractMappingCondition;
 import org.ow2.petals.se.mapping.incoming.condition.MappingOutputCondition;
@@ -51,6 +50,12 @@ public class XPathOutputCondition extends AbstractMappingCondition implements Ma
      * The XPath expression compiled
      */
     private final String xpathExprStr;
+    
+    
+    /**
+     * The XPath expression builder
+     */
+    private final XPath xpathBuilder;
 
     /**
      * 
@@ -58,11 +63,14 @@ public class XPathOutputCondition extends AbstractMappingCondition implements Ma
      *            The WSDL operation containing the current annotations
      * @param xpathExprStr
      *            The XPath expression of the condition. Not {@code null} and not empty.
+     * @param xpathBuilder
+     *            The XPath expression builder
      * @param logger
      */
     public XPathOutputCondition(final QName wsdlOperationName, final String wsdlMessageName, final String xpathExprStr,
-            final Logger logger) {
+            final XPath xpathBuilder, final Logger logger) {
         super(wsdlOperationName, wsdlMessageName, logger);
+        this.xpathBuilder = xpathBuilder;
         this.xpathExprStr = xpathExprStr;
     }
 
@@ -70,7 +78,10 @@ public class XPathOutputCondition extends AbstractMappingCondition implements Ma
     public boolean shouldReturnFault(final Document technicalDoc) throws InvalidAnnotationForMessageException {
 
         try {
-            return (boolean) this.xpathExpr.evaluate(technicalDoc, XPathConstants.BOOLEAN);
+            synchronized (this.xpathExpr) {
+                // XPathExpression is not thread-safe
+                return (boolean) this.xpathExpr.evaluate(technicalDoc, XPathConstants.BOOLEAN);
+            }
         } catch (final IllegalArgumentException e) {
             // XPath expression does not return a boolean
             throw new XpathExprReturnUnexpectedException(this.wsdlOperationName, this.wsdlMessageName, e);
@@ -82,10 +93,8 @@ public class XPathOutputCondition extends AbstractMappingCondition implements Ma
 
     @Override
     public void verifyAnnotationCoherence() throws InvalidAnnotationForMessageException {
-        final XPathFactory xpathFactory = XPathFactory.newInstance();
-        final XPath xpath = xpathFactory.newXPath();
         try {
-            this.xpathExpr = xpath.compile(this.xpathExprStr);
+            this.xpathExpr = this.xpathBuilder.compile(this.xpathExprStr);
         } catch (final XPathExpressionException e) {
             throw new XpathExprInvalidException(this.wsdlOperationName, this.wsdlMessageName, e);
         }
