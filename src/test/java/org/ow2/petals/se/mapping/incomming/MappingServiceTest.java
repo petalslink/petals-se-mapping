@@ -139,7 +139,6 @@ public class MappingServiceTest extends AbstractComponentTest {
         final ResponseMessage businessResponse = COMPONENT.sendAndGetResponse(businessRequest, technicalServiceMock);
 
         // Check the reply
-        assertNotNull(businessResponse);
         assertFalse(businessResponse.isFault());
         final Source fault = businessResponse.getFault();
         assertNull("Unexpected fault", (fault == null ? null : SourceHelper.toString(fault)));
@@ -243,7 +242,6 @@ public class MappingServiceTest extends AbstractComponentTest {
         final ResponseMessage businessResponse = COMPONENT.sendAndGetResponse(businessRequest, technicalServiceMock);
 
         // Check the reply
-        assertNotNull(businessResponse);
         assertTrue(businessResponse.isFault());
         final Source out = businessResponse.getOut();
         assertNull("Unexpected OUT message", (out == null ? null : SourceHelper.toString(out)));
@@ -344,7 +342,6 @@ public class MappingServiceTest extends AbstractComponentTest {
         final ResponseMessage businessResponse = COMPONENT.sendAndGetResponse(businessRequest, technicalServiceMock);
 
         // Check the reply
-        assertNotNull(businessResponse);
         assertFalse(businessResponse.isFault());
         final Source fault = businessResponse.getFault();
         assertNull("Unexpected fault", (fault == null ? null : SourceHelper.toString(fault)));
@@ -445,7 +442,6 @@ public class MappingServiceTest extends AbstractComponentTest {
         final ResponseMessage businessResponse = COMPONENT.sendAndGetResponse(businessRequest, technicalServiceMock);
 
         // Check the reply
-        assertNotNull(businessResponse);
         assertTrue(businessResponse.isFault());
         final Source out = businessResponse.getOut();
         assertNull("Unexpected OUT message", (out == null ? null : SourceHelper.toString(out)));
@@ -533,7 +529,6 @@ public class MappingServiceTest extends AbstractComponentTest {
         final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
 
         // Check the reply
-        assertNotNull(businessStatus);
         assertNull(businessStatus.getOut());
         assertEquals(ExchangeStatus.ERROR, businessStatus.getStatus());
         assertEquals(myError, businessStatus.getError().getCause().getMessage());
@@ -630,7 +625,6 @@ public class MappingServiceTest extends AbstractComponentTest {
                 SimpleComponent.DEFAULT_SEND_AND_RECEIVE_TIMEOUT, FACTURE_TIMEOUT + 2000);
 
         // Check the reply
-        assertNotNull(businessStatus);
         assertNull(businessStatus.getOut());
         assertEquals(ExchangeStatus.ERROR, businessStatus.getStatus());
         assertTrue(businessStatus.getError().getMessage().contains("timeout occurs"));
@@ -718,7 +712,6 @@ public class MappingServiceTest extends AbstractComponentTest {
         final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
 
         // Check the reply
-        assertNotNull(businessStatus);
         assertEquals(businessStatus.getStatus(), ExchangeStatus.DONE);
 
         // Check MONIT traces
@@ -800,7 +793,6 @@ public class MappingServiceTest extends AbstractComponentTest {
         final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
 
         // Check the reply
-        assertNotNull(businessStatus);
         assertEquals(businessStatus.getStatus(), ExchangeStatus.ERROR);
         assertEquals(myErrorMsg, businessStatus.getError().getCause().getMessage());
 
@@ -882,7 +874,6 @@ public class MappingServiceTest extends AbstractComponentTest {
         final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
 
         // Check the reply
-        assertNotNull(businessStatus);
         assertEquals(businessStatus.getStatus(), ExchangeStatus.DONE);
 
         // Check MONIT traces
@@ -964,7 +955,6 @@ public class MappingServiceTest extends AbstractComponentTest {
         final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
 
         // Check the reply
-        assertNotNull(businessStatus);
         assertEquals(businessStatus.getStatus(), ExchangeStatus.ERROR);
         assertEquals(myErrorMsg, businessStatus.getError().getCause().getMessage());
 
@@ -1054,7 +1044,6 @@ public class MappingServiceTest extends AbstractComponentTest {
         final ResponseMessage businessResponse = COMPONENT.sendAndGetResponse(businessRequest, technicalServiceMock);
 
         // Check the reply
-        assertNotNull(businessResponse);
         assertTrue(businessResponse.isFault());
         final Source out = businessResponse.getOut();
         assertNull("Unexpected OUT message", (out == null ? null : SourceHelper.toString(out)));
