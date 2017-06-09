@@ -45,6 +45,7 @@ import org.ow2.petals.se.mapping.incoming.message.exception.InvalidAnnotationFor
 import org.ow2.petals.se.mapping.incoming.operation.exception.InvalidAnnotationForOperationException;
 import org.w3c.dom.Document;
 
+import com.ebmwebsourcing.easycommons.stream.EasyByteArrayOutputStream;
 import com.ebmwebsourcing.easycommons.xml.SourceHelper;
 
 /**
@@ -156,8 +157,8 @@ public class MappingOperation {
             final Document inputSource = exchange.getInMessageContentAsDocument();
 
             // Transform the incoming request
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            final Result transformedInputResult = new StreamResult(baos);
+            final EasyByteArrayOutputStream ebaos = new EasyByteArrayOutputStream();
+            final Result transformedInputResult = new StreamResult(ebaos);
 
             // TODO: Must be optimlized to avoid conversion Source <-> Document
             this.inputMessageMapping.transform(new DOMSource(inputSource), transformedInputResult, componentProperties);
@@ -165,30 +166,21 @@ public class MappingOperation {
             // Invoke the service - Create a new exchange
             final Exchange subExchange = jbiMessageSender.createConsumeExchange(this.serviceProvider,
                     MEPPatternConstants.fromURI(exchange.getPattern()));
-            // we always use the operation from the service unit (the JBI Consumes defines the service used, not the
+            // We always use the operation from the service unit (the JBI Consumes defines the service used, not the
             // operation)
             subExchange.setOperation(this.serviceProviderOperation);
 
-            final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-            try {
-                // Set the XML payload
-                // TODO: Must be optimized to avoid copy of byte array
-                subExchange.setInMessageContent(new StreamSource(bais));
-                // Copy attachments
-                NormalizedMessageUtil.copyAttachments(exchange.getInMessage(), subExchange.getInMessage());
+            // Set the XML payload
+            // TODO: Must be optimized to avoid copy of byte array
+            subExchange.setInMessageContent(new StreamSource(ebaos.toByteArrayInputStream()));
+            // Copy attachments
+            NormalizedMessageUtil.copyAttachments(exchange.getInMessage(), subExchange.getInMessage());
 
-                // Invoke the service - Send request
-                jbiMessageSender.sendAsync(subExchange,
-                        new MappingOperationAsyncContext(this, exchange, subExchange, inputSource));
+            // Invoke the service - Send request
+            jbiMessageSender.sendAsync(subExchange,
+                    new MappingOperationAsyncContext(this, exchange, subExchange, inputSource));
 
-                return false;
-            } finally {
-                try {
-                    bais.close();
-                } catch (final IOException e) {
-                    this.logger.log(Level.WARNING, "An error occurs closing XML payload of sub-exchange", e);
-                }
-            }
+            return false;
 
         } catch (final MessagingException e) {
             // Technical error
