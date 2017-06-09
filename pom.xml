@@ -44,6 +44,10 @@
          <artifactId>easycommons-lang</artifactId>
       </dependency>
       <dependency>
+         <groupId>org.ow2.easycommons</groupId>
+         <artifactId>easycommons-stream</artifactId>
+      </dependency>
+      <dependency>
          <groupId>javax.activation</groupId>
          <artifactId>activation</artifactId>
       </dependency>
