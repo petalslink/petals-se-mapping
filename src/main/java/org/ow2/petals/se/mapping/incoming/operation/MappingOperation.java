@@ -223,7 +223,7 @@ public class MappingOperation {
                 final Exception businessError = new MessagingException(
                         String.format(
                                 "A technical error occurs at technical service level invoking the operation '%s' of the service '%s'.",
-                                technicalExchange.getOperation().toString(), technicalExchange.getService().toString()),
+                                technicalExchange.getOperation(), technicalExchange.getService()),
                         technicalExchange.getError());
                 this.logger.log(Level.SEVERE, businessError.getMessage(), technicalExchange.getError());
                 businessExchange.setError(businessError);

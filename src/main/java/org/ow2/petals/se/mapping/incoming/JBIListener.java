@@ -67,7 +67,7 @@ public class JBIListener extends AbstractJBIListener {
                         logger.fine("InterfaceName = " + interfaceName);
                         logger.fine("Service       = " + service);
                         logger.fine("EndpointName  = " + eptName);
-                        logger.fine("OperationName = " + operation.toString());
+                        logger.fine("OperationName = " + operation);
                         logger.fine("Pattern " + exchange.getPattern());
                     }
 
