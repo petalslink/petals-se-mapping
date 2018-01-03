@@ -29,7 +29,7 @@
    <name>Petals ESB - Components - SE Mapping</name>
    <artifactId>petals-se-mapping</artifactId>
    <groupId>org.ow2.petals</groupId>
-   <version>1.0.0</version>
+   <version>1.0.1-SNAPSHOT</version>
    <packaging>jbi-component</packaging>
    <description>Mapping Service Engine</description>
 
@@ -148,6 +148,6 @@
    <scm>
       <connection>scm:git:https://github.com/petalslink/petals-se-mapping.git</connection>
       <developerConnection>scm:git:https://github.com/petalslink/petals-se-mapping.git</developerConnection>
-      <tag>petals-se-mapping-1.0.0</tag>
+      <tag>HEAD</tag>
    </scm>
 </project>
