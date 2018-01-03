@@ -159,9 +159,11 @@ public class Assert {
         final URL resultXmlUrl = Thread.currentThread().getContextClassLoader().getResource(resultXmlResourceName);
         assertNotNull("XML resource file '" + resultXmlResourceName
                 + "' containing the XSL transformation result is not found", resultXmlUrl);
+        // TODO: the content of the resource file must be validated against WSDL
 
         final URL xmlResourceUrl = Thread.currentThread().getContextClassLoader().getResource(xmlResourceName);
         assertNotNull("XML resource file '" + xmlResourceName + "' to transform is not found", xmlResourceUrl);
+        // TODO: the content of the resource file must be validated against WSDL
 
         final URL xslResourceUrl = Thread.currentThread().getContextClassLoader().getResource("jbi/" + xslResourceName);
         assertNotNull("XSL resource file '" + xslResourceName + "' is not found", xslResourceUrl);

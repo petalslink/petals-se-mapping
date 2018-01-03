@@ -92,7 +92,7 @@ public abstract class AbstractComponentTest extends AbstractTest {
 
     protected static final InMemoryLogHandler IN_MEMORY_LOG_HANDLER = new InMemoryLogHandler();
 
-    private static final TemporaryFolder TEMP_FOLDER = new TemporaryFolder();
+    protected static final TemporaryFolder TEMP_FOLDER = new TemporaryFolder();
 
     protected static final ComponentUnderTest COMPONENT_UNDER_TEST = new ComponentUnderTest()
             .addLogHandler(IN_MEMORY_LOG_HANDLER.getHandler())

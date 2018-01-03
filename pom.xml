@@ -24,7 +24,7 @@
       <artifactId>petals-cdkbased-components-parent</artifactId>
       <groupId>org.ow2.petals</groupId>
       <relativePath />
-      <version>1.0.3-SNAPSHOT</version>
+      <version>1.0.3</version>
    </parent>
 
    <name>Petals ESB - Components - SE Mapping</name>
