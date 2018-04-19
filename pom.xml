@@ -47,10 +47,6 @@
          <artifactId>easycommons-stream</artifactId>
       </dependency>
       <dependency>
-         <groupId>javax.activation</groupId>
-         <artifactId>activation</artifactId>
-      </dependency>
-      <dependency>
          <groupId>org.jvnet.jaxb2_commons</groupId>
          <artifactId>jaxb2-basics-runtime</artifactId>
       </dependency>
@@ -98,7 +94,14 @@
       <dependency>
          <groupId>com.sun.mail</groupId>
          <artifactId>javax.mail</artifactId>
-         <scope>test</scope>
+	 <scope>test</scope>
+	 <exclusions>
+            <exclusion>
+               <!-- Already included in JRE 8 -->
+               <groupId>javax.activation</groupId>
+               <artifactId>activation</artifactId>
+            </exclusion>
+	 </exclusions>
       </dependency>
    </dependencies>
 
