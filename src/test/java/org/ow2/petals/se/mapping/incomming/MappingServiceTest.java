@@ -69,12 +69,12 @@ public class MappingServiceTest extends AbstractComponentTest {
      * </p>
      * <p>
      * Expected results:
+     * </p>
      * <ul>
      * <li>the request is correctly transformed,</li>
      * <li>the sub-service is correctly called and returns a nominal reply,</li>
      * <li>the response is correctly transformed,</li>
      * </ul>
-     * </p>
      */
     @Test
     public void validInOutRequest_WithOutMessageTransformedInOutMessage() throws Exception {
@@ -172,12 +172,12 @@ public class MappingServiceTest extends AbstractComponentTest {
      * </p>
      * <p>
      * Expected results:
+     * </p>
      * <ul>
      * <li>the request is correctly transformed,</li>
      * <li>the sub-service is correctly called and returns a fault,</li>
      * <li>the fault response is correctly transformed into a fault.</li>
      * </ul>
-     * </p>
      */
     @Test
     public void validInOutRequest_WithFaultTransformedInFault() throws Exception {
@@ -272,12 +272,12 @@ public class MappingServiceTest extends AbstractComponentTest {
      * </p>
      * <p>
      * Expected results:
+     * </p>
      * <ul>
      * <li>the request is correctly transformed,</li>
      * <li>the sub-service is correctly called and returns a fault,</li>
      * <li>the fault response is correctly transformed into an output message.</li>
      * </ul>
-     * </p>
      */
     @Test
     public void validInOutRequest_WithFaultTransformedInOutMessage() throws Exception {
@@ -372,12 +372,12 @@ public class MappingServiceTest extends AbstractComponentTest {
      * </p>
      * <p>
      * Expected results:
+     * </p>
      * <ul>
      * <li>the request is correctly transformed,</li>
      * <li>the sub-service is correctly called and returns a nominal reply,</li>
      * <li>the response is correctly transformed into a fault,</li>
      * </ul>
-     * </p>
      */
     @Test
     public void validInOutRequest_WithOutMessageTransformedInFaultMessage() throws Exception {
@@ -472,12 +472,12 @@ public class MappingServiceTest extends AbstractComponentTest {
      * </p>
      * <p>
      * Expected results:
+     * </p>
      * <ul>
      * <li>the request is correctly transformed,</li>
      * <li>the sub-service is correctly called and returns an error (not a fault),</li>
      * <li>an error is returned.</li>
      * </ul>
-     * </p>
      */
     @Test
     public void validInOutRequest_WithErrorMessageTransformedInErrorMessage() throws Exception {
@@ -551,12 +551,12 @@ public class MappingServiceTest extends AbstractComponentTest {
      * </p>
      * <p>
      * Expected results:
+     * </p>
      * <ul>
      * <li>the request is correctly transformed,</li>
      * <li>the sub-service is correctly called but a timeout expired,</li>
      * <li>an error is returned.</li>
      * </ul>
-     * </p>
      */
     @Test
     public void validInOutRequest_WithTimeout() throws Exception {
@@ -652,12 +652,12 @@ public class MappingServiceTest extends AbstractComponentTest {
      * </p>
      * <p>
      * Expected results:
+     * </p>
      * <ul>
      * <li>the request is correctly transformed,</li>
      * <li>the sub-service is correctly called and returns a status DONE,</li>
      * <li>a status DONE is returned,</li>
      * </ul>
-     * </p>
      */
     @Test
     public void validInOnlyRequest_WithStatusDone() throws Exception {
@@ -732,12 +732,12 @@ public class MappingServiceTest extends AbstractComponentTest {
      * </p>
      * <p>
      * Expected results:
+     * </p>
      * <ul>
      * <li>the request is correctly transformed,</li>
      * <li>the sub-service is correctly called and returns a status ERROR,</li>
      * <li>a status ERROR is returned,</li>
      * </ul>
-     * </p>
      */
     @Test
     public void validInOnlyRequest_WithStatusError() throws Exception {
@@ -814,12 +814,12 @@ public class MappingServiceTest extends AbstractComponentTest {
      * </p>
      * <p>
      * Expected results:
+     * </p>
      * <ul>
      * <li>the request is correctly transformed,</li>
      * <li>the sub-service is correctly called and returns a status DONE,</li>
      * <li>a status DONE is returned,</li>
      * </ul>
-     * </p>
      */
     @Test
     public void validRobustInOnlyRequest_WithStatusDone() throws Exception {
@@ -894,12 +894,12 @@ public class MappingServiceTest extends AbstractComponentTest {
      * </p>
      * <p>
      * Expected results:
+     * </p>
      * <ul>
      * <li>the request is correctly transformed,</li>
      * <li>the sub-service is correctly called and returns a status ERROR,</li>
      * <li>a status ERROR is returned,</li>
      * </ul>
-     * </p>
      */
     @Test
     public void validRobustInOnlyRequest_WithStatusError() throws Exception {
@@ -976,12 +976,12 @@ public class MappingServiceTest extends AbstractComponentTest {
      * </p>
      * <p>
      * Expected results:
+     * </p>
      * <ul>
      * <li>the request is correctly transformed,</li>
      * <li>the sub-service is correctly called and returns a fault,</li>
      * <li>a fault transformed is returned,</li>
      * </ul>
-     * </p>
      */
     @Test
     public void validRobustInOnlyRequest_WithFaultTransformedInFault() throws Exception {

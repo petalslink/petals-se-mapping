@@ -131,11 +131,11 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
      * </p>
      * <p>
      * Expected results:
+     * </p>
      * <ul>
      * <li>No error occurs</li>
      * <li>The expected annotated operation are retrieved</li>
      * </ul>
-     * </p>
      */
     @Test
     public void parse_WsdlValid() throws SAXException, IOException {
@@ -186,11 +186,11 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
      * </p>
      * <p>
      * Expected results:
+     * </p>
      * <ul>
      * <li>No error occurs</li>
      * <li>The expected annotated operation are retrieved</li>
      * </ul>
-     * </p>
      */
     @Test
     public void parse_WsdlValidWithImports() throws SAXException, IOException {
@@ -333,12 +333,12 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
      * <p>
      * Check the parser against a WSDL containing mapping annotations but the service provider operation is as
      * following:
+     * </p>
      * <ul>
      * <li>tag missing (ie. no XML tag service provider operation),</li>
      * <li>tag closed (ie. XML tag service provider operation without value),</li>
      * <li>empty (ie. the XML value is empty).</li>
      * </ul>
-     * </p>
      * <p>
      * Expected results: An error occurs about the missing or empty service provider operation, and an error occurs
      * about no valid annotated operation found.
@@ -479,12 +479,12 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
      * <p>
      * Check the parser against a WSDL containing mapping annotations but the xsl style-sheet of input message is as
      * following:
+     * </p>
      * <ul>
      * <li>tag 'input-transformation' is missing (ie. no XML tag),</li>
      * <li>tag 'input-transformation' closed (ie. XML tag xsl without attribute),</li>
      * <li>empty (ie. the XSL attribute is empty).</li>
      * </ul>
-     * </p>
      * <p>
      * Expected results: An error occurs about the missing or empty XSL style-sheet value, and an error occurs about no
      * valid annotated operation found.
@@ -645,12 +645,12 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
      * <p>
      * Check the parser against a WSDL containing mapping annotations but the xsl style-sheet of output message is as
      * following:
+     * </p>
      * <ul>
      * <li>tag 'output-transformation' is missing (ie. no XML tag),</li>
      * <li>tag 'output-transformation' closed (ie. XML tag xsl without attribute),</li>
      * <li>empty (ie. the XSL attribute is empty).</li>
      * </ul>
-     * </p>
      * <p>
      * Expected results: An error occurs about the missing or empty XSL style-sheet value, and an error occurs about no
      * valid annotated operation found.
@@ -810,11 +810,11 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
     /**
      * <p>
      * Check the parser against a WSDL containing mapping annotations but an output XPath condition is as following:
+     * </p>
      * <ul>
      * <li>tag closed (ie. XML tag service provider operation without value),</li>
      * <li>empty (ie. the XML value is empty).</li>
      * </ul>
-     * </p>
      * <p>
      * Expected results: An error occurs about the missing or empty service provider operation.
      * </p>

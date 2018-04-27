@@ -62,7 +62,7 @@ public class OutputMessageXslMapping extends AbstractMessageXslMapping implement
      * @param logErrorListener
      *            The SU XSL error listener, used to resolve and log line numbers when errors are found into the XSL
      *            style-sheet.
-     * @param Logger
+     * @param logger
      */
     public OutputMessageXslMapping(final QName wsdlOperationName, final String wsdlMessageName,
             final String xslFileName, final MappingOutputCondition outputCondition, final String suRootPath,

@@ -136,7 +136,7 @@ public abstract class AbstractMessageXslMapping extends AbstractMappingMessage i
 
     /**
      * <p>
-     * Set XSL global parameters.</p
+     * Set XSL global parameters.</p>
      * <p>
      * This implementation add all properties of the component property file.
      * </p>

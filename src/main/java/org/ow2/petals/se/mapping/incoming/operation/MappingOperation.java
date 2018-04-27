@@ -131,6 +131,7 @@ public class MappingOperation {
     /**
      * <p>
      * Execute the operation (sending request part):
+     * </p>
      * <ol>
      * <li>transform the incoming request,</li>
      * <li>invoke a service using the transformed request,
@@ -138,7 +139,6 @@ public class MappingOperation {
      * <li>transform the service reply,</li>
      * <li>and return it to the caller.</li>
      * </ol>
-     * </p>
      * 
      * @param exchange
      *            The exchange that contains the incoming request, and where the response will be put.
@@ -195,6 +195,7 @@ public class MappingOperation {
     /**
      * <p>
      * Execute the operation (processing response part):
+     * </p>
      * <ol>
      * <li>transform the incoming request (business request),</li>
      * <li>invoke a service using the transformed request (technical request),
@@ -202,7 +203,6 @@ public class MappingOperation {
      * <li>transform the service reply (technical response),</li>
      * <li>and return it to the caller (business response).</li>
      * </ol>
-     * </p>
      * 
      * @param technicalExchange
      *            The exchange used to invoke the service provider
@@ -292,6 +292,7 @@ public class MappingOperation {
     /**
      * <p>
      * Execute the operation (processing response timout expiration part):
+     * </p>
      * <ol>
      * <li>transform the incoming request,</li>
      * <li>invoke a service using the transformed request,
@@ -299,7 +300,6 @@ public class MappingOperation {
      * <li>transform the service reply,</li>
      * <li>and return it to the caller.</li>
      * </ol>
-     * </p>
      * 
      * @param context
      *            Asynchronous context of the technical service invocation
@@ -321,9 +321,6 @@ public class MappingOperation {
 
     /**
      * Log the mapping operation characteristics
-     * 
-     * @param logger
-     * @param logLevel
      */
     public void log() {
         this.logger.config("mapping operation '" + this.wsdlOperation + "':");
