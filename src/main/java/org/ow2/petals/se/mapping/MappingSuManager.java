@@ -52,8 +52,8 @@ public class MappingSuManager extends ServiceEngineServiceUnitManager {
 
     @Override
     protected void doDeploy(final ServiceUnitDataHandler suDH) throws PEtALSCDKException {
-        if (this.logger.isLoggable(Level.FINE)) {
-            this.logger.fine("Deploying specific part of SU = " + suDH.getName() + ") ...");
+        if (this.logger.isLoggable(Level.FINE)&& suDH != null) {
+            this.logger.log(Level.FINE, "Deploying specific part of SU = {0} ...", suDH.getName() );
         }
 
         final Jbi jbiDescriptor = suDH.getDescriptor();
@@ -73,9 +73,11 @@ public class MappingSuManager extends ServiceEngineServiceUnitManager {
                     "Invalid JBI descriptor: one and only one 'consumes' section must be defined.");
         }
         final Consumes serviceProvider = jbiDescriptor.getServices().getConsumes().get(0);
-        if (serviceProvider.getOperation() != null) {
-            this.logger.warning(
-                    "An operation '%s' is defined into the 3PP service provider definition in the JBI descriptor. It won't be used, remove it !!");
+        if (serviceProvider.getOperation() != null && this.logger.isLoggable(Level.WARNING)) {
+                this.logger.log(Level.WARNING,
+                        "An operation '{0}' is defined into the 3PP service provider definition in the JBI descriptor. It won't be used, remove it !!",
+                        serviceProvider.getOperation());
+            }
         }
 
         // Check that there is only one Provides section in the SU
@@ -107,20 +109,20 @@ public class MappingSuManager extends ServiceEngineServiceUnitManager {
         this.getComponent().logEptOperationToMappingOperation();
 
         if (this.logger.isLoggable(Level.FINE)) {
-            this.logger.fine("Specific part of SU = " + suDH.getName() + ") deployed.");
+            this.logger.log(Level.FINE, "Specific part of SU = {0}) deployed.", suDH.getName() );
         }
     }
 
     @Override
     protected void doUndeploy(final ServiceUnitDataHandler suDH) throws PEtALSCDKException {
-        this.logger.fine("Undeploying specific part of SU = " + suDH.getName() + ") ...");
+        this.logger.log(Level.FINE, "Undeploying specific part of SU = {0}) ...", suDH.getName());
         try {
             final String edptName = suDH.getDescriptor().getServices().getProvides().iterator().next()
                     .getEndpointName();
             // Remove the mapping operations in the map with the corresponding end-point
             this.getComponent().removeMappingOPerations(edptName);
         } finally {
-            this.logger.fine("Specific part of SU = " + suDH.getName() + ") undeployed");
+            this.logger.log(Level.FINE, "Specific part of SU = {0}) undeployed", suDH.getName());
         }
     }
 
