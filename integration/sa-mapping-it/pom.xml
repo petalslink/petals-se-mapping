@@ -20,7 +20,7 @@
    <parent>
       <artifactId>parent</artifactId>
       <groupId>org.ow2.petals.integration.tests.se.mapping</groupId>
-      <version>5.2.0-SNAPSHOT</version>
+      <version>5.2.1-SNAPSHOT</version>
       <relativePath>../parent/pom.xml</relativePath>
    </parent>
 
@@ -39,7 +39,7 @@
       <dependency>
          <groupId>org.ow2.petals.samples.mapping</groupId>
          <artifactId>su-Mapping-factureService-provide</artifactId>
-         <version>1.1.0-1.0.0</version>
+         <version>${petals-samples-mapping.version}</version>
          <type>jbi-service-unit</type>
       </dependency>
    </dependencies>
