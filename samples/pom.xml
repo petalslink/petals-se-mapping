@@ -38,14 +38,14 @@
             <groupId>org.ow2.petals</groupId>
             <scope>provided</scope>
             <type>jbi-component</type>
-            <version>1.1.0</version>
+            <version>1.1.1-SNAPSHOT</version>
          </dependency>
          <dependency>
             <artifactId>petals-bc-soap</artifactId>
             <groupId>org.ow2.petals</groupId>
             <scope>provided</scope>
             <type>jbi-component</type>
-            <version>5.0.0</version>
+            <version>5.0.1-SNAPSHOT</version>
          </dependency>
       </dependencies>
    </dependencyManagement>

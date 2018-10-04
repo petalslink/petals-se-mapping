@@ -56,7 +56,7 @@
       <dependency>
          <groupId>org.ow2.petals</groupId>
          <artifactId>petals-se-mapping-junit</artifactId>
-         <version>1.1.0</version>
+         <version>1.1.1-SNAPSHOT</version>
          <scope>test</scope>
       </dependency>
    </dependencies>
