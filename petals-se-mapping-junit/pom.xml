@@ -23,7 +23,7 @@
       <artifactId>petals-cdkbased-components-parent</artifactId>
       <groupId>org.ow2.petals</groupId>
       <relativePath />
-      <version>1.1.0</version>
+      <version>1.1.1-SNAPSHOT</version>
    </parent>
 
    <name>Petals ESB - Components - SE Mapping - JUnit framework</name>
@@ -36,7 +36,7 @@
       <dependency>
          <groupId>org.ow2.petals</groupId>
          <artifactId>petals-se-mapping</artifactId>
-         <version>1.1.0</version>
+         <version>1.1.1-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>org.ow2.petals</groupId>
