@@ -21,7 +21,7 @@
    <parent>
       <artifactId>petals-mapping-parent</artifactId>
       <groupId>org.ow2.petals.samples.mapping</groupId>
-      <version>1.1.1-1.0.0-SNAPSHOT</version>
+      <version>1.2.0-1.0.0-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
@@ -56,7 +56,7 @@
       <dependency>
          <groupId>org.ow2.petals</groupId>
          <artifactId>petals-se-mapping-junit</artifactId>
-         <version>1.1.1-SNAPSHOT</version>
+         <version>1.2.0-SNAPSHOT</version>
          <scope>test</scope>
       </dependency>
    </dependencies>

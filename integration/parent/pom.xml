@@ -32,7 +32,7 @@
    <properties>
       <!-- We override here the component version defined in the integration test parent POM
            file to defined the version of the component to test. -->
-      <petals-se-mapping.version>1.1.0</petals-se-mapping.version>
+      <petals-se-mapping.version>1.2.0-SNAPSHOT</petals-se-mapping.version>
    </properties>
 
    <dependencyManagement>
