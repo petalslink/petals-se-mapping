@@ -17,14 +17,8 @@
  */
 package org.ow2.petals.se.mapping.incomming;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.URL;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 
 import org.junit.Before;
@@ -40,9 +34,6 @@ import org.ow2.petals.component.framework.junit.rule.ComponentUnderTest;
 import org.ow2.petals.component.framework.junit.rule.ParameterGenerator;
 import org.ow2.petals.component.framework.junit.rule.ServiceConfigurationFactory;
 import org.ow2.petals.junit.rules.log.handler.InMemoryLogHandler;
-import org.ow2.petals.se.mapping.AbstractTest;
-
-import com.ebmwebsourcing.easycommons.lang.UncheckedException;
 
 /**
  * Abstract class for unit tests about request processing
@@ -50,45 +41,7 @@ import com.ebmwebsourcing.easycommons.lang.UncheckedException;
  * @author Christophe DENEUX - Linagora
  * 
  */
-public abstract class AbstractComponentTest extends AbstractTest {
-
-    protected static final long FACTURE_TIMEOUT = 4000;
-
-    private static final String FACTURE_NAMESPACE = "http://petals.ow2.org/se/mapping/unit-test/facture";
-
-    protected static final QName FACTURE_INTERFACE = new QName(FACTURE_NAMESPACE, "facture");
-
-    protected static final QName FACTURE_SERVICE = new QName(FACTURE_NAMESPACE, "factureService");
-
-    protected static final String FACTURE_ENDPOINT = "testEndpointName";
-
-    protected static final QName OPERATION_ARCHIVER = new QName(FACTURE_NAMESPACE, "archiver");
-
-    protected static final QName OPERATION_CONSULTER = new QName(FACTURE_NAMESPACE, "consulter");
-
-    protected static final QName OPERATION_OUT2FAULT = new QName(FACTURE_NAMESPACE, "out2fault");
-
-    protected static final QName OPERATION_FAULT2OUT = new QName(FACTURE_NAMESPACE, "fault2out");
-
-    private static final String GED_NAMESPACE = "http://petals.ow2.org/se/mapping/unit-test/ged";
-
-    protected static final QName GED_INTERFACE = new QName(GED_NAMESPACE, "document");
-
-    protected static final QName GED_SERVICE = new QName(GED_NAMESPACE, "documentService");
-
-    protected static final String GED_ENDPOINT = "gedEndpointName";
-
-    protected static final QName GED_ARCHIVER_OPERATION = new QName(GED_NAMESPACE, "archiver");
-
-    protected static final QName GED_CONSULTER_OPERATION = new QName(GED_NAMESPACE, "consulter");
-
-    protected static final QName GED_SUPPRIMER_OPERATION = new QName(GED_NAMESPACE, "supprimer");
-
-    protected static final String VALID_SU = "valid-su";
-
-    protected static final String COMP_PROPERTY_VALUE_1 = "value-1";
-
-    protected static final String COMP_PROPERTY_VALUE_2 = "value-2";
+public abstract class AbstractComponentTest extends AbstractEnv {
 
     protected static final InMemoryLogHandler IN_MEMORY_LOG_HANDLER = new InMemoryLogHandler();
 
@@ -168,40 +121,11 @@ public abstract class AbstractComponentTest extends AbstractTest {
                 }
             }).registerExternalServiceProvider(GED_ENDPOINT, GED_SERVICE, GED_INTERFACE);
 
-    private static Marshaller MARSHALLER;
-
-    protected static Unmarshaller UNMARSHALLER;
-
     @ClassRule
     public static final TestRule chain = RuleChain.outerRule(TEMP_FOLDER).around(IN_MEMORY_LOG_HANDLER)
             .around(COMPONENT_UNDER_TEST);
 
     protected static final SimpleComponent COMPONENT = new SimpleComponent(COMPONENT_UNDER_TEST);
-
-    static {
-        try {
-            final JAXBContext context = JAXBContext.newInstance(
-                    org.ow2.petals.se.mapping.unit_test.facture.Archiver.class,
-                    org.ow2.petals.se.mapping.unit_test.facture.Consulter.class,
-                    org.ow2.petals.se.mapping.unit_test.facture.ConsulterResponse.class,
-                    org.ow2.petals.se.mapping.unit_test.facture.Supprimer.class,
-                    org.ow2.petals.se.mapping.unit_test.facture.SupprimerResponse.class,
-                    org.ow2.petals.se.mapping.unit_test.facture.FactureInconnue.class,
-                    org.ow2.petals.se.mapping.unit_test.facture.FactureExistante.class,
-                    org.ow2.petals.se.mapping.unit_test.ged.Archiver.class,
-                    org.ow2.petals.se.mapping.unit_test.ged.Consulter.class,
-                    org.ow2.petals.se.mapping.unit_test.ged.ConsulterResponse.class,
-                    org.ow2.petals.se.mapping.unit_test.ged.Supprimer.class,
-                    org.ow2.petals.se.mapping.unit_test.ged.SupprimerResponse.class,
-                    org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu.class,
-                    org.ow2.petals.se.mapping.unit_test.ged.DocumentExistant.class);
-            UNMARSHALLER = context.createUnmarshaller();
-            MARSHALLER = context.createMarshaller();
-            MARSHALLER.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        } catch (final JAXBException e) {
-            throw new UncheckedException(e);
-        }
-    }
 
     /**
      * All log traces must be cleared before starting a unit test
@@ -209,23 +133,6 @@ public abstract class AbstractComponentTest extends AbstractTest {
     @Before
     public void clearLogTraces() {
         IN_MEMORY_LOG_HANDLER.clear();
-    }
-
-    /**
-     * Convert a JAXB element to bytes
-     * 
-     * @param jaxbElement
-     *            The JAXB element to write as bytes
-     */
-    protected byte[] toByteArray(final Object jaxbElement) throws JAXBException, IOException {
-
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            MARSHALLER.marshal(jaxbElement, baos);
-            return baos.toByteArray();
-        } finally {
-            baos.close();
-        }
     }
 
 }

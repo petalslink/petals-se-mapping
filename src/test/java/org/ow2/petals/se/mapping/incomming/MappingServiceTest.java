@@ -17,7 +17,6 @@
  */
 package org.ow2.petals.se.mapping.incomming;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.LogRecord;
 
@@ -40,7 +39,6 @@ import org.ow2.petals.component.framework.junit.ResponseMessage;
 import org.ow2.petals.component.framework.junit.StatusMessage;
 import org.ow2.petals.component.framework.junit.helpers.ServiceProviderImplementation;
 import org.ow2.petals.component.framework.junit.helpers.SimpleComponent;
-import org.ow2.petals.component.framework.junit.impl.message.Attachment;
 import org.ow2.petals.component.framework.junit.impl.message.FaultToConsumerMessage;
 import org.ow2.petals.component.framework.junit.impl.message.RequestToProviderMessage;
 import org.ow2.petals.component.framework.junit.impl.message.ResponseToConsumerMessage;
@@ -79,15 +77,14 @@ public class MappingServiceTest extends AbstractComponentTest {
     @Test
     public void validInOutRequest_WithOutMessageTransformedInOutMessage() throws Exception {
 
-        final String myDocumentId = "my-document";
         final Consulter businessRequestBean = new Consulter();
         final String factureId = "my-facture-id";
         businessRequestBean.setIdentifiant(factureId);
 
         // Send the valid request
         final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
-                OPERATION_CONSULTER, AbsItfOperation.MEPPatternConstants.IN_OUT.value(),
-                this.toByteArray(businessRequestBean));
+                OPERATION_CONSULTER, AbsItfOperation.MEPPatternConstants.IN_OUT.value(), businessRequestBean,
+                MARSHALLER);
 
         final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
             private MessageExchange technicalMessageExchange;
@@ -110,17 +107,12 @@ public class MappingServiceTest extends AbstractComponentTest {
                 final org.ow2.petals.se.mapping.unit_test.ged.Consulter technicalRequestBean = (org.ow2.petals.se.mapping.unit_test.ged.Consulter) technicalRequestObj;
                 assertEquals(factureId + COMP_PROPERTY_VALUE_1, technicalRequestBean.getReference());
 
-                final List<Attachment> attachments = new ArrayList<>();
-                final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
-                final DataHandler dh = new DataHandler(ds);
-                attachments.add(new Attachment(myDocumentId, dh));
-
                 final org.ow2.petals.se.mapping.unit_test.ged.ConsulterResponse technicalConsulterResponse = new org.ow2.petals.se.mapping.unit_test.ged.ConsulterResponse();
-                technicalConsulterResponse.setDocument(dh);
+                final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
+                technicalConsulterResponse.setDocument(new DataHandler(ds));
 
                 // We return the response
-                return new ResponseToConsumerMessage(technicalRequest,
-                        new String(MappingServiceTest.this.toByteArray(technicalConsulterResponse)), attachments);
+                return new ResponseToConsumerMessage(technicalRequest, technicalConsulterResponse, MARSHALLER);
             }
 
             @Override
@@ -129,7 +121,7 @@ public class MappingServiceTest extends AbstractComponentTest {
                 assertNotNull(statusDoneMsg);
                 // It's the same message exchange instance
                 assertSame(statusDoneMsg.getMessageExchange(), this.technicalMessageExchange);
-                assertEquals(statusDoneMsg.getMessageExchange().getStatus(), ExchangeStatus.DONE);
+                assertEquals(ExchangeStatus.DONE, statusDoneMsg.getMessageExchange().getStatus());
             }
 
         };
@@ -149,7 +141,6 @@ public class MappingServiceTest extends AbstractComponentTest {
         assertNotNull(businessResponseBean.getDocument());
         assertNotNull(businessResponse.getOutAttachmentNames());
         assertEquals(1, businessResponse.getOutAttachmentNames().size());
-        assertEquals(myDocumentId, businessResponse.getOutAttachmentNames().toArray()[0]);
 
         // We check that the technical service has received the right status DONE
         COMPONENT.receiveStatusAsExternalProvider(technicalServiceMock);
@@ -182,15 +173,14 @@ public class MappingServiceTest extends AbstractComponentTest {
     @Test
     public void validInOutRequest_WithFaultTransformedInFault() throws Exception {
 
-        final String myDocumentId = "my-document";
         final Consulter businessRequestBean = new Consulter();
         final String factureId = "my-facture-id";
         businessRequestBean.setIdentifiant(factureId);
 
         // Send the valid request
         final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
-                OPERATION_CONSULTER, AbsItfOperation.MEPPatternConstants.IN_OUT.value(),
-                this.toByteArray(businessRequestBean));
+                OPERATION_CONSULTER, AbsItfOperation.MEPPatternConstants.IN_OUT.value(), businessRequestBean,
+                MARSHALLER);
 
         final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
             private MessageExchange technicalMessageExchange;
@@ -213,17 +203,11 @@ public class MappingServiceTest extends AbstractComponentTest {
                 final org.ow2.petals.se.mapping.unit_test.ged.Consulter technicalRequestBean = (org.ow2.petals.se.mapping.unit_test.ged.Consulter) technicalRequestObj;
                 assertEquals(factureId + COMP_PROPERTY_VALUE_1, technicalRequestBean.getReference());
 
-                final List<Attachment> attachments = new ArrayList<>();
-                final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
-                final DataHandler dh = new DataHandler(ds);
-                attachments.add(new Attachment(myDocumentId, dh));
-
                 final org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu technicalFault = new org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu();
                 technicalFault.setReference(technicalRequestBean.getReference());
 
                 // We return the response
-                return new FaultToConsumerMessage(technicalRequest,
-                        new String(MappingServiceTest.this.toByteArray(technicalFault)));
+                return new FaultToConsumerMessage(technicalRequest, technicalFault, MARSHALLER);
             }
 
             @Override
@@ -232,7 +216,7 @@ public class MappingServiceTest extends AbstractComponentTest {
                 assertNotNull(statusDoneMsg);
                 // It's the same message exchange instance
                 assertSame(statusDoneMsg.getMessageExchange(), this.technicalMessageExchange);
-                assertEquals(statusDoneMsg.getMessageExchange().getStatus(), ExchangeStatus.DONE);
+                assertEquals(ExchangeStatus.DONE, statusDoneMsg.getMessageExchange().getStatus());
             }
 
         };
@@ -282,15 +266,14 @@ public class MappingServiceTest extends AbstractComponentTest {
     @Test
     public void validInOutRequest_WithFaultTransformedInOutMessage() throws Exception {
 
-        final String myDocumentId = "my-document";
         final Supprimer businessRequestBean = new Supprimer();
         final String factureId = "my-facture-id";
         businessRequestBean.setIdentifiant(factureId);
 
         // Send the valid request
         final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
-                OPERATION_FAULT2OUT, AbsItfOperation.MEPPatternConstants.IN_OUT.value(),
-                this.toByteArray(businessRequestBean));
+                OPERATION_FAULT2OUT, AbsItfOperation.MEPPatternConstants.IN_OUT.value(), businessRequestBean,
+                MARSHALLER);
 
         final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
             private MessageExchange technicalMessageExchange;
@@ -313,17 +296,11 @@ public class MappingServiceTest extends AbstractComponentTest {
                 final org.ow2.petals.se.mapping.unit_test.ged.Supprimer technicalRequestBean = (org.ow2.petals.se.mapping.unit_test.ged.Supprimer) technicalRequestObj;
                 assertEquals(factureId, technicalRequestBean.getReference());
 
-                final List<Attachment> attachments = new ArrayList<>();
-                final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
-                final DataHandler dh = new DataHandler(ds);
-                attachments.add(new Attachment(myDocumentId, dh));
-
                 final org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu technicalFault = new org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu();
                 technicalFault.setReference(technicalRequestBean.getReference());
 
                 // We return the response
-                return new FaultToConsumerMessage(technicalRequest,
-                        new String(MappingServiceTest.this.toByteArray(technicalFault)));
+                return new FaultToConsumerMessage(technicalRequest, technicalFault, MARSHALLER);
             }
 
             @Override
@@ -332,7 +309,7 @@ public class MappingServiceTest extends AbstractComponentTest {
                 assertNotNull(statusDoneMsg);
                 // It's the same message exchange instance
                 assertSame(statusDoneMsg.getMessageExchange(), this.technicalMessageExchange);
-                assertEquals(statusDoneMsg.getMessageExchange().getStatus(), ExchangeStatus.DONE);
+                assertEquals(ExchangeStatus.DONE, statusDoneMsg.getMessageExchange().getStatus());
             }
 
         };
@@ -382,15 +359,14 @@ public class MappingServiceTest extends AbstractComponentTest {
     @Test
     public void validInOutRequest_WithOutMessageTransformedInFaultMessage() throws Exception {
 
-        final String myDocumentId = "my-document";
         final Supprimer businessRequestBean = new Supprimer();
         final String factureId = "my-facture-id";
         businessRequestBean.setIdentifiant(factureId);
 
         // Send the valid request
         final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
-                OPERATION_OUT2FAULT, AbsItfOperation.MEPPatternConstants.IN_OUT.value(),
-                this.toByteArray(businessRequestBean));
+                OPERATION_OUT2FAULT, AbsItfOperation.MEPPatternConstants.IN_OUT.value(), businessRequestBean,
+                MARSHALLER);
 
         final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
             private MessageExchange technicalMessageExchange;
@@ -413,17 +389,12 @@ public class MappingServiceTest extends AbstractComponentTest {
                 final org.ow2.petals.se.mapping.unit_test.ged.Supprimer technicalRequestBean = (org.ow2.petals.se.mapping.unit_test.ged.Supprimer) technicalRequestObj;
                 assertEquals(factureId, technicalRequestBean.getReference());
 
-                final List<Attachment> attachments = new ArrayList<>();
-                final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
-                final DataHandler dh = new DataHandler(ds);
-                attachments.add(new Attachment(myDocumentId, dh));
-
                 final org.ow2.petals.se.mapping.unit_test.ged.SupprimerResponse technicalConsulterResponse = new org.ow2.petals.se.mapping.unit_test.ged.SupprimerResponse();
-                technicalConsulterResponse.setDocument(dh);
+                final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
+                technicalConsulterResponse.setDocument(new DataHandler(ds));
 
                 // We return the response
-                return new ResponseToConsumerMessage(technicalRequest,
-                        new String(MappingServiceTest.this.toByteArray(technicalConsulterResponse)), attachments);
+                return new ResponseToConsumerMessage(technicalRequest, technicalConsulterResponse, MARSHALLER);
             }
 
             @Override
@@ -432,7 +403,7 @@ public class MappingServiceTest extends AbstractComponentTest {
                 assertNotNull(statusDoneMsg);
                 // It's the same message exchange instance
                 assertSame(statusDoneMsg.getMessageExchange(), this.technicalMessageExchange);
-                assertEquals(statusDoneMsg.getMessageExchange().getStatus(), ExchangeStatus.DONE);
+                assertEquals(ExchangeStatus.DONE, statusDoneMsg.getMessageExchange().getStatus());
             }
 
         };
@@ -489,8 +460,8 @@ public class MappingServiceTest extends AbstractComponentTest {
 
         // Send the valid request
         final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
-                OPERATION_CONSULTER, AbsItfOperation.MEPPatternConstants.IN_OUT.value(),
-                this.toByteArray(businessRequestBean));
+                OPERATION_CONSULTER, AbsItfOperation.MEPPatternConstants.IN_OUT.value(), businessRequestBean,
+                MARSHALLER);
 
         final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
             private MessageExchange technicalMessageExchange;
@@ -561,15 +532,14 @@ public class MappingServiceTest extends AbstractComponentTest {
     @Test
     public void validInOutRequest_WithTimeout() throws Exception {
 
-        final String myDocumentId = "my-document";
         final Consulter businessRequestBean = new Consulter();
         final String factureId = "my-facture-id";
         businessRequestBean.setIdentifiant(factureId);
 
         // Send the valid request
         final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
-                OPERATION_CONSULTER, AbsItfOperation.MEPPatternConstants.IN_OUT.value(),
-                this.toByteArray(businessRequestBean));
+                OPERATION_CONSULTER, AbsItfOperation.MEPPatternConstants.IN_OUT.value(), businessRequestBean,
+                MARSHALLER);
 
         final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
             private MessageExchange technicalMessageExchange;
@@ -594,17 +564,12 @@ public class MappingServiceTest extends AbstractComponentTest {
 
                 Thread.sleep(FACTURE_TIMEOUT + 2000);
 
-                final List<Attachment> attachments = new ArrayList<>();
-                final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
-                final DataHandler dh = new DataHandler(ds);
-                attachments.add(new Attachment(myDocumentId, dh));
-
                 final org.ow2.petals.se.mapping.unit_test.ged.ConsulterResponse technicalConsulterResponse = new org.ow2.petals.se.mapping.unit_test.ged.ConsulterResponse();
-                technicalConsulterResponse.setDocument(dh);
+                final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
+                technicalConsulterResponse.setDocument(new DataHandler(ds));
 
                 // We return the response
-                return new ResponseToConsumerMessage(technicalRequest,
-                        new String(MappingServiceTest.this.toByteArray(technicalConsulterResponse)), attachments);
+                return new ResponseToConsumerMessage(technicalRequest, technicalConsulterResponse, MARSHALLER);
             }
 
             @Override
@@ -613,7 +578,7 @@ public class MappingServiceTest extends AbstractComponentTest {
                 assertNotNull(statusDoneMsg);
                 // It's the same message exchange instance
                 assertSame(statusDoneMsg.getMessageExchange(), this.technicalMessageExchange);
-                assertEquals(statusDoneMsg.getMessageExchange().getStatus(), ExchangeStatus.ERROR);
+                assertEquals(ExchangeStatus.ERROR, statusDoneMsg.getMessageExchange().getStatus());
             }
 
         };
@@ -672,8 +637,8 @@ public class MappingServiceTest extends AbstractComponentTest {
 
         // Send the valid request
         final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
-                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.IN_ONLY.value(),
-                this.toByteArray(businessRequestBean));
+                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.IN_ONLY.value(), businessRequestBean,
+                MARSHALLER);
 
         final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
             private MessageExchange technicalMessageExchange;
@@ -712,7 +677,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
 
         // Check the reply
-        assertEquals(businessStatus.getStatus(), ExchangeStatus.DONE);
+        assertEquals(ExchangeStatus.DONE, businessStatus.getStatus());
 
         // Check MONIT traces
         final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
@@ -753,8 +718,8 @@ public class MappingServiceTest extends AbstractComponentTest {
 
         // Send the valid request
         final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
-                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.IN_ONLY.value(),
-                this.toByteArray(businessRequestBean));
+                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.IN_ONLY.value(), businessRequestBean,
+                MARSHALLER);
 
         final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
             private MessageExchange technicalMessageExchange;
@@ -793,7 +758,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
 
         // Check the reply
-        assertEquals(businessStatus.getStatus(), ExchangeStatus.ERROR);
+        assertEquals(ExchangeStatus.ERROR, businessStatus.getStatus());
         assertEquals(myErrorMsg, businessStatus.getError().getCause().getMessage());
 
         // Check MONIT traces
@@ -834,8 +799,8 @@ public class MappingServiceTest extends AbstractComponentTest {
 
         // Send the valid request
         final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
-                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.ROBUST_IN_ONLY.value(),
-                this.toByteArray(businessRequestBean));
+                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.ROBUST_IN_ONLY.value(), businessRequestBean,
+                MARSHALLER);
 
         final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
             private MessageExchange technicalMessageExchange;
@@ -874,7 +839,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
 
         // Check the reply
-        assertEquals(businessStatus.getStatus(), ExchangeStatus.DONE);
+        assertEquals(ExchangeStatus.DONE, businessStatus.getStatus());
 
         // Check MONIT traces
         final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
@@ -915,8 +880,8 @@ public class MappingServiceTest extends AbstractComponentTest {
 
         // Send the valid request
         final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
-                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.ROBUST_IN_ONLY.value(),
-                this.toByteArray(businessRequestBean));
+                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.ROBUST_IN_ONLY.value(), businessRequestBean,
+                MARSHALLER);
 
         final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
             private MessageExchange technicalMessageExchange;
@@ -955,7 +920,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
 
         // Check the reply
-        assertEquals(businessStatus.getStatus(), ExchangeStatus.ERROR);
+        assertEquals(ExchangeStatus.ERROR, businessStatus.getStatus());
         assertEquals(myErrorMsg, businessStatus.getError().getCause().getMessage());
 
         // Check MONIT traces
@@ -996,8 +961,8 @@ public class MappingServiceTest extends AbstractComponentTest {
 
         // Send the valid request
         final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
-                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.ROBUST_IN_ONLY.value(),
-                this.toByteArray(businessRequestBean));
+                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.ROBUST_IN_ONLY.value(), businessRequestBean,
+                MARSHALLER);
 
         final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
             private MessageExchange technicalMessageExchange;
@@ -1024,8 +989,7 @@ public class MappingServiceTest extends AbstractComponentTest {
                 technicalFault.setReference(technicalRequestBean.getReference());
 
                 // We return the response
-                return new FaultToConsumerMessage(technicalRequest,
-                        new String(MappingServiceTest.this.toByteArray(technicalFault)));
+                return new FaultToConsumerMessage(technicalRequest, technicalFault, MARSHALLER);
             }
 
             @Override
@@ -1034,7 +998,7 @@ public class MappingServiceTest extends AbstractComponentTest {
                 assertNotNull(statusDoneMsg);
                 // It's the same message exchange instance
                 assertSame(statusDoneMsg.getMessageExchange(), this.technicalMessageExchange);
-                assertEquals(statusDoneMsg.getMessageExchange().getStatus(), ExchangeStatus.DONE);
+                assertEquals(ExchangeStatus.DONE, statusDoneMsg.getMessageExchange().getStatus());
             }
 
         };

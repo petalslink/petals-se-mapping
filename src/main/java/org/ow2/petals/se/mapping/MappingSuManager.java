@@ -53,7 +53,7 @@ public class MappingSuManager extends ServiceEngineServiceUnitManager {
     @Override
     protected void doDeploy(final ServiceUnitDataHandler suDH) throws PEtALSCDKException {
         if (this.logger.isLoggable(Level.FINE)) {
-            this.logger.fine("Deploying specific part of SU = " + suDH.getName() + ") ...");
+            this.logger.fine("Deploying specific part of SU = " + suDH.getName() + " ...");
         }
 
         final Jbi jbiDescriptor = suDH.getDescriptor();
@@ -107,20 +107,20 @@ public class MappingSuManager extends ServiceEngineServiceUnitManager {
         this.getComponent().logEptOperationToMappingOperation();
 
         if (this.logger.isLoggable(Level.FINE)) {
-            this.logger.fine("Specific part of SU = " + suDH.getName() + ") deployed.");
+            this.logger.fine("Specific part of SU = " + suDH.getName() + " deployed.");
         }
     }
 
     @Override
     protected void doUndeploy(final ServiceUnitDataHandler suDH) throws PEtALSCDKException {
-        this.logger.fine("Undeploying specific part of SU = " + suDH.getName() + ") ...");
+        this.logger.fine("Undeploying specific part of SU = " + suDH.getName() + " ...");
         try {
             final String edptName = suDH.getDescriptor().getServices().getProvides().iterator().next()
                     .getEndpointName();
             // Remove the mapping operations in the map with the corresponding end-point
             this.getComponent().removeMappingOPerations(edptName);
         } finally {
-            this.logger.fine("Specific part of SU = " + suDH.getName() + ") undeployed");
+            this.logger.fine("Specific part of SU = " + suDH.getName() + " undeployed");
         }
     }
 

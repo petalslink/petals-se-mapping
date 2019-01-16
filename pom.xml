@@ -98,14 +98,20 @@
       <dependency>
          <groupId>com.sun.mail</groupId>
          <artifactId>javax.mail</artifactId>
-	 <scope>test</scope>
-	 <exclusions>
+         <scope>test</scope>
+         <exclusions>
             <exclusion>
-               <!-- Already included in JRE 8 -->
+                  <!-- Already included in JRE 8 -->
                <groupId>javax.activation</groupId>
                <artifactId>activation</artifactId>
             </exclusion>
-	 </exclusions>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>net.sf.supercsv</groupId>
+         <artifactId>super-csv</artifactId>
+         <version>2.4.0</version>
+         <scope>test</scope>
       </dependency>
    </dependencies>
 

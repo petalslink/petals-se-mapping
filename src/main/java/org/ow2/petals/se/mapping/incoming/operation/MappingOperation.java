@@ -20,6 +20,7 @@ package org.ow2.petals.se.mapping.incoming.operation;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +39,7 @@ import org.ow2.easywsdl.wsdl.api.abstractItf.AbsItfOperation.MEPPatternConstants
 import org.ow2.petals.component.framework.api.message.Exchange;
 import org.ow2.petals.component.framework.jbidescriptor.generated.Consumes;
 import org.ow2.petals.component.framework.listener.AbstractListener;
+import org.ow2.petals.component.framework.util.ExchangeUtil;
 import org.ow2.petals.component.framework.util.NormalizedMessageUtil;
 import org.ow2.petals.se.mapping.incoming.message.MappingInputMessage;
 import org.ow2.petals.se.mapping.incoming.message.MappingOutputMessage;
@@ -160,12 +162,20 @@ public class MappingOperation {
             final EasyByteArrayOutputStream ebaos = new EasyByteArrayOutputStream();
             final Result transformedInputResult = new StreamResult(ebaos);
 
-            // TODO: Must be optimlized to avoid conversion Source <-> Document
+            // TODO: Must be optimized to avoid conversion Source <-> Document
             this.inputMessageMapping.transform(new DOMSource(inputSource), transformedInputResult, componentProperties);
 
             // Invoke the service - Create a new exchange
-            final Exchange subExchange = jbiMessageSender.createConsumeExchange(this.serviceProvider,
-                    MEPPatternConstants.fromURI(exchange.getPattern()));
+            final Boolean currentFlowTracingActivation;
+            final Optional<Boolean> msgFlowTracingActivation = ExchangeUtil.isFlowTracingActivated(exchange);
+            if (msgFlowTracingActivation.isPresent()) {
+                currentFlowTracingActivation = msgFlowTracingActivation.get();
+            } else {
+                currentFlowTracingActivation = Boolean.valueOf(
+                        jbiMessageSender.getComponent().isFlowTracingActivated(jbiMessageSender.getProvides()));
+            }
+            final Exchange subExchange = jbiMessageSender.createExchange(this.serviceProvider,
+                    MEPPatternConstants.fromURI(exchange.getPattern()), Optional.of(currentFlowTracingActivation));
             // We always use the operation from the service unit (the JBI Consumes defines the service used, not the
             // operation)
             subExchange.setOperation(this.serviceProviderOperation);
