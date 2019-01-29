@@ -22,10 +22,12 @@ import java.net.URL;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 
+import org.ow2.easywsdl.wsdl.api.abstractItf.AbsItfOperation.MEPPatternConstants;
 import org.ow2.petals.component.framework.junit.impl.ProvidesServiceConfiguration;
 import org.ow2.petals.component.framework.junit.monitoring.business.filtering.AbstractMonitTraceFilteringTestForSimpleOrchestration;
 import org.ow2.petals.component.framework.junit.monitoring.business.filtering.exception.ServiceProviderCfgCreationError;
 import org.ow2.petals.se.mapping.unit_test.facture.Consulter;
+import org.ow2.petals.se.mapping.unit_test.facture.Supprimer;
 
 /**
  * Unit tests about MONIT trace filtering.
@@ -51,13 +53,21 @@ public class MonitTraceFilteringTest extends AbstractMonitTraceFilteringTestForS
     }
 
     @Override
-    protected QName getConsumedServiceOperation() {
-        return AbstractEnv.GED_CONSULTER_OPERATION;
+    protected QName getConsumedServiceOperation(final MEPPatternConstants mep) {
+        if (mep == MEPPatternConstants.IN_OUT) {
+            return AbstractEnv.GED_CONSULTER_OPERATION;
+        } else {
+            return AbstractEnv.GED_SUPPRIMER_OPERATION;
+        }
     }
 
     @Override
-    protected QName getInvokedServiceProviderOperation() {
-        return AbstractEnv.OPERATION_CONSULTER;
+    protected QName getInvokedServiceProviderOperation(final MEPPatternConstants mep) {
+        if (mep == MEPPatternConstants.IN_OUT) {
+            return AbstractEnv.OPERATION_CONSULTER;
+        } else {
+            return AbstractEnv.OPERATION_SUPPRIMER;
+        }
     }
 
     @Override
@@ -66,13 +76,32 @@ public class MonitTraceFilteringTest extends AbstractMonitTraceFilteringTestForS
     }
 
     @Override
-    protected Object createRequestPayloadToProvider() {
-        return new Consulter();
+    protected MEPPatternConstants[] getMepsSupportedByServiceProvider() {
+        return new MEPPatternConstants[] { MEPPatternConstants.IN_ONLY, MEPPatternConstants.IN_OUT,
+                MEPPatternConstants.ROBUST_IN_ONLY };
     }
 
     @Override
-    protected Object createResponsePayloadToProvider() {
-        return new org.ow2.petals.se.mapping.unit_test.ged.ConsulterResponse();
+    protected Object createRequestPayloadToProvider(final MEPPatternConstants mep) {
+        if (mep == MEPPatternConstants.IN_OUT) {
+            return new Consulter();
+        } else {
+            return new Supprimer();
+        }
+    }
+
+    @Override
+    protected Object createResponsePayloadToProvider(final MEPPatternConstants mep, final boolean useAsFault) {
+        if (mep == MEPPatternConstants.IN_OUT) {
+            if (useAsFault) {
+                return new org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu();
+            } else {
+                return new org.ow2.petals.se.mapping.unit_test.ged.ConsulterResponse();
+            }
+        } else {
+            // mep == RobustInOnly && useAsFault == true
+            return new org.ow2.petals.se.mapping.unit_test.ged.DocumentInconnu();
+        }
     }
 
     @Override

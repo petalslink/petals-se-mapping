@@ -49,6 +49,8 @@ public abstract class AbstractEnv extends AbstractTest {
 
     protected static final QName OPERATION_CONSULTER = new QName(FACTURE_NAMESPACE, "consulter");
 
+    protected static final QName OPERATION_SUPPRIMER = new QName(FACTURE_NAMESPACE, "supprimer");
+
     protected static final QName OPERATION_OUT2FAULT = new QName(FACTURE_NAMESPACE, "out2fault");
 
     protected static final QName OPERATION_FAULT2OUT = new QName(FACTURE_NAMESPACE, "fault2out");

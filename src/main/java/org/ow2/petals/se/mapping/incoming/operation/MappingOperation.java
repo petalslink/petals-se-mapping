@@ -228,15 +228,22 @@ public class MappingOperation {
 
         try {
 
-            if (technicalExchange.getError() != null) {
-                // Technical error received from technical service
-                final Exception businessError = new MessagingException(
-                        String.format(
-                                "A technical error occurs at technical service level invoking the operation '%s' of the service '%s'.",
-                                technicalExchange.getOperation(), technicalExchange.getService()),
-                        technicalExchange.getError());
-                this.logger.log(Level.SEVERE, businessError.getMessage(), technicalExchange.getError());
-                businessExchange.setError(businessError);
+            if (technicalExchange.isErrorStatus()) {
+                if (technicalExchange.getError() != null) {
+                    // Technical error received from technical service
+                    final Exception businessError = new MessagingException(String.format(
+                            "A technical error occurs at technical service level invoking the operation '%s' of the service '%s'.",
+                            technicalExchange.getOperation(), technicalExchange.getService()),
+                            technicalExchange.getError());
+                    this.logger.log(Level.SEVERE, businessError.getMessage(), technicalExchange.getError());
+                    businessExchange.setError(businessError);
+                } else {
+                    final Exception businessError = new MessagingException(String.format(
+                            "A technical error status returned by the technical service invoking the operation '%s' of the service '%s'.",
+                            technicalExchange.getOperation(), technicalExchange.getService()));
+                    this.logger.log(Level.SEVERE, businessError.getMessage());
+                    businessExchange.setErrorStatus();
+                }
             } else if (technicalExchange.isDoneStatus()) {
                 // We receive a DONE status as response. It should be an exchange with pattern InOnly, RobustInOnly or
                 // InOptionalOut. We return the same status.
