@@ -36,16 +36,6 @@
       <maven-dependency-plugin.failOnWarning>false</maven-dependency-plugin.failOnWarning>
    </properties>
 
-   <dependencyManagement>
-      <dependencies>
-         <dependency>
-            <groupId>org.ow2.easycommons</groupId>
-            <artifactId>easycommons-util</artifactId>
-            <version>2.5.1-SNAPSHOT</version>
-         </dependency>
-      </dependencies>
-   </dependencyManagement>
-   
    <dependencies>
       <dependency>
          <groupId>org.ow2.petals</groupId>
