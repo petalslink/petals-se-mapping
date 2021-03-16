@@ -31,6 +31,29 @@
    <!-- No version set -->
    <packaging>jar</packaging>
    <description>ged-server</description>
+   
+   <dependencies>
+      <dependency>
+         <groupId>jakarta.xml.ws</groupId>
+         <artifactId>jakarta.xml.ws-api</artifactId>
+         <exclusions>
+            <exclusion>
+               <!-- Already included in com.sun.activation:jakarta.activation that we prefer -->
+               <groupId>jakarta.activation</groupId>
+               <artifactId>jakarta.activation-api</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <!-- Required by jakarta.xml.ws:jakarta.xml.ws-api -->
+         <groupId>com.sun.activation</groupId>
+         <artifactId>jakarta.activation</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>jakarta.jws</groupId>
+         <artifactId>jakarta.jws-api</artifactId>
+      </dependency>
+   </dependencies>
 
    <build>
       <plugins>

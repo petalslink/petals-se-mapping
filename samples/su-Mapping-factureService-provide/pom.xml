@@ -31,11 +31,6 @@
    <name>Petals ESB - Components - SE Mapping - Samples - SU Mapping FactureService</name>
    <!-- No version set -->
 
-   <properties>
-      <!-- Skip dependency check for service unit. -->
-      <maven-dependency-plugin.failOnWarning>false</maven-dependency-plugin.failOnWarning>
-   </properties>
-
    <dependencies>
       <dependency>
          <groupId>org.ow2.petals</groupId>
@@ -84,6 +79,21 @@
                            </resources>
                         </exception>
                      </exceptions>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>analyze</id>
+                  <configuration>
+                     <usedDependencies>
+                        <!-- The Petals component on which this SU must run -->
+                        <usedDependency>org.ow2.petals:petals-se-mapping</usedDependency>
+                     </usedDependencies>
                   </configuration>
                </execution>
             </executions>
