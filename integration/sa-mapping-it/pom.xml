@@ -45,9 +45,8 @@
             <groupId>org.ow2.petals</groupId>
             <artifactId>petals-maven-plugin</artifactId>
             <configuration>
-               <serviceAssemblyNameMapping>${project.artifactId}</serviceAssemblyNameMapping>
-               <!-- TODO: Use a better expression for 'serviceUnitNameMappingInSA' when MNG-3558 will be fixed -->
-               <serviceUnitNameMappingInSA>su-Mapping-factureService-provide</serviceUnitNameMappingInSA>
+               <serviceAssemblyNameMapping>${dollar}${dollar}{artifactId}</serviceAssemblyNameMapping>
+               <serviceUnitNameMappingInSA>${dollar}${dollar}{artifactId}</serviceUnitNameMappingInSA>
             </configuration>
          </plugin>
          <plugin>
