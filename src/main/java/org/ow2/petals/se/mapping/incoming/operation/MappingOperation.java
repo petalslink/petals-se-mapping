@@ -21,7 +21,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,6 +36,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.ow2.easywsdl.wsdl.api.abstractItf.AbsItfOperation.MEPPatternConstants;
 import org.ow2.petals.component.framework.api.message.Exchange;
+import org.ow2.petals.component.framework.api.util.Placeholders;
 import org.ow2.petals.component.framework.jbidescriptor.generated.Consumes;
 import org.ow2.petals.component.framework.listener.AbstractListener;
 import org.ow2.petals.component.framework.util.ExchangeUtil;
@@ -147,12 +147,12 @@ public class MappingOperation {
      * @param jbiMessageSender
      *            A JBI message sender
      * @param componentProperties
-     *            Properties defined in the property file configured at component level
+     *            Placeholders defined in the property file configured at component level
      * @return {@code true} if the given {@code exchange} must be terminated and sent back automatically by the CDK.
      *         {@code false} if the given {@code exchange} will be terminated manually
      */
     public boolean sendRequest(final Exchange exchange, final AbstractListener jbiMessageSender,
-            final Properties componentProperties) {
+            final Placeholders componentProperties) {
 
         try {
             // Get the input message content
@@ -219,10 +219,10 @@ public class MappingOperation {
      * @param context
      *            Asynchronous context of the technical service invocation
      * @param componentProperties
-     *            Properties defined in the property file configured at component level
+     *            Placeholders defined in the property file configured at component level
      */
     public void processResponse(final Exchange technicalExchange, final MappingOperationAsyncContext context,
-            final Properties componentProperties) {
+            final Placeholders componentProperties) {
 
         final Exchange businessExchange = context.getInitialExchange();
 

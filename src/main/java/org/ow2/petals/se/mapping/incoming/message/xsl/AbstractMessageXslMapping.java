@@ -19,7 +19,6 @@ package org.ow2.petals.se.mapping.incoming.message.xsl;
 
 import java.io.File;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
@@ -32,6 +31,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
+import org.ow2.petals.component.framework.api.util.Placeholders;
 import org.ow2.petals.se.mapping.incoming.message.AbsMappingMessage;
 import org.ow2.petals.se.mapping.incoming.message.AbstractMappingMessage;
 import org.ow2.petals.se.mapping.incoming.message.exception.InvalidAnnotationForMessageException;
@@ -136,7 +136,8 @@ public abstract class AbstractMessageXslMapping extends AbstractMappingMessage i
 
     /**
      * <p>
-     * Set XSL global parameters.</p>
+     * Set XSL global parameters.
+     * </p>
      * <p>
      * This implementation add all properties of the component property file.
      * </p>
@@ -146,13 +147,13 @@ public abstract class AbstractMessageXslMapping extends AbstractMappingMessage i
      * @param incomingSource
      *            The initial incoming request
      * @param componentProperties
-     *            Properties defined in the property file configured at component level
+     *            Placeholders defined in the property file configured at component level
      */
     protected void setXslParameters(final Transformer transformer, final Document incomingSource,
-            final Properties componentProperties) {
+            final Placeholders componentProperties) {
 
         if (componentProperties != null) {
-            for (final Entry<Object, Object> property : componentProperties.entrySet()) {
+            for (final Entry<Object, Object> property : componentProperties.toProperties().entrySet()) {
                 transformer.setParameter(
                         new QName(XSL_PARAM_PROPERTIES_NAMESPACE, property.getKey().toString()).toString(),
                         property.getValue().toString());
@@ -170,12 +171,12 @@ public abstract class AbstractMessageXslMapping extends AbstractMappingMessage i
      * @param businessRequest
      *            The XML {@code Document} associated to the incoming request
      * @param componentProperties
-     *            Properties defined in the property file configured at component level
+     *            Placeholders defined in the property file configured at component level
      * @throws TransformException
      *             An error occurs during transformation
      */
     protected void doTransform(final Source source, final Result target, final Document businessRequest,
-            final Properties componentProperties) throws TransformException {
+            final Placeholders componentProperties) throws TransformException {
         try {
             final Transformer transformer = this.xsl.newTransformer();
 

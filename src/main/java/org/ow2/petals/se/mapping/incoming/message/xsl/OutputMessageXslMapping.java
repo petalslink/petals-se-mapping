@@ -17,7 +17,6 @@
  */
 package org.ow2.petals.se.mapping.incoming.message.xsl;
 
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
@@ -25,6 +24,7 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 
+import org.ow2.petals.component.framework.api.util.Placeholders;
 import org.ow2.petals.se.mapping.incoming.condition.MappingOutputCondition;
 import org.ow2.petals.se.mapping.incoming.message.MappingOutputMessage;
 import org.ow2.petals.se.mapping.incoming.message.exception.InvalidAnnotationForMessageException;
@@ -83,14 +83,14 @@ public class OutputMessageXslMapping extends AbstractMessageXslMapping implement
 
     @Override
     protected void setXslParameters(final Transformer transformer, final Document incomingSource,
-            final Properties componentProperties) {
+            final Placeholders componentProperties) {
         super.setXslParameters(transformer, incomingSource, componentProperties);
         transformer.setParameter(XSL_PARAM_OUTPUT_INCOMING_REQUEST_STR, incomingSource);
     }
 
     @Override
     public void transform(final Source technicalResponse, final Result businessResponse, final Document businessRequest,
-            final Properties componentProperties) throws TransformException {
+            final Placeholders componentProperties) throws TransformException {
         this.doTransform(technicalResponse, businessResponse, businessRequest, componentProperties);
     }
 }

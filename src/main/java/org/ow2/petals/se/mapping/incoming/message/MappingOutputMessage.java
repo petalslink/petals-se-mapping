@@ -17,11 +17,10 @@
  */
 package org.ow2.petals.se.mapping.incoming.message;
 
-import java.util.Properties;
-
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.ow2.petals.component.framework.api.util.Placeholders;
 import org.ow2.petals.se.mapping.incoming.condition.MappingOutputCondition;
 import org.ow2.petals.se.mapping.incoming.message.exception.InvalidAnnotationForMessageException;
 import org.ow2.petals.se.mapping.incoming.message.exception.TransformException;
@@ -46,12 +45,12 @@ public interface MappingOutputMessage extends AbsMappingMessage {
      * @param businessRequest
      *            The XML {@code Document} associated to the incoming request
      * @param componentProperties
-     *            Properties defined in the property file configured at component level
+     *            Placeholders defined in the property file configured at component level
      * @throws TransformException
      *             An error occurs during transformation
      */
     public void transform(final Source technicalResponse, final Result businessResponse, final Document businessRequest,
-            final Properties componentProperties) throws TransformException;
+            final Placeholders componentProperties) throws TransformException;
 
     /**
      * Compute if the returned output must be a fault or a normal OUT message.

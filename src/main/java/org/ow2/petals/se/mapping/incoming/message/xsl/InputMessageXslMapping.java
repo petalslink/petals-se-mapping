@@ -17,13 +17,13 @@
  */
 package org.ow2.petals.se.mapping.incoming.message.xsl;
 
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.ow2.petals.component.framework.api.util.Placeholders;
 import org.ow2.petals.se.mapping.incoming.message.MappingInputMessage;
 import org.ow2.petals.se.mapping.incoming.message.exception.TransformException;
 
@@ -56,7 +56,7 @@ public class InputMessageXslMapping extends AbstractMessageXslMapping implements
 
     @Override
     public void transform(final Source technicalResponse, final Result businessResponse,
-            final Properties componentProperties) throws TransformException {
+            final Placeholders componentProperties) throws TransformException {
         this.doTransform(technicalResponse, businessResponse, null, componentProperties);
     }
 

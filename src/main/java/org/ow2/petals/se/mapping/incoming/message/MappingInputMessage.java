@@ -17,11 +17,10 @@
  */
 package org.ow2.petals.se.mapping.incoming.message;
 
-import java.util.Properties;
-
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.ow2.petals.component.framework.api.util.Placeholders;
 import org.ow2.petals.se.mapping.incoming.message.exception.TransformException;
 
 /**
@@ -41,10 +40,10 @@ public interface MappingInputMessage extends AbsMappingMessage {
      * @param technicalRequest
      *            The {@code Result} associated to the incoming request transformed.
      * @param componentProperties
-     *            Properties defined in the property file configured at component level
+     *            Placeholders defined in the property file configured at component level
      * @throws TransformException
      *             An error occurs during transformation
      */
     public void transform(final Source businessRequest, final Result technicalRequest,
-            final Properties componentProperties) throws TransformException;
+            final Placeholders componentProperties) throws TransformException;
 }
