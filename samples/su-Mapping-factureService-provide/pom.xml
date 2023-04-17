@@ -21,7 +21,7 @@
    <parent>
       <artifactId>petals-mapping-parent</artifactId>
       <groupId>org.ow2.petals.samples.mapping</groupId>
-      <version>1.2.0-1.0.0</version>
+      <version>1.2.0-2.0.0-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
@@ -105,6 +105,6 @@
    <scm>
       <connection>scm:git:https://github.com/petalslink/petals-se-mapping.git</connection>
       <developerConnection>scm:git:https://github.com/petalslink/petals-se-mapping.git</developerConnection>
-     <tag>petals-samples-mapping-1.2.0-1.0.0</tag>
+     <tag>HEAD</tag>
   </scm>
 </project>
