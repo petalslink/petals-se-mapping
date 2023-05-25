@@ -150,9 +150,9 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
         for (final MappingOperation mappingOperation : mappingOperations) {
 
             final MappingInputMessage inputMessageMapping = (MappingInputMessage) ReflectionHelper
-                    .getFieldValue(MappingOperation.class, mappingOperation, "inputMessageMapping", false);
+                    .getFieldValue(MappingOperation.class, mappingOperation, "inputMessageMapping");
             final MappingOutputMessage outputMessageMapping = (MappingOutputMessage) ReflectionHelper
-                    .getFieldValue(MappingOperation.class, mappingOperation, "outputMessageMapping", false);
+                    .getFieldValue(MappingOperation.class, mappingOperation, "outputMessageMapping");
 
             if (MAPPING_OP_ARCHIVER.equals(mappingOperation.getWsdlOperation())) {
                 op1_found = true;
@@ -205,9 +205,9 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
         for (final MappingOperation mappingOperation : mappingOperations) {
 
             final MappingInputMessage inputMessageMapping = (MappingInputMessage) ReflectionHelper
-                    .getFieldValue(MappingOperation.class, mappingOperation, "inputMessageMapping", false);
+                    .getFieldValue(MappingOperation.class, mappingOperation, "inputMessageMapping");
             final MappingOutputMessage outputMessageMapping = (MappingOutputMessage) ReflectionHelper
-                    .getFieldValue(MappingOperation.class, mappingOperation, "outputMessageMapping", false);
+                    .getFieldValue(MappingOperation.class, mappingOperation, "outputMessageMapping");
 
             if (MAPPING_OP_ARCHIVER.equals(mappingOperation.getWsdlOperation())) {
                 op1_found = true;
