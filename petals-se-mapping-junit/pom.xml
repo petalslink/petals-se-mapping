@@ -29,14 +29,14 @@
    <name>Petals ESB - Components - SE Mapping - JUnit framework</name>
    <artifactId>petals-se-mapping-junit</artifactId>
    <groupId>org.ow2.petals</groupId>
-   <version>1.2.1-SNAPSHOT</version>
+   <version>1.3.0-SNAPSHOT</version>
    <packaging>jar</packaging>
 
    <dependencies>
       <dependency>
          <groupId>org.ow2.petals</groupId>
          <artifactId>petals-se-mapping</artifactId>
-         <version>1.2.0</version>
+         <version>1.3.0-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>org.ow2.petals</groupId>

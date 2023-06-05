@@ -29,7 +29,7 @@
    <name>Petals ESB - Components - SE Mapping</name>
    <artifactId>petals-se-mapping</artifactId>
    <groupId>org.ow2.petals</groupId>
-   <version>1.2.1-SNAPSHOT</version>
+   <version>1.3.0-SNAPSHOT</version>
    <packaging>jbi-component</packaging>
    <description>Mapping Service Engine</description>
 
