@@ -17,11 +17,11 @@
  */
 package org.ow2.petals.samples.mapping.ged.server.service;
 
-import javax.activation.DataHandler;
-import javax.jws.WebService;
-import javax.xml.ws.soap.MTOM;
-
 import org.ow2.petals.samples.mapping.ged.server.service.data.DocumentInconnuException;
+
+import jakarta.activation.DataHandler;
+import jakarta.jws.WebService;
+import jakarta.xml.ws.soap.MTOM;
 
 @MTOM(enabled = true, threshold = 2048)
 @WebService(endpointInterface = "org.ow2.petals.samples.mapping.ged.server.service.GedService", serviceName = "GedService", portName = "GedServicePort")

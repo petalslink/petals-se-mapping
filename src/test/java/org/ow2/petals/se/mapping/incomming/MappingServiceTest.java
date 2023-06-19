@@ -20,12 +20,9 @@ package org.ow2.petals.se.mapping.incomming;
 import java.util.List;
 import java.util.logging.LogRecord;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
 import javax.jbi.messaging.ExchangeStatus;
 import javax.jbi.messaging.MessageExchange;
 import javax.jbi.messaging.MessageExchange.Role;
-import javax.mail.util.ByteArrayDataSource;
 import javax.xml.transform.Source;
 
 import org.junit.Test;
@@ -51,6 +48,10 @@ import org.ow2.petals.se.mapping.unit_test.facture.FactureInconnue;
 import org.ow2.petals.se.mapping.unit_test.facture.Supprimer;
 
 import com.ebmwebsourcing.easycommons.xml.SourceHelper;
+
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.mail.util.ByteArrayDataSource;
 
 /**
  * Unit tests about request processing of mapping services, with a component configured with default values

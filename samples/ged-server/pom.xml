@@ -49,10 +49,6 @@
          <groupId>com.sun.activation</groupId>
          <artifactId>jakarta.activation</artifactId>
       </dependency>
-      <dependency>
-         <groupId>jakarta.jws</groupId>
-         <artifactId>jakarta.jws-api</artifactId>
-      </dependency>
    </dependencies>
 
    <build>

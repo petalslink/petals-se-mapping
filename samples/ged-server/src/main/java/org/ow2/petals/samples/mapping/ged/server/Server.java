@@ -17,9 +17,9 @@
  */
 package org.ow2.petals.samples.mapping.ged.server;
 
-import javax.xml.ws.Endpoint;
-
 import org.ow2.petals.samples.mapping.ged.server.service.GedServiceImpl;
+
+import jakarta.xml.ws.Endpoint;
 
 public class Server {
 

@@ -55,15 +55,22 @@
          <artifactId>jakarta.xml.bind-api</artifactId>
          <exclusions>
             <exclusion>
-               <!-- Already included in com.sun.activation:jakarta.activation -->
+               <!-- Already included in com.sun.activation:jakarta.activation provided by Petals CDK -->
                <groupId>jakarta.activation</groupId>
                <artifactId>jakarta.activation-api</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
       <dependency>
-         <groupId>org.jvnet.jaxb2_commons</groupId>
-         <artifactId>jaxb2-basics-runtime</artifactId>
+         <groupId>org.patrodyne.jvnet</groupId>
+         <artifactId>hisrc-basicjaxb-runtime</artifactId>
+         <exclusions>
+            <exclusion>
+               <!-- Already included in com.sun.activation:jakarta.activation provided by Petals CDK -->
+               <groupId>jakarta.activation</groupId>
+               <artifactId>jakarta.activation-api</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.ow2.petals</groupId>
@@ -119,8 +126,8 @@
    <build>
       <plugins>
          <plugin>
-            <groupId>org.jvnet.jaxb2.maven2</groupId>
-            <artifactId>maven-jaxb2-plugin</artifactId>
+            <groupId>org.patrodyne.jvnet</groupId>
+            <artifactId>hisrc-higherjaxb-maven-plugin</artifactId>
             <executions>
                <execution>
                   <id>generate</id>

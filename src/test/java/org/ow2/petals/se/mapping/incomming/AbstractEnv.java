@@ -17,15 +17,16 @@
  */
 package org.ow2.petals.se.mapping.incomming;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 
 import org.ow2.petals.se.mapping.AbstractTest;
 
 import com.ebmwebsourcing.easycommons.lang.UncheckedException;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 
 /**
  * Abstract class for unit tests about request processing

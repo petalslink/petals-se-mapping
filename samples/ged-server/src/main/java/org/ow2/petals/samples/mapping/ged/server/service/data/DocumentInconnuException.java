@@ -17,7 +17,7 @@
  */
 package org.ow2.petals.samples.mapping.ged.server.service.data;
 
-import javax.xml.ws.WebFault;
+import jakarta.xml.ws.WebFault;
 
 @WebFault(name = "documentInconnu", targetNamespace = "http://service.server.ged.mapping.samples.petals.ow2.org/")
 public class DocumentInconnuException extends Exception {

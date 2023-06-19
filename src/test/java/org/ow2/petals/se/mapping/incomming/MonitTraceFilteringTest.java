@@ -19,7 +19,6 @@ package org.ow2.petals.se.mapping.incomming;
 
 import java.net.URL;
 
-import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 
 import org.ow2.easywsdl.wsdl.api.abstractItf.AbsItfOperation.MEPPatternConstants;
@@ -28,6 +27,8 @@ import org.ow2.petals.component.framework.junit.monitoring.business.filtering.Ab
 import org.ow2.petals.component.framework.junit.monitoring.business.filtering.exception.ServiceProviderCfgCreationError;
 import org.ow2.petals.se.mapping.unit_test.facture.Consulter;
 import org.ow2.petals.se.mapping.unit_test.facture.Supprimer;
+
+import jakarta.xml.bind.Marshaller;
 
 /**
  * Unit tests about MONIT trace filtering.
