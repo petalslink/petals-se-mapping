@@ -28,8 +28,8 @@ import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.ow2.petals.component.framework.jbidescriptor.generated.Consumes;
 import org.ow2.petals.se.mapping.AbstractTest;
 import org.ow2.petals.se.mapping.incoming.AnnotatedWsdlParser;
@@ -99,10 +99,10 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
 
     private final AnnotatedWsdlParser parser = new AnnotatedWsdlParser(this.logger);
 
-    @BeforeClass
+    @BeforeAll
     public static void setSuRootPath() throws URISyntaxException {
         final URL urlValidXsl = AnnotatedWsdlParserTest.class.getResource("/parser/xsl/input-valid.xsl");
-        assertNotNull("Valid xsl resource not found", urlValidXsl);
+        assertNotNull(urlValidXsl, "Valid xsl resource not found");
         final File validXsl = new File(urlValidXsl.toURI());
         SU_ROOT_PATH = validXsl.getParentFile().getAbsolutePath();
     }
@@ -116,7 +116,7 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
      */
     private Document readWsdlDocument(final String resourceName) throws SAXException, IOException {
         final InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
-        assertNotNull("WSDL not found", is);
+        assertNotNull(is, "WSDL not found");
         final DocumentBuilder docBuilder = DocumentBuilders.takeDocumentBuilder();
         try {
             return docBuilder.parse(is);
@@ -157,20 +157,20 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
             if (MAPPING_OP_ARCHIVER.equals(mappingOperation.getWsdlOperation())) {
                 op1_found = true;
                 assertNotNull(inputMessageMapping);
-                assertTrue(inputMessageMapping instanceof InputMessageXslMapping);
+                assertInstanceOf(InputMessageXslMapping.class, inputMessageMapping);
                 assertNull(outputMessageMapping);
             } else if (MAPPING_OP_CONSULTER.equals(mappingOperation.getWsdlOperation())) {
                 op2_found = true;
                 assertNotNull(inputMessageMapping);
-                assertTrue(inputMessageMapping instanceof InputMessageXslMapping);
+                assertInstanceOf(InputMessageXslMapping.class, inputMessageMapping);
                 assertNotNull(outputMessageMapping);
-                assertTrue(outputMessageMapping instanceof OutputMessageXslMapping);
+                assertInstanceOf(OutputMessageXslMapping.class, outputMessageMapping);
             } else if (MAPPING_OP_SUPPRIMER.equals(mappingOperation.getWsdlOperation())) {
                 op3_found = true;
                 assertNotNull(inputMessageMapping);
-                assertTrue(inputMessageMapping instanceof InputMessageXslMapping);
+                assertInstanceOf(InputMessageXslMapping.class, inputMessageMapping);
                 assertNotNull(outputMessageMapping);
-                assertTrue(outputMessageMapping instanceof OutputMessageXslMapping);
+                assertInstanceOf(OutputMessageXslMapping.class, outputMessageMapping);
             } else {
                 fail("Unexpected annotated operation");
             }
@@ -212,20 +212,20 @@ public class AnnotatedWsdlParserTest extends AbstractTest {
             if (MAPPING_OP_ARCHIVER.equals(mappingOperation.getWsdlOperation())) {
                 op1_found = true;
                 assertNotNull(inputMessageMapping);
-                assertTrue(inputMessageMapping instanceof InputMessageXslMapping);
+                assertInstanceOf(InputMessageXslMapping.class, inputMessageMapping);
                 assertNull(outputMessageMapping);
             } else if (MAPPING_OP_CONSULTER.equals(mappingOperation.getWsdlOperation())) {
                 op2_found = true;
                 assertNotNull(inputMessageMapping);
-                assertTrue(inputMessageMapping instanceof InputMessageXslMapping);
+                assertInstanceOf(InputMessageXslMapping.class, inputMessageMapping);
                 assertNotNull(outputMessageMapping);
-                assertTrue(outputMessageMapping instanceof OutputMessageXslMapping);
+                assertInstanceOf(OutputMessageXslMapping.class, outputMessageMapping);
             } else if (MAPPING_OP_SUPPRIMER.equals(mappingOperation.getWsdlOperation())) {
                 op3_found = true;
                 assertNotNull(inputMessageMapping);
-                assertTrue(inputMessageMapping instanceof InputMessageXslMapping);
+                assertInstanceOf(InputMessageXslMapping.class, inputMessageMapping);
                 assertNotNull(outputMessageMapping);
-                assertTrue(outputMessageMapping instanceof OutputMessageXslMapping);
+                assertInstanceOf(OutputMessageXslMapping.class, outputMessageMapping);
             } else {
                 fail("Unexpected annotated operation");
             }

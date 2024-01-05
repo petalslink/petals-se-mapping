@@ -31,6 +31,6 @@ public abstract class AbstractTest extends Assert {
 
     static {
         final URL logConfig = AbstractTest.class.getResource("/logging.properties");
-        assertNotNull("Logging configuration file not found", logConfig);
+        assertNotNull(logConfig, "Logging configuration file not found");
     }
 }
