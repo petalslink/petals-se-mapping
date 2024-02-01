@@ -17,10 +17,10 @@
  */
 package org.ow2.petals.se.mapping.junit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -60,7 +60,6 @@ import org.xmlunit.diff.Diff;
  * All stuff for unit testing of SU 'Mapping'
  * 
  * @author Christophe DENEUX - Linagora
- *
  */
 public class Assert {
 
@@ -83,19 +82,19 @@ public class Assert {
      * @param expectedOperations
      *            List of the expected operations declared in the WSDL.
      */
-    public static void assertWsdlCompliance(final QName[] expectedOperations) throws URISyntaxException,
-            IOException, JBIDescriptorException, PEtALSCDKException, WSDLException {
+    public static void assertWsdlCompliance(final QName[] expectedOperations)
+            throws URISyntaxException, IOException, JBIDescriptorException, PEtALSCDKException, WSDLException {
 
         final URL jbiDescriptorUrl = Thread.currentThread().getContextClassLoader().getResource("jbi/jbi.xml");
-        assertNotNull("SU JBI descriptor not found", jbiDescriptorUrl);
+        assertNotNull(jbiDescriptorUrl, "SU JBI descriptor not found");
 
         final File jbiDescriptorFile = new File(jbiDescriptorUrl.toURI());
         try (final FileInputStream isJbiDescr = new FileInputStream(jbiDescriptorFile)) {
             final Jbi jbiDescriptor = CDKJBIDescriptorBuilder.getInstance().buildJavaJBIDescriptor(isJbiDescr);
-            assertNotNull("Invalid JBI descriptor", jbiDescriptor);
-            assertNotNull("Invalid JBI descriptor", jbiDescriptor.getServices());
-            assertNotNull("Invalid JBI descriptor", jbiDescriptor.getServices().getProvides());
-            assertEquals("Invalid JBI descriptor", 1, jbiDescriptor.getServices().getProvides().size());
+            assertNotNull(jbiDescriptor, "Invalid JBI descriptor");
+            assertNotNull(jbiDescriptor.getServices(), "Invalid JBI descriptor");
+            assertNotNull(jbiDescriptor.getServices().getProvides(), "Invalid JBI descriptor");
+            assertEquals(1, jbiDescriptor.getServices().getProvides().size(), "Invalid JBI descriptor");
 
             final Provides provides = jbiDescriptor.getServices().getProvides().get(0);
 
@@ -122,7 +121,7 @@ public class Assert {
                         break;
                     }
                 }
-                assertTrue("Operation not found: " + expectedOperation.toString(), bFound);
+                assertTrue(bFound, "Operation not found: " + expectedOperation.toString());
             }
 
             // Assert that all actual operation are in expected operations
@@ -134,10 +133,9 @@ public class Assert {
                         break;
                     }
                 }
-                assertTrue("Operation not found: " + actualOperation.toString(), bFound);
+                assertTrue(bFound, "Operation not found: " + actualOperation.toString());
             }
         }
-
     }
 
     /**
@@ -157,27 +155,26 @@ public class Assert {
             final String xslResourceName) throws IOException, TransformerException, SAXException {
 
         final URL resultXmlUrl = Thread.currentThread().getContextClassLoader().getResource(resultXmlResourceName);
-        assertNotNull("XML resource file '" + resultXmlResourceName
-                + "' containing the XSL transformation result is not found", resultXmlUrl);
+        assertNotNull(resultXmlUrl, "XML resource file '" + resultXmlResourceName
+                + "' containing the XSL transformation result is not found");
         // TODO: the content of the resource file must be validated against WSDL
 
         final URL xmlResourceUrl = Thread.currentThread().getContextClassLoader().getResource(xmlResourceName);
-        assertNotNull("XML resource file '" + xmlResourceName + "' to transform is not found", xmlResourceUrl);
+        assertNotNull(xmlResourceUrl, "XML resource file '" + xmlResourceName + "' to transform is not found");
         // TODO: the content of the resource file must be validated against WSDL
 
         final URL xslResourceUrl = Thread.currentThread().getContextClassLoader().getResource("jbi/" + xslResourceName);
-        assertNotNull("XSL resource file '" + xslResourceName + "' is not found", xslResourceUrl);
-        
+        assertNotNull(xslResourceUrl, "XSL resource file '" + xslResourceName + "' is not found");
+
         // Execute the transformation
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Transform.source(Input.fromURL(xmlResourceUrl).build()).
-                withStylesheet(Input.fromURL(xslResourceUrl).build()).
-                build().to(new StreamResult(baos));
+        Transform.source(Input.fromURL(xmlResourceUrl).build()).withStylesheet(Input.fromURL(xslResourceUrl).build())
+                .build().to(new StreamResult(baos));
 
         final Diff diff = DiffBuilder.compare(Input.fromURL(resultXmlUrl))
                 .withTest(Input.fromStream(new ByteArrayInputStream(baos.toByteArray()))).checkForSimilar()
                 .ignoreComments().build();
-        assertFalse(String.format("Unexpected XML result: %s%n%s", baos.toString(), diff.toString()),
-                diff.hasDifferences());
+        assertFalse(diff.hasDifferences(),
+                String.format("Unexpected XML result: %s%n%s", baos.toString(), diff.toString()));
     }
 }

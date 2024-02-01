@@ -25,7 +25,7 @@ import javax.jbi.messaging.MessageExchange;
 import javax.jbi.messaging.MessageExchange.Role;
 import javax.xml.transform.Source;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.ow2.easywsdl.wsdl.api.abstractItf.AbsItfOperation;
 import org.ow2.petals.commons.log.FlowLogData;
 import org.ow2.petals.commons.log.Level;
@@ -57,7 +57,6 @@ import jakarta.mail.util.ByteArrayDataSource;
  * Unit tests about request processing of mapping services, with a component configured with default values
  * 
  * @author Christophe DENEUX - Linagora
- * 
  */
 public class MappingServiceTest extends AbstractComponentTest {
 
@@ -134,8 +133,8 @@ public class MappingServiceTest extends AbstractComponentTest {
         // Check the reply
         assertFalse(businessResponse.isFault());
         final Source fault = businessResponse.getFault();
-        assertNull("Unexpected fault", (fault == null ? null : SourceHelper.toString(fault)));
-        assertNotNull("No XML payload in response", businessResponse.getPayload());
+        assertNull(fault == null ? null : SourceHelper.toString(fault), "Unexpected fault");
+        assertNotNull(businessResponse.getPayload(), "No XML payload in response");
         final Object businessResponseBeanObj = UNMARSHALLER.unmarshal(businessResponse.getPayload());
         assertTrue(businessResponseBeanObj instanceof ConsulterResponse);
         final ConsulterResponse businessResponseBean = (ConsulterResponse) businessResponseBeanObj;
@@ -147,7 +146,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         COMPONENT.receiveStatusAsExternalProvider(technicalServiceMock);
 
         // Check MONIT traces
-        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        final List<LogRecord> monitLogs_1 = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
         assertEquals(4, monitLogs_1.size());
         final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
                 FACTURE_ENDPOINT, OPERATION_CONSULTER, monitLogs_1.get(0));
@@ -229,8 +228,8 @@ public class MappingServiceTest extends AbstractComponentTest {
         // Check the reply
         assertTrue(businessResponse.isFault());
         final Source out = businessResponse.getOut();
-        assertNull("Unexpected OUT message", (out == null ? null : SourceHelper.toString(out)));
-        assertNotNull("No XML payload in fault", businessResponse.getPayload());
+        assertNull(out == null ? null : SourceHelper.toString(out), "Unexpected OUT message");
+        assertNotNull(businessResponse.getPayload(), "No XML payload in fault");
         final Object businessResponseBeanObj = UNMARSHALLER.unmarshal(businessResponse.getPayload());
         assertTrue(businessResponseBeanObj instanceof FactureInconnue);
         final FactureInconnue businessResponseBean = (FactureInconnue) businessResponseBeanObj;
@@ -240,7 +239,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         COMPONENT.receiveStatusAsExternalProvider(technicalServiceMock);
 
         // Check MONIT traces
-        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        final List<LogRecord> monitLogs_1 = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
         assertEquals(4, monitLogs_1.size());
         final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
                 FACTURE_ENDPOINT, OPERATION_CONSULTER, monitLogs_1.get(0));
@@ -322,8 +321,8 @@ public class MappingServiceTest extends AbstractComponentTest {
         // Check the reply
         assertFalse(businessResponse.isFault());
         final Source fault = businessResponse.getFault();
-        assertNull("Unexpected fault", (fault == null ? null : SourceHelper.toString(fault)));
-        assertNotNull("No XML payload in response", businessResponse.getPayload());
+        assertNull(fault == null ? null : SourceHelper.toString(fault), "Unexpected fault");
+        assertNotNull(businessResponse.getPayload(), "No XML payload in response");
         final Object businessResponseBeanObj = UNMARSHALLER.unmarshal(businessResponse.getPayload());
         assertTrue(businessResponseBeanObj instanceof Supprimer);
         final Supprimer businessResponseBean = (Supprimer) businessResponseBeanObj;
@@ -333,7 +332,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         COMPONENT.receiveStatusAsExternalProvider(technicalServiceMock);
 
         // Check MONIT traces
-        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        final List<LogRecord> monitLogs_1 = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
         assertEquals(4, monitLogs_1.size());
         final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
                 FACTURE_ENDPOINT, OPERATION_FAULT2OUT, monitLogs_1.get(0));
@@ -416,8 +415,8 @@ public class MappingServiceTest extends AbstractComponentTest {
         // Check the reply
         assertTrue(businessResponse.isFault());
         final Source out = businessResponse.getOut();
-        assertNull("Unexpected OUT message", (out == null ? null : SourceHelper.toString(out)));
-        assertNotNull("No XML payload in fault", businessResponse.getPayload());
+        assertNull(out == null ? null : SourceHelper.toString(out), "Unexpected OUT message");
+        assertNotNull(businessResponse.getPayload(), "No XML payload in fault");
         final Object businessResponseBeanObj = UNMARSHALLER.unmarshal(businessResponse.getPayload());
         assertTrue(businessResponseBeanObj instanceof FactureInconnue);
         final FactureInconnue businessResponseBean = (FactureInconnue) businessResponseBeanObj;
@@ -427,7 +426,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         COMPONENT.receiveStatusAsExternalProvider(technicalServiceMock);
 
         // Check MONIT traces
-        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        final List<LogRecord> monitLogs_1 = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
         assertEquals(4, monitLogs_1.size());
         final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
                 FACTURE_ENDPOINT, OPERATION_OUT2FAULT, monitLogs_1.get(0));
@@ -506,7 +505,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         assertEquals(myError, businessStatus.getError().getCause().getMessage());
 
         // Check MONIT traces
-        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        final List<LogRecord> monitLogs_1 = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
         assertEquals(4, monitLogs_1.size());
         final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
                 FACTURE_ENDPOINT, OPERATION_CONSULTER, monitLogs_1.get(0));
@@ -598,7 +597,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         assertTrue(businessStatus.getError().getMessage().contains(GED_SERVICE.toString()));
 
         // Check MONIT traces
-        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        final List<LogRecord> monitLogs_1 = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
         assertEquals(4, monitLogs_1.size());
         final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
                 FACTURE_ENDPOINT, OPERATION_CONSULTER, monitLogs_1.get(0));
@@ -681,7 +680,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         assertEquals(ExchangeStatus.DONE, businessStatus.getStatus());
 
         // Check MONIT traces
-        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        final List<LogRecord> monitLogs_1 = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
         assertEquals(4, monitLogs_1.size());
         final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
                 FACTURE_ENDPOINT, OPERATION_ARCHIVER, monitLogs_1.get(0));
@@ -763,7 +762,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         assertEquals(myErrorMsg, businessStatus.getError().getCause().getMessage());
 
         // Check MONIT traces
-        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        final List<LogRecord> monitLogs_1 = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
         assertEquals(4, monitLogs_1.size());
         final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
                 FACTURE_ENDPOINT, OPERATION_ARCHIVER, monitLogs_1.get(0));
@@ -843,7 +842,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         assertEquals(ExchangeStatus.DONE, businessStatus.getStatus());
 
         // Check MONIT traces
-        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        final List<LogRecord> monitLogs_1 = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
         assertEquals(4, monitLogs_1.size());
         final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
                 FACTURE_ENDPOINT, OPERATION_ARCHIVER, monitLogs_1.get(0));
@@ -925,7 +924,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         assertEquals(myErrorMsg, businessStatus.getError().getCause().getMessage());
 
         // Check MONIT traces
-        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        final List<LogRecord> monitLogs_1 = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
         assertEquals(4, monitLogs_1.size());
         final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
                 FACTURE_ENDPOINT, OPERATION_ARCHIVER, monitLogs_1.get(0));
@@ -1011,8 +1010,8 @@ public class MappingServiceTest extends AbstractComponentTest {
         // Check the reply
         assertTrue(businessResponse.isFault());
         final Source out = businessResponse.getOut();
-        assertNull("Unexpected OUT message", (out == null ? null : SourceHelper.toString(out)));
-        assertNotNull("No XML payload in fault", businessResponse.getPayload());
+        assertNull(out == null ? null : SourceHelper.toString(out), "Unexpected OUT message");
+        assertNotNull(businessResponse.getPayload(), "No XML payload in fault");
         final Object businessResponseBeanObj = UNMARSHALLER.unmarshal(businessResponse.getPayload());
         assertTrue(businessResponseBeanObj instanceof FactureExistante);
         final FactureExistante businessResponseBean = (FactureExistante) businessResponseBeanObj;
@@ -1022,7 +1021,7 @@ public class MappingServiceTest extends AbstractComponentTest {
         COMPONENT.receiveStatusAsExternalProvider(technicalServiceMock);
 
         // Check MONIT traces
-        final List<LogRecord> monitLogs_1 = IN_MEMORY_LOG_HANDLER.getAllRecords(Level.MONIT);
+        final List<LogRecord> monitLogs_1 = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
         assertEquals(4, monitLogs_1.size());
         final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
                 FACTURE_ENDPOINT, OPERATION_ARCHIVER, monitLogs_1.get(0));

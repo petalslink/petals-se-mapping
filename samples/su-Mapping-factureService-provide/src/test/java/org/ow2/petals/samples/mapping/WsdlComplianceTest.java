@@ -21,7 +21,7 @@ import static org.ow2.petals.se.mapping.junit.Assert.assertWsdlCompliance;
 
 import javax.xml.namespace.QName;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test of the compliance of the service WSDL

@@ -21,7 +21,7 @@
    <parent>
       <artifactId>petals-mapping-parent</artifactId>
       <groupId>org.ow2.petals.samples.mapping</groupId>
-      <version>1.2.0-2.0.0-SNAPSHOT</version>
+      <version>1.3.0-1.0.0-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
@@ -62,7 +62,7 @@
                   <configuration>
                      <usedDependencies>
                         <!-- We don't provide unit test in this project -->
-                        <usedDependency>junit:junit</usedDependency>
+                        <usedDependency>org.junit.jupiter:junit-jupiter-api</usedDependency>
                      </usedDependencies>
                   </configuration>
                </execution>

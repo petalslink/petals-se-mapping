@@ -34,7 +34,6 @@ import jakarta.xml.bind.Marshaller;
  * Unit tests about MONIT trace filtering.
  * 
  * @author Christophe DENEUX - Linagora
- * 
  */
 public class MonitTraceFilteringTest extends AbstractMonitTraceFilteringTestForSimpleOrchestration {
 
@@ -110,48 +109,48 @@ public class MonitTraceFilteringTest extends AbstractMonitTraceFilteringTestForS
             throws ServiceProviderCfgCreationError {
 
         final URL wsdlUrl = Thread.currentThread().getContextClassLoader().getResource("su/valid/facture.wsdl");
-        assertNotNull("Rule #" + ruleIdx + ": WSDl not found", wsdlUrl);
+        assertNotNull(wsdlUrl, "Rule #" + ruleIdx + ": WSDl not found");
         final ProvidesServiceConfiguration serviceProviderCfg = new ProvidesServiceConfiguration(
                 AbstractEnv.FACTURE_INTERFACE, AbstractEnv.FACTURE_SERVICE, AbstractEnv.FACTURE_ENDPOINT, wsdlUrl);
 
         final URL inputArchiverXslUrl = Thread.currentThread().getContextClassLoader()
                 .getResource("su/valid/input-archiver.xsl");
-        assertNotNull("Rule #" + ruleIdx + ": XSL 'input-archiver.xsl' not found", inputArchiverXslUrl);
+        assertNotNull(inputArchiverXslUrl, "Rule #" + ruleIdx + ": XSL 'input-archiver.xsl' not found");
         serviceProviderCfg.addResource(inputArchiverXslUrl);
 
         final URL outputArchiverXslUrl = Thread.currentThread().getContextClassLoader()
                 .getResource("su/valid/output-archiver.xsl");
-        assertNotNull("Rule #" + ruleIdx + ": XSL 'output-archiver.xsl' not found", outputArchiverXslUrl);
+        assertNotNull(outputArchiverXslUrl, "Rule #" + ruleIdx + ": XSL 'output-archiver.xsl' not found");
         serviceProviderCfg.addResource(outputArchiverXslUrl);
 
         final URL inputConsulterXslUrl = Thread.currentThread().getContextClassLoader()
                 .getResource("su/valid/input-consulter.xsl");
-        assertNotNull("Rule #" + ruleIdx + ": XSL 'input-consulter.xsl' not found", inputConsulterXslUrl);
+        assertNotNull(inputConsulterXslUrl, "Rule #" + ruleIdx + ": XSL 'input-consulter.xsl' not found");
         serviceProviderCfg.addResource(inputConsulterXslUrl);
 
         final URL outputConsulterXslUrl = Thread.currentThread().getContextClassLoader()
                 .getResource("su/valid/output-consulter.xsl");
-        assertNotNull("Rule #" + ruleIdx + ": XSL 'output-consulter.xsl' not found", outputConsulterXslUrl);
+        assertNotNull(outputConsulterXslUrl, "Rule #" + ruleIdx + ": XSL 'output-consulter.xsl' not found");
         serviceProviderCfg.addResource(outputConsulterXslUrl);
 
         final URL inputSupprimerXslUrl = Thread.currentThread().getContextClassLoader()
                 .getResource("su/valid/input-supprimer.xsl");
-        assertNotNull("Rule #" + ruleIdx + ": XSL 'input-supprimer.xsl' not found", inputSupprimerXslUrl);
+        assertNotNull(inputSupprimerXslUrl, "Rule #" + ruleIdx + ": XSL 'input-supprimer.xsl' not found");
         serviceProviderCfg.addResource(inputSupprimerXslUrl);
 
         final URL outputSupprimerXslUrl = Thread.currentThread().getContextClassLoader()
                 .getResource("su/valid/output-supprimer.xsl");
-        assertNotNull("Rule #" + ruleIdx + ": XSL 'output-supprimer.xsl' not found", outputSupprimerXslUrl);
+        assertNotNull(outputSupprimerXslUrl, "Rule #" + ruleIdx + ": XSL 'output-supprimer.xsl' not found");
         serviceProviderCfg.addResource(outputSupprimerXslUrl);
 
         final URL outputOut2FaultXslUrl = Thread.currentThread().getContextClassLoader()
                 .getResource("su/valid/output-out2fault.xsl");
-        assertNotNull("Rule #" + ruleIdx + ": XSL 'output-out2fault.xsl' not found", outputOut2FaultXslUrl);
+        assertNotNull(outputOut2FaultXslUrl, "Rule #" + ruleIdx + ": XSL 'output-out2fault.xsl' not found");
         serviceProviderCfg.addResource(outputOut2FaultXslUrl);
 
         final URL outputFault2OutXslUrl = Thread.currentThread().getContextClassLoader()
                 .getResource("su/valid/output-fault2out.xsl");
-        assertNotNull("Rule #" + ruleIdx + ": XSL 'output-fault2out.xsl' not found", outputFault2OutXslUrl);
+        assertNotNull(outputFault2OutXslUrl, "Rule #" + ruleIdx + ": XSL 'output-fault2out.xsl' not found");
         serviceProviderCfg.addResource(outputFault2OutXslUrl);
 
         return serviceProviderCfg;
