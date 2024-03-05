@@ -136,10 +136,14 @@ public class JBIListener extends AbstractJBIListener {
     @Override
     public void onExpiredAsyncJBIMessage(final Exchange asyncExchange, final AsyncContext asyncContext) {
 
+        // On time-out, we just log a message. No error can be returned
+        super.onExpiredAsyncJBIMessage(asyncExchange, asyncContext);
+
         if (asyncContext instanceof MappingOperationAsyncContext) {
             final MappingOperationAsyncContext mappingOperationAsyncContext = (MappingOperationAsyncContext) asyncContext;
 
-            mappingOperationAsyncContext.getMappingOperation().processExpiredResponse(mappingOperationAsyncContext);
+            mappingOperationAsyncContext.getMappingOperation().processExpiredResponse(mappingOperationAsyncContext,
+                    this.getTimeout(this.getConsumes()));
 
             try {
                 this.send(mappingOperationAsyncContext.getInitialExchange());

@@ -84,6 +84,8 @@ public abstract class AbstractComponentTest extends AbstractTest {
 
     protected static final QName GED_SUPPRIMER_OPERATION = new QName(GED_NAMESPACE, "supprimer");
 
+    protected static final long GED_TIMEOUT = 4000;
+
     protected static final String VALID_SU = "valid-su";
 
     protected static final String COMP_PROPERTY_VALUE_1 = "value-1";
@@ -168,7 +170,7 @@ public abstract class AbstractComponentTest extends AbstractTest {
                 }
             }).registerExternalServiceProvider(GED_ENDPOINT, GED_SERVICE, GED_INTERFACE);
 
-    private static Marshaller MARSHALLER;
+    protected static Marshaller MARSHALLER;
 
     protected static Unmarshaller UNMARSHALLER;
 
