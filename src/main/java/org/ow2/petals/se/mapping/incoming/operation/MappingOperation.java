@@ -35,10 +35,13 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.ow2.easywsdl.wsdl.api.abstractItf.AbsItfOperation.MEPPatternConstants;
+import org.ow2.petals.commons.log.FlowAttributes;
+import org.ow2.petals.commons.log.PetalsExecutionContext;
 import org.ow2.petals.component.framework.api.message.Exchange;
 import org.ow2.petals.component.framework.api.util.Placeholders;
 import org.ow2.petals.component.framework.jbidescriptor.generated.Consumes;
 import org.ow2.petals.component.framework.listener.AbstractListener;
+import org.ow2.petals.component.framework.logger.StepLogHelper;
 import org.ow2.petals.component.framework.util.ExchangeUtil;
 import org.ow2.petals.component.framework.util.NormalizedMessageUtil;
 import org.ow2.petals.se.mapping.incoming.message.MappingInputMessage;
@@ -136,8 +139,7 @@ public class MappingOperation {
      * </p>
      * <ol>
      * <li>transform the incoming request,</li>
-     * <li>invoke a service using the transformed request,
-     * <li>
+     * <li>invoke a service using the transformed request,</li>
      * <li>transform the service reply,</li>
      * <li>and return it to the caller.</li>
      * </ol>
@@ -320,13 +322,35 @@ public class MappingOperation {
      * 
      * @param context
      *            Asynchronous context of the technical service invocation
+     * @param timeout
+     *            The duration of the timeout fired
      */
-    public void processExpiredResponse(final MappingOperationAsyncContext context) {
+    public void processExpiredResponse(final MappingOperationAsyncContext context, final long timeout) {
 
-        final String errorMessage = String.format("The timeout occurs invoking the operation '%s' of the service '%s'",
-                context.getTechnicalOperationName().toString(), context.getTechnicalServiceName().toString());
-        this.logger.log(Level.WARNING, errorMessage);
-        context.getInitialExchange().setError(new MessagingException(errorMessage));
+        // A timeout warning message is already logged at Petals CDK level
+        
+        // We prepare the timeout error to return
+        
+        // TODO: Perhaps can we build and set the timeout error message at CDK level, for example in
+        // AbstractJBIListener.onExpiredAsyncJBIMessage() ?
+
+        final String interfaceName = this.serviceProvider.getInterfaceName().toString();
+        final String serviceName = this.serviceProvider.getServiceName() == null
+                ? StepLogHelper.TIMEOUT_ERROR_MSG_UNDEFINED_REF
+                : this.serviceProvider.getServiceName().toString();
+        final String endpointName = this.serviceProvider.getEndpointName() == null
+                ? StepLogHelper.TIMEOUT_ERROR_MSG_UNDEFINED_REF
+                : this.serviceProvider.getEndpointName();
+        final String operationName = this.serviceProvider.getOperation() == null
+                ? StepLogHelper.TIMEOUT_ERROR_MSG_UNDEFINED_REF
+                : this.serviceProvider.getOperation().toString();
+        final FlowAttributes currentFlowAttributes = PetalsExecutionContext.getFlowAttributes();
+
+        final String timeoutErrorMessage = String.format(StepLogHelper.TIMEOUT_ERROR_MSG_PATTERN,
+                timeout, interfaceName, serviceName, endpointName,
+                operationName, currentFlowAttributes.getFlowInstanceId(), currentFlowAttributes.getFlowStepId());
+        
+        context.getInitialExchange().setError(new MessagingException(timeoutErrorMessage));
     }
 
     /**
