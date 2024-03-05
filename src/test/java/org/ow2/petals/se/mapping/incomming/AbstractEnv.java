@@ -36,8 +36,6 @@ import jakarta.xml.bind.Unmarshaller;
  */
 public abstract class AbstractEnv extends AbstractTest {
 
-    protected static final long FACTURE_TIMEOUT = 4000;
-
     private static final String FACTURE_NAMESPACE = "http://petals.ow2.org/se/mapping/unit-test/facture";
 
     protected static final QName FACTURE_INTERFACE = new QName(FACTURE_NAMESPACE, "facture");
@@ -69,6 +67,8 @@ public abstract class AbstractEnv extends AbstractTest {
     protected static final QName GED_CONSULTER_OPERATION = new QName(GED_NAMESPACE, "consulter");
 
     protected static final QName GED_SUPPRIMER_OPERATION = new QName(GED_NAMESPACE, "supprimer");
+
+    protected static final long GED_TIMEOUT = 4000;
 
     protected static final String VALID_SU = "valid-su";
 

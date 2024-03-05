@@ -113,7 +113,7 @@ public abstract class AbstractComponentTest extends AbstractEnv {
                         // Technical consumed service 'ged'
                         final ConsumesServiceConfiguration consumeServiceConfiguration = new ConsumesServiceConfiguration(
                                 GED_INTERFACE, GED_SERVICE, GED_ENDPOINT);
-                        consumeServiceConfiguration.setTimeout(FACTURE_TIMEOUT);
+                        consumeServiceConfiguration.setTimeout(GED_TIMEOUT);
                         serviceConfiguration.addServiceConfigurationDependency(consumeServiceConfiguration);
 
                         return serviceConfiguration;

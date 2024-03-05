@@ -19,6 +19,7 @@ package org.ow2.petals.se.mapping.incomming;
 
 import java.util.List;
 import java.util.logging.LogRecord;
+import java.util.regex.Pattern;
 
 import javax.jbi.messaging.ExchangeStatus;
 import javax.jbi.messaging.MessageExchange;
@@ -40,6 +41,7 @@ import org.ow2.petals.component.framework.junit.impl.message.FaultToConsumerMess
 import org.ow2.petals.component.framework.junit.impl.message.RequestToProviderMessage;
 import org.ow2.petals.component.framework.junit.impl.message.ResponseToConsumerMessage;
 import org.ow2.petals.component.framework.junit.impl.message.StatusToConsumerMessage;
+import org.ow2.petals.component.framework.logger.StepLogHelper;
 import org.ow2.petals.se.mapping.unit_test.facture.Archiver;
 import org.ow2.petals.se.mapping.unit_test.facture.Consulter;
 import org.ow2.petals.se.mapping.unit_test.facture.ConsulterResponse;
@@ -517,6 +519,154 @@ public class MappingServiceTest extends AbstractComponentTest {
 
     /**
      * <p>
+     * Check the message processing where the service is invoked with a valid in-only request where the sub-service is
+     * too long to reply.
+     * </p>
+     * <p>
+     * Expected results:
+     * </p>
+     * <ul>
+     * <li>a timeout occurs waiting the status message of the sub-service,</li>
+     * <li>the sub-service is correctly called,</li>
+     * <li>a timeout error is returned,</li>
+     * <li>a timeout warning message is logged,</li>
+     * <li>expected MONIT traces are logged.</li>
+     * </ul>
+     */
+    @Test
+    public void validInOnlyRequest_WithTimeout() throws Exception {
+
+        final String factureId = "my-facture-id";
+
+        final Archiver businessRequestBean = new Archiver();
+        businessRequestBean.setIdentifiant(factureId);
+        final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
+        final DataHandler dh = new DataHandler(ds);
+        businessRequestBean.setDocument(dh);
+
+        // Send the valid request
+        final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
+                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.IN_ONLY.value(), businessRequestBean,
+                MARSHALLER);
+
+        final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
+
+            @Override
+            public Message provides(final RequestMessage technicalRequest) throws Exception {
+
+                // We return a status DONE after a slow processing simulated
+                final StatusMessage response = new StatusToConsumerMessage(technicalRequest, ExchangeStatus.DONE);
+                Thread.sleep(GED_TIMEOUT + 2000);
+                return response;
+            }
+
+            @Override
+            public boolean statusExpected() {
+                return false;
+            }
+        };
+
+        // We send the business request to the mapping service, and we check that the technical service receives the
+        // right request
+        final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
+
+        // Check the reply
+        assertNull(businessStatus.getOut());
+        assertEquals(ExchangeStatus.ERROR, businessStatus.getStatus());
+        final Pattern msgPattern = Pattern.compile(String.format(
+                "A timeout expired \\(%d ms\\) sending a message to a service provider \\(%s\\|%s\\|%s\\|%s\\) in the context of the flow step '[-0-9a-f-]*\\/[-0-9a-f-]*'",
+                GED_TIMEOUT, Pattern.quote(GED_INTERFACE.toString()), Pattern.quote(GED_SERVICE.toString()),
+                GED_ENDPOINT, StepLogHelper.TIMEOUT_ERROR_MSG_UNDEFINED_REF));
+        assertTrue(msgPattern.matcher(businessStatus.getError().getMessage()).matches());
+
+        // Check MONIT traces
+        final List<LogRecord> monitLogs = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
+        assertEquals(4, monitLogs.size());
+        final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
+                FACTURE_ENDPOINT, OPERATION_ARCHIVER, monitLogs.get(0));
+        final FlowLogData technicalBeginFlowLogData = assertMonitProviderBeginLog(businessBeginFlowLogData,
+                GED_INTERFACE, GED_SERVICE, GED_ENDPOINT, GED_ARCHIVER_OPERATION, monitLogs.get(1));
+        assertMonitProviderTimeoutLog(GED_TIMEOUT, GED_INTERFACE, GED_SERVICE, GED_ENDPOINT, null,
+                businessBeginFlowLogData, monitLogs.get(2));
+        assertMonitProviderEndLog(technicalBeginFlowLogData, monitLogs.get(3));
+    }
+
+    /**
+     * <p>
+     * Check the message processing where the service is invoked with a valid robust-in-only request where the
+     * sub-service is too long to reply.
+     * </p>
+     * <p>
+     * Expected results:
+     * </p>
+     * <ul>
+     * <li>a timeout occurs waiting the status message of the sub-service,</li>
+     * <li>the sub-service is correctly called,</li>
+     * <li>a timeout error is returned,</li>
+     * <li>a timeout warning message is logged,</li>
+     * <li>expected MONIT traces are logged.</li>
+     * </ul>
+     */
+    @Test
+    public void validRobustInOnlyRequest_WithTimeout() throws Exception {
+
+        final String factureId = "my-facture-id";
+
+        final Archiver businessRequestBean = new Archiver();
+        businessRequestBean.setIdentifiant(factureId);
+        final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
+        final DataHandler dh = new DataHandler(ds);
+        businessRequestBean.setDocument(dh);
+
+        // Send the valid request
+        final RequestToProviderMessage businessRequest = new RequestToProviderMessage(COMPONENT_UNDER_TEST, VALID_SU,
+                OPERATION_ARCHIVER, AbsItfOperation.MEPPatternConstants.ROBUST_IN_ONLY.value(), businessRequestBean,
+                MARSHALLER);
+
+        final ServiceProviderImplementation technicalServiceMock = new ServiceProviderImplementation() {
+
+            @Override
+            public Message provides(final RequestMessage technicalRequest) throws Exception {
+
+                // We return a status DONE after a slow processing simulated
+                final StatusMessage response = new StatusToConsumerMessage(technicalRequest, ExchangeStatus.DONE);
+                Thread.sleep(GED_TIMEOUT + 2000);
+                return response;
+            }
+
+            @Override
+            public boolean statusExpected() {
+                return false;
+            }
+        };
+
+        // We send the business request to the mapping service, and we check that the technical service receives the
+        // right request
+        final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock);
+
+        // Check the reply
+        assertNull(businessStatus.getOut());
+        assertEquals(ExchangeStatus.ERROR, businessStatus.getStatus());
+        final Pattern msgPattern = Pattern.compile(String.format(
+                "A timeout expired \\(%d ms\\) sending a message to a service provider \\(%s\\|%s\\|%s\\|%s\\) in the context of the flow step '[-0-9a-f-]*\\/[-0-9a-f-]*'",
+                GED_TIMEOUT, Pattern.quote(GED_INTERFACE.toString()), Pattern.quote(GED_SERVICE.toString()),
+                GED_ENDPOINT, StepLogHelper.TIMEOUT_ERROR_MSG_UNDEFINED_REF));
+        assertTrue(msgPattern.matcher(businessStatus.getError().getMessage()).matches());
+
+        // Check MONIT traces
+        final List<LogRecord> monitLogs = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
+        assertEquals(4, monitLogs.size());
+        final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
+                FACTURE_ENDPOINT, OPERATION_ARCHIVER, monitLogs.get(0));
+        final FlowLogData technicalBeginFlowLogData = assertMonitProviderBeginLog(businessBeginFlowLogData,
+                GED_INTERFACE, GED_SERVICE, GED_ENDPOINT, GED_ARCHIVER_OPERATION, monitLogs.get(1));
+        assertMonitProviderTimeoutLog(GED_TIMEOUT, GED_INTERFACE, GED_SERVICE, GED_ENDPOINT, null,
+                businessBeginFlowLogData, monitLogs.get(2));
+        assertMonitProviderEndLog(technicalBeginFlowLogData, monitLogs.get(3));
+    }
+
+    /**
+     * <p>
      * Check the message processing where the service is invoked with a valid in-out request where the sub-service is
      * too long to reply.
      * </p>
@@ -524,9 +674,11 @@ public class MappingServiceTest extends AbstractComponentTest {
      * Expected results:
      * </p>
      * <ul>
-     * <li>the request is correctly transformed,</li>
-     * <li>the sub-service is correctly called but a timeout expired,</li>
-     * <li>an error is returned.</li>
+     * <li>a timeout occurs waiting the status message of the sub-service,</li>
+     * <li>the sub-service is correctly called,</li>
+     * <li>a timeout error is returned,</li>
+     * <li>a timeout warning message is logged,</li>
+     * <li>expected MONIT traces are logged.</li>
      * </ul>
      */
     @Test
@@ -562,7 +714,7 @@ public class MappingServiceTest extends AbstractComponentTest {
                 final org.ow2.petals.se.mapping.unit_test.ged.Consulter technicalRequestBean = (org.ow2.petals.se.mapping.unit_test.ged.Consulter) technicalRequestObj;
                 assertEquals(factureId + COMP_PROPERTY_VALUE_1, technicalRequestBean.getReference());
 
-                Thread.sleep(FACTURE_TIMEOUT + 2000);
+                Thread.sleep(GED_TIMEOUT + 2000);
 
                 final org.ow2.petals.se.mapping.unit_test.ged.ConsulterResponse technicalConsulterResponse = new org.ow2.petals.se.mapping.unit_test.ged.ConsulterResponse();
                 final DataSource ds = new ByteArrayDataSource("My attached file content", "text/plain");
@@ -587,24 +739,27 @@ public class MappingServiceTest extends AbstractComponentTest {
         // right request.
         // Caution to set the right timeout value
         final StatusMessage businessStatus = COMPONENT.sendAndGetStatus(businessRequest, technicalServiceMock,
-                SimpleComponent.DEFAULT_SEND_AND_RECEIVE_TIMEOUT, FACTURE_TIMEOUT + 2000);
+                SimpleComponent.DEFAULT_SEND_AND_RECEIVE_TIMEOUT, GED_TIMEOUT + 2000);
 
         // Check the reply
         assertNull(businessStatus.getOut());
         assertEquals(ExchangeStatus.ERROR, businessStatus.getStatus());
-        assertTrue(businessStatus.getError().getMessage().contains("timeout occurs"));
-        assertTrue(businessStatus.getError().getMessage().contains(GED_CONSULTER_OPERATION.toString()));
-        assertTrue(businessStatus.getError().getMessage().contains(GED_SERVICE.toString()));
+        final Pattern msgPattern = Pattern.compile(String.format(
+                "A timeout expired \\(%d ms\\) sending a message to a service provider \\(%s\\|%s\\|%s\\|%s\\) in the context of the flow step '[-0-9a-f-]*\\/[-0-9a-f-]*'",
+                GED_TIMEOUT, Pattern.quote(GED_INTERFACE.toString()), Pattern.quote(GED_SERVICE.toString()),
+                GED_ENDPOINT, StepLogHelper.TIMEOUT_ERROR_MSG_UNDEFINED_REF));
+        assertTrue(msgPattern.matcher(businessStatus.getError().getMessage()).matches());
 
         // Check MONIT traces
-        final List<LogRecord> monitLogs_1 = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
-        assertEquals(4, monitLogs_1.size());
+        final List<LogRecord> monitLogs = COMPONENT_UNDER_TEST.getInMemoryLogHandler().getAllRecords(Level.MONIT);
+        assertEquals(4, monitLogs.size());
         final FlowLogData businessBeginFlowLogData = assertMonitProviderBeginLog(FACTURE_INTERFACE, FACTURE_SERVICE,
-                FACTURE_ENDPOINT, OPERATION_CONSULTER, monitLogs_1.get(0));
+                FACTURE_ENDPOINT, OPERATION_CONSULTER, monitLogs.get(0));
         final FlowLogData technicalBeginFlowLogData = assertMonitProviderBeginLog(businessBeginFlowLogData,
-                GED_INTERFACE, GED_SERVICE, GED_ENDPOINT, GED_CONSULTER_OPERATION, monitLogs_1.get(1));
-        assertMonitProviderFailureLog(businessBeginFlowLogData, monitLogs_1.get(2));
-        assertMonitProviderEndLog(technicalBeginFlowLogData, monitLogs_1.get(3));
+                GED_INTERFACE, GED_SERVICE, GED_ENDPOINT, GED_CONSULTER_OPERATION, monitLogs.get(1));
+        assertMonitProviderTimeoutLog(GED_TIMEOUT, GED_INTERFACE, GED_SERVICE, GED_ENDPOINT, null,
+                businessBeginFlowLogData, monitLogs.get(2));
+        assertMonitProviderEndLog(technicalBeginFlowLogData, monitLogs.get(3));
 
         // We check that the technical service has received the right status ERROR because of timeout on consumer side
         COMPONENT.receiveStatusAsExternalProvider(technicalServiceMock);
@@ -669,7 +824,6 @@ public class MappingServiceTest extends AbstractComponentTest {
             public boolean statusExpected() {
                 return false;
             }
-
         };
 
         // We send the business request to the mapping service, and we check that the technical service receives the
