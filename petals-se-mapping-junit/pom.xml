@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright (c) 2016-2023 Linagora
+ Copyright (c) 2016-2024 Linagora
 
  This program/library is free software: you can redistribute it and/or modify
  it under the terms of the GNU Lesser General Public License as published by
@@ -29,14 +29,14 @@
    <name>Petals ESB - Components - SE Mapping - JUnit framework</name>
    <artifactId>petals-se-mapping-junit</artifactId>
    <groupId>org.ow2.petals</groupId>
-   <version>1.2.0</version>
+   <version>1.2.1-SNAPSHOT</version>
    <packaging>jar</packaging>
 
    <dependencies>
       <dependency>
          <groupId>org.ow2.petals</groupId>
          <artifactId>petals-se-mapping</artifactId>
-         <version>1.2.0</version>
+         <version>1.2.1-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>org.ow2.petals</groupId>
