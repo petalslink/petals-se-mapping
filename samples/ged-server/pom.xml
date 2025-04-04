@@ -36,18 +36,10 @@
       <dependency>
          <groupId>jakarta.xml.ws</groupId>
          <artifactId>jakarta.xml.ws-api</artifactId>
-         <exclusions>
-            <exclusion>
-               <!-- Already included in com.sun.activation:jakarta.activation that we prefer -->
-               <groupId>jakarta.activation</groupId>
-               <artifactId>jakarta.activation-api</artifactId>
-            </exclusion>
-         </exclusions>
       </dependency>
       <dependency>
-         <!-- Required by jakarta.xml.ws:jakarta.xml.ws-api -->
-         <groupId>com.sun.activation</groupId>
-         <artifactId>jakarta.activation</artifactId>
+         <groupId>jakarta.activation</groupId>
+         <artifactId>jakarta.activation-api</artifactId>
       </dependency>
    </dependencies>
 

@@ -47,30 +47,16 @@
          <artifactId>easycommons-stream</artifactId>
       </dependency>
       <dependency>
-         <groupId>com.sun.activation</groupId>
-         <artifactId>jakarta.activation</artifactId>
+         <groupId>jakarta.activation</groupId>
+         <artifactId>jakarta.activation-api</artifactId>
       </dependency>
       <dependency>
          <groupId>jakarta.xml.bind</groupId>
          <artifactId>jakarta.xml.bind-api</artifactId>
-         <exclusions>
-            <exclusion>
-               <!-- Already included in com.sun.activation:jakarta.activation provided by Petals CDK -->
-               <groupId>jakarta.activation</groupId>
-               <artifactId>jakarta.activation-api</artifactId>
-            </exclusion>
-         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.patrodyne.jvnet</groupId>
          <artifactId>hisrc-basicjaxb-runtime</artifactId>
-         <exclusions>
-            <exclusion>
-               <!-- Already included in com.sun.activation:jakarta.activation provided by Petals CDK -->
-               <groupId>jakarta.activation</groupId>
-               <artifactId>jakarta.activation-api</artifactId>
-            </exclusion>
-         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.ow2.petals</groupId>
@@ -121,8 +107,8 @@
          <artifactId>petals-junit-inmemoryloghandler</artifactId>
       </dependency>
       <dependency>
-         <groupId>com.sun.mail</groupId>
-         <artifactId>jakarta.mail</artifactId>
+         <groupId>jakarta.mail</groupId>
+         <artifactId>jakarta.mail-api</artifactId>
          <scope>test</scope>
       </dependency>
    </dependencies>
