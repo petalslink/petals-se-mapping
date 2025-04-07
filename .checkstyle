@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<fileset-config file-format-version="1.2.0" simple-config="false" sync-formatter="false">
+  <local-check-config name="maven-checkstyle-plugin check-header" location="jar:file:/home/cdeneux/.m2/repository/org/ow2/petals/petals-checkstyle-rules/1.2.0-SNAPSHOT/petals-checkstyle-rules-1.2.0-SNAPSHOT.jar!/petals-checkstyle-rules.xml" type="remote" description="maven-checkstyle-plugin configuration check-header">
+    <property name="checkstyle.header.file" value="/home/cdeneux/workspace/.metadata/.plugins/org.eclipse.core.resources/.projects/petals-se-mapping/com.basistech.m2e.code.quality.checkstyleConfigurator/checkstyle-header-check-header.txt"/>
+    <property name="checkstyle.cache.file" value="${project_loc}/target/checkstyle-cachefile"/>
+  </local-check-config>
+  <local-check-config name="maven-checkstyle-plugin check-header-pom-file" location="jar:file:/home/cdeneux/.m2/repository/org/ow2/petals/petals-checkstyle-rules/1.2.0-SNAPSHOT/petals-checkstyle-rules-1.2.0-SNAPSHOT.jar!/petals-checkstyle-rules.xml" type="remote" description="maven-checkstyle-plugin configuration check-header-pom-file">
+    <property name="checkstyle.header.file" value="/home/cdeneux/workspace/.metadata/.plugins/org.eclipse.core.resources/.projects/petals-se-mapping/com.basistech.m2e.code.quality.checkstyleConfigurator/checkstyle-header-check-header-pom-file.txt"/>
+    <property name="checkstyle.cache.file" value="${project_loc}/target/checkstyle-cachefile"/>
+  </local-check-config>
+  <local-check-config name="maven-checkstyle-plugin check-header-ant-source-files" location="jar:file:/home/cdeneux/.m2/repository/org/ow2/petals/petals-checkstyle-rules/1.2.0-SNAPSHOT/petals-checkstyle-rules-1.2.0-SNAPSHOT.jar!/petals-checkstyle-rules.xml" type="remote" description="maven-checkstyle-plugin configuration check-header-ant-source-files">
+    <property name="checkstyle.header.file" value="/home/cdeneux/workspace/.metadata/.plugins/org.eclipse.core.resources/.projects/petals-se-mapping/com.basistech.m2e.code.quality.checkstyleConfigurator/checkstyle-header-check-header-ant-source-files.txt"/>
+    <property name="checkstyle.cache.file" value="${project_loc}/target/checkstyle-cachefile"/>
+  </local-check-config>
+  <local-check-config name="maven-checkstyle-plugin check-header-jbi-source-files" location="jar:file:/home/cdeneux/.m2/repository/org/ow2/petals/petals-checkstyle-rules/1.2.0-SNAPSHOT/petals-checkstyle-rules-1.2.0-SNAPSHOT.jar!/petals-checkstyle-rules.xml" type="remote" description="maven-checkstyle-plugin configuration check-header-jbi-source-files">
+    <property name="checkstyle.header.file" value="/home/cdeneux/workspace/.metadata/.plugins/org.eclipse.core.resources/.projects/petals-se-mapping/com.basistech.m2e.code.quality.checkstyleConfigurator/checkstyle-header-check-header-jbi-source-files.txt"/>
+    <property name="checkstyle.cache.file" value="${project_loc}/target/checkstyle-cachefile"/>
+  </local-check-config>
+  <local-check-config name="maven-checkstyle-plugin check-header-assembly-files" location="jar:file:/home/cdeneux/.m2/repository/org/ow2/petals/petals-checkstyle-rules/1.2.0-SNAPSHOT/petals-checkstyle-rules-1.2.0-SNAPSHOT.jar!/petals-checkstyle-rules.xml" type="remote" description="maven-checkstyle-plugin configuration check-header-assembly-files">
+    <property name="checkstyle.header.file" value="/home/cdeneux/workspace/.metadata/.plugins/org.eclipse.core.resources/.projects/petals-se-mapping/com.basistech.m2e.code.quality.checkstyleConfigurator/checkstyle-header-check-header-assembly-files.txt"/>
+    <property name="checkstyle.cache.file" value="${project_loc}/target/checkstyle-cachefile"/>
+  </local-check-config>
+  <local-check-config name="maven-checkstyle-plugin check-copyright-file" location="jar:file:/home/cdeneux/.m2/repository/org/ow2/petals/petals-checkstyle-rules/1.2.0-SNAPSHOT/petals-checkstyle-rules-1.2.0-SNAPSHOT.jar!/petals-checkstyle-rules.xml" type="remote" description="maven-checkstyle-plugin configuration check-copyright-file">
+    <property name="checkstyle.header.file" value="/home/cdeneux/workspace/.metadata/.plugins/org.eclipse.core.resources/.projects/petals-se-mapping/com.basistech.m2e.code.quality.checkstyleConfigurator/checkstyle-header-check-copyright-file.txt"/>
+    <property name="checkstyle.cache.file" value="${project_loc}/target/checkstyle-cachefile"/>
+  </local-check-config>
+  <local-check-config name="maven-checkstyle-plugin check-license-file" location="jar:file:/home/cdeneux/.m2/repository/org/ow2/petals/petals-checkstyle-rules/1.2.0-SNAPSHOT/petals-checkstyle-rules-1.2.0-SNAPSHOT.jar!/petals-checkstyle-rules.xml" type="remote" description="maven-checkstyle-plugin configuration check-license-file">
+    <property name="checkstyle.header.file" value="/home/cdeneux/workspace/.metadata/.plugins/org.eclipse.core.resources/.projects/petals-se-mapping/com.basistech.m2e.code.quality.checkstyleConfigurator/checkstyle-header-check-license-file.txt"/>
+    <property name="checkstyle.cache.file" value="${project_loc}/target/checkstyle-cachefile"/>
+  </local-check-config>
+  <fileset name="java-sources-check-header" enabled="true" check-config-name="maven-checkstyle-plugin check-header" local="true">
+    <file-match-pattern match-pattern="^src/main/resources/.*" include-pattern="true"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*\.jar" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*\.class" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*\.zip" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*\.bin" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*LICENSE\.txt" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*NOTE" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*\.log" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*_provideFlowStepBegin\.xml" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*_provideFlowStepEnd\.xml" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*_provideFlowStepFailure\.xml" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*man1/.*\.1" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*man5/.*\.5" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*man7/.*\.7" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*\.jks" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*id_rsa.*" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*known_hosts" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*\.jpg" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*\.png" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*\.crt" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*\.pem" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/resources/.*\.gitignore" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*" include-pattern="true"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*\.jar" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*\.class" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*\.zip" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*\.bin" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*LICENSE\.txt" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*NOTE" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*\.log" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*_provideFlowStepBegin\.xml" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*_provideFlowStepEnd\.xml" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*_provideFlowStepFailure\.xml" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*man1/.*\.1" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*man5/.*\.5" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*man7/.*\.7" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*\.jks" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*id_rsa.*" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*known_hosts" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*\.jpg" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*\.png" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*\.crt" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*\.pem" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/test/resources/.*\.gitignore" include-pattern="false"/>
+  </fileset>
+  <fileset name="java-sources-check-header-pom-file" enabled="true" check-config-name="maven-checkstyle-plugin check-header-pom-file" local="true">
+    <file-match-pattern match-pattern="^/pom\.xml" include-pattern="true"/>
+  </fileset>
+  <fileset name="java-sources-check-header-ant-source-files" enabled="true" check-config-name="maven-checkstyle-plugin check-header-ant-source-files" local="true">
+    <file-match-pattern match-pattern="^src/main/ant/.*" include-pattern="true"/>
+  </fileset>
+  <fileset name="java-sources-check-header-jbi-source-files" enabled="true" check-config-name="maven-checkstyle-plugin check-header-jbi-source-files" local="true">
+    <file-match-pattern match-pattern="^src/main/jbi/.*" include-pattern="true"/>
+    <file-match-pattern match-pattern="^src/main/jbi.*.*\.jar" include-pattern="false"/>
+    <file-match-pattern match-pattern="^src/main/jbi.*.*\.jks" include-pattern="false"/>
+  </fileset>
+  <fileset name="java-sources-check-header-assembly-files" enabled="true" check-config-name="maven-checkstyle-plugin check-header-assembly-files" local="true">
+    <file-match-pattern match-pattern="^src/main/assembly/.*" include-pattern="true"/>
+  </fileset>
+  <fileset name="java-sources-check-copyright-file" enabled="true" check-config-name="maven-checkstyle-plugin check-copyright-file" local="true">
+    <file-match-pattern match-pattern="^/COPYRIGHT" include-pattern="true"/>
+  </fileset>
+  <fileset name="java-sources-check-license-file" enabled="true" check-config-name="maven-checkstyle-plugin check-license-file" local="true">
+    <file-match-pattern match-pattern="^/LICENSE" include-pattern="true"/>
+  </fileset>
+</fileset-config>
