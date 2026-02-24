@@ -16,8 +16,7 @@
  along with this program/library; If not, see http://www.gnu.org/licenses/
  for the GNU Lesser General Public License version 2.1.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -30,7 +29,7 @@
 	<name>Petals ESB - Components - SE Mapping - JUnit framework</name>
 	<artifactId>petals-se-mapping-junit</artifactId>
 	<groupId>org.ow2.petals</groupId>
-	<version>1.3.0-SNAPSHOT</version>
+	<version>1.3.0</version>
 	<packaging>jar</packaging>
 
 	<dependencies>
@@ -80,6 +79,6 @@
 	<scm>
 		<connection>scm:git:https://github.com/petalslink/petals-se-mapping.git</connection>
 		<developerConnection>scm:git:https://github.com/petalslink/petals-se-mapping.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>petals-se-mapping-junit-1.3.0</tag>
 	</scm>
 </project>
